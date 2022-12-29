@@ -1,0 +1,47 @@
+
+    <section class="widget" widget="">
+      <header>
+        <h3>{{'Translation.Export Files'| translate}}</h3>
+      </header>
+      <div class="widget-body">
+        <form class="form-horizontal form-label-left" method="post" data-parsley-priority-enabled="false" novalidate="novalidate"
+          role="form" [formGroup]="myForm">
+          <div class="row wizard_data">
+            <div class="col-sm-4 fields_box"> </div>
+
+            <div class="col-sm-4 fields_box"> 
+                <label for="status">{{'Translation.Transaction Date'| translate}}<span class="validation"></span></label>
+                <wj-input-date id="transDate" formControlName="transDate" class="wijmo_style" [(ngModel)]="transDate" [showYearPicker]="false"
+                     [isRequired]="true"> </wj-input-date>
+
+            </div>
+            <div class="col-sm-4 fields_box"> </div>
+
+          </div>
+          <div class="row wizard_data">
+            <div class="col-sm-4 fields_box"> </div>
+            <div class="col-sm-4 fields_box">
+              <label for="search-input">{{'Translation.Export type'| translate}}  <span class="validation">*</span></label>
+              <wj-combo-box id="exportType" tabindex="2" class="wijmo_style" formControlName="exportType" [itemsSource]="exportTypeList"
+                displayMemberPath="abbreviation" selectedValuePath="value" [isRequired]="true" [isEditable]="true">
+              </wj-combo-box>
+              <div *ngIf="myForm.controls['exportType'].hasError('required')" [hidden]="myForm.controls.exportType.valid || (myForm.controls.exportType.pristine && !isSubmitted)"
+                class="text-danger">{{'Translation.Export type'| translate}} {{'Translation.is required'| translate}}.</div>
+            </div>
+            <div class="col-sm-4 fields_box"> </div>
+
+          </div>
+          <div class="row wizard_data">
+            <div class="col-sm-4 fields_box"> </div>
+            <div class="col-sm-4  fields_box">
+              <!--*ngIf="userService.isAuhtorized(userService.EB_MIGRATORS_CL_HOLDING_NEW)"-->
+              <button class="btn btn-success btn-rounded pull-right" (click)="btnUpload(myForm.value, myForm.valid)" type="submit"> {{'Translation.Download'| translate}} </button>
+            </div>
+            <div class="col-sm-4 fields_box"> </div>
+          </div>
+
+        </form>
+      </div>
+    </section>
+
+<dialog-cmp #dialogCmp (btnClick)="getNotification($event)"> </dialog-cmp>

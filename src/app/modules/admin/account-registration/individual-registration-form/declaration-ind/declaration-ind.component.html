@@ -1,0 +1,13 @@
+<div class="w-full max-w-4xl">
+    <div [formGroup]="declarationIndFormGroup">
+        <div class="w-full">
+            <button class="lstBtn" (click)="openDialog()" mat-flat-button>Read Terms & Conditions
+            </button>
+            <div class="text-secondary mt-2">
+                <mat-checkbox [color]="'primary'" name="isAgree" formControlName="isAgree">I agree to the terms &
+                    conditions.
+                </mat-checkbox>
+            </div>
+        </div>
+    </div>
+</div>

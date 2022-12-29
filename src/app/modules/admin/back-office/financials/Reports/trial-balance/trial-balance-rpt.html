@@ -1,0 +1,79 @@
+
+    <section class="widget" widget="">
+      <header>
+        <h3>{{'Menu.Trial Balance' | translate}}</h3>
+      </header>
+
+      <div class="widget-body">
+        <form class="form-horizontal form-label-left" method="post" data-parsley-priority-enabled="false" novalidate role="form"
+          name="myForm" [formGroup]="myForm" (ngSubmit)="printReport(myForm.value, myForm.valid)">
+          <div class="row">
+            <div class="col-sm-3 fields_box">
+              <label for="status">{{'Translation.From Date' | translate}}
+                <span class="validation">*</span>
+              </label>
+              <wj-input-date id="fromDate" formControlName="fromDate" class="wijmo_style" [(ngModel)]="params.START_DATE" [format]="dateFormat"
+                [mask]="dateMask" [isRequired]="true" [showYearPicker]="false"> </wj-input-date>
+              <div *ngIf="!dateComparison" class="text-danger">{{'Translation.From date should be less or equal than To date' | translate}}.</div>
+            </div>
+
+            <div class="col-sm-3 fields_box">
+              <label for="status">{{'Translation.To Date' | translate}}
+                <span class="validation">*</span>
+              </label>
+              <wj-input-date id="toDate" formControlName="toDate" class="wijmo_style" [(ngModel)]="params.END_DATE" [format]="dateFormat"
+                [mask]="dateMask" [isRequired]="true" [showYearPicker]="false"> </wj-input-date>
+            </div>
+
+            <div class="col-sm-3 fields_box">
+              <label for="status">{{'Translation.Trade Date' | translate}}
+                <span class="validation">*</span>
+              </label>
+              <wj-input-date id="tradeDate" formControlName="tradeDate" class="wijmo_style" [(ngModel)]="params.TRADE_DATE" [format]="dateFormat"
+                [mask]="dateMask" [isRequired]="true" [showYearPicker]="false"> </wj-input-date>
+            </div>
+
+            <div class="col-sm-3 fields_box">
+              <label for="headLevel">{{'Translation.Head Level' | translate}}
+                <span class="validation">*</span>
+              </label>
+              <wj-combo-box tabindex="2" id="headLevelId" class="wijmo_style" formControlName="headLevelId" [isEditable]="true" [itemsSource]="headLevelList"
+                displayMemberPath="label" selectedValuePath="value" #headLevelId [(ngModel)]="params.HEAD_LEVEL"></wj-combo-box>
+            </div>
+            <div class="col-sm-3 fields_box">
+              <label for="status"> {{'Translation.Report Type' | translate}}
+                <span class="validation">*</span>
+              </label>
+              <wj-combo-box tabindex="3" id="reportType" class="wijmo_style" formControlName="reportType" [isEditable]="true" [itemsSource]="reportTypeList"
+                [isRequired]="true" #inputReportType displayMemberPath="label" selectedValuePath="value" [(ngModel)]="reportType"></wj-combo-box>
+
+              <div *ngIf="myForm.controls['reportType'].hasError('required')" [hidden]="myForm.controls['reportType'].valid || (myForm.controls['reportType'].pristine && !isSubmitted)"
+                class="text-danger">{{'Translation.Report type is required' | translate}}.</div>
+
+            </div>
+            <div class="col-sm-3 fields_box">
+              <label for="status"> {{'Translation.Report Format' | translate}}
+                <span class="validation">*</span>
+              </label>
+              <wj-combo-box tabindex="3" id="reportFormat" class="wijmo_style" formControlName="reportFormat" [isEditable]="true" [itemsSource]="reportFormatList"
+                [isRequired]="true" #inputReportFormat displayMemberPath="label" selectedValuePath="value" [(ngModel)]="reportFormat"></wj-combo-box>
+
+              <div *ngIf="myForm.controls['reportFormat'].hasError('required')" [hidden]="myForm.controls['reportFormat'].valid || (myForm.controls['reportFormat'].pristine && !isSubmitted)"
+                class="text-danger">{{'Translation.Report Format is required' | translate}}.</div>
+
+            </div>
+
+            <div class="col-sm-3 fields_box">
+              <label for="status"> </label>
+              <button type="submit" class="btn btn-success">{{'Translation.View Report' | translate}}</button>
+            </div>
+          </div>
+        </form>
+      </div>
+      
+      <div *ngIf="pdf" class="flex justify-center m-4 mt-4">
+       <ngx-extended-pdf-viewer [base64Src]="pdfSrc" theme="dark" backgroundColor="#151922a8" [useBrowserLocale]="true"  [showOpenFileButton]="false" filenameForDownload="{{fileNameForDownload}}"
+      class="w-full" style="display: block;height: 775px;"></ngx-extended-pdf-viewer>
+      </div>
+    </section>
+<dialog-cmp #dialogCmp (btnClick)="getNotification($event)"> </dialog-cmp>

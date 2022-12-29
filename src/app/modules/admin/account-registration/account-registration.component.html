@@ -1,0 +1,46 @@
+<div class="relative flex flex-col flex-auto min-w-0 overflow-hidden" style="background-image: url('assets/images/marlin-dashboard/dashboard-back.png');
+                background-size: cover;
+                background-repeat: no-repeat;">
+
+    <!-- Header & Cards -->
+    <div class="relative pb-12 sm:pb-24 overflow-hidden">
+        <!-- Header -->
+        <div class="flex flex-col items-center">
+            <!-- Recurring selector -->
+            <div
+                class="flex items-center mt-4 sm:mt-4 p-0.5 rounded-full overflow-hidden bg-gray-200 dark:bg-gray-700">
+                <button
+                    class="px-6"
+                    [ngClass]="{'bg-card pointer-events-none shadow': newRegistration,
+                                'bg-transparent': !newRegistration}"
+                    mat-flat-button
+                    (click)="newRegistration = true"
+                    disableRipple>
+                    Initial Registration
+
+                </button>
+                <button
+                    class="px-6"
+                    [ngClass]="{'bg-card pointer-events-none shadow': !newRegistration,
+                                'bg-transparent': newRegistration}"
+                    mat-flat-button
+                    (click)="newRegistration = false"
+                    disableRipple>
+                    Already Have OTP!
+                </button>
+            </div>
+        </div>
+        <!-- Main -->
+        <div class="flex flex-col flex-auto items-center justify-center h-full">
+            <!-- @formatter:off -->
+            <div class="w-full md:max-w-screen-md sm:max-w-screen-sm">
+                <ng-container *ngIf="!newRegistration">
+                    <already-have-otp></already-have-otp>
+                </ng-container>
+                <ng-container *ngIf="newRegistration">
+                    <initial-registration></initial-registration> 
+                </ng-container>
+            </div>
+        </div>
+    </div>
+</div>

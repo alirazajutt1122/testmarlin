@@ -1,0 +1,47 @@
+<div class="py-2 overflow-x-hidden">
+    <div class="extra-content">
+        <ng-content></ng-content>
+    </div>
+    <!-- <div class="flex items-center">
+        <div class="m-2 ml-4 text-xl font-bold tracking-tighter text-primary">TIPS</div>
+    </div> -->
+      <fuse-vertical-navigation *ngIf="investorProfileStatus === '' && (userType !== 'PARTICIPANT' && userType !== 'PARTICIPANT ADMIN')" [appearance]="'default'" [navigation]="menuDataBecomeInv" [inner]="true" [mode]="'side'"
+        [name]="'demo-sidebar-navigation'" [opened]="true"></fuse-vertical-navigation>
+
+        <fuse-vertical-navigation *ngIf="investorProfileStatus !== '' && (userType !== 'PARTICIPANT' && userType !== 'PARTICIPANT ADMIN')"  [appearance]="'default'" [navigation]="menuDataViewDetail" [inner]="true" [mode]="'side'"
+        [name]="'demo-sidebar-navigation'" [opened]="true"></fuse-vertical-navigation>
+
+        <fuse-vertical-navigation *ngIf="userType === 'PARTICIPANT' || userType === 'PARTICIPANT ADMIN'"  [appearance]="'default'" [navigation]="menuDataViewDetailParticipant" [inner]="true" [mode]="'side'"
+        [name]="'demo-sidebar-navigation'" [opened]="true"></fuse-vertical-navigation>
+
+    <div class="flex">
+        <div class="containerrr">
+            <div class="box1"></div>
+            <div class="text-lg   tracking-tighter box2 pt-1">News & Advertisements</div>
+        </div>
+    </div>
+    <div>
+        <div *ngFor="let naData of naActiveDate" class="flex flex-col max-w-80 m-2 mt-4 w-full filter-article">
+            <div class="text-xl mb-2 text-primary leading-tight">{{naData.naTitle}}
+            </div>
+            <img class="object-cover h-30" [src]="naData.src || 'assets/images/marlin-dashboard/silver.png'"
+                alt="Card cover image">
+            <div class="mt-4 text-lg">
+                {{naData.naDetail}}
+            </div>
+            <div class="mt-4 text-lg">
+                {{naData.naWebLink}}
+            </div>
+
+        </div>
+    </div>
+
+    <!-- <div class="flex">
+        <div class="containerrr">
+            <div class="box1"></div>
+            <div class="text-lg tracking-tighter box2 pt-1">Recent News</div>
+        </div>
+    </div> -->
+    <recent-news></recent-news>
+
+</div>

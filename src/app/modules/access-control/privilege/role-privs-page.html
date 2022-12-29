@@ -1,0 +1,88 @@
+
+        <section class="widget" widget="">
+            <header>
+                <h3>{{"Menu.Privilege" | translate}} <span class="fw-semi-bold"></span></h3>
+                <!--<div class="widget-controls">
+                    <a data-widgster="expand" title="Expand" href="#"><i class="glyphicon glyphicon-chevron-up"></i></a>
+                    <a data-widgster="collapse" title="Collapse" href="#"><i class="glyphicon glyphicon-chevron-down"></i></a>
+                </div>-->
+            </header>
+            <div class="widget-body">
+                <form class="form-horizontal form-label-left parsleyjs" [formGroup]="myForm" (ngSubmit)="onSaveAction(myForm.value, myForm.valid)"
+                    data-parsley-priority-enabled="false" novalidate="novalidate">
+
+                    <div class="widget-body">
+
+                        <div style="margin-bottom:15px;">
+                            <div class="row">
+                                <div class="col-sm-3 fields_box">
+                                    <label for="search-input">{{"Translation.Role" | translate}} <span class="validation">*</span></label>
+                                    <wj-combo-box id="role" class="wijmo_style" name="role" [itemsSource]="roleList" (ngModelChange)="onRoleChangeEvent($event)"
+                                        displayMemberPath="roleName" selectedValuePath="roleId" [isRequired]="true" [isEditable]="true" [(ngModel)]="selectedItem.roleId"
+                                        formControlName="role"> </wj-combo-box>
+
+                                    <div *ngIf="myForm.controls['role'].hasError('required')" [hidden]="myForm.controls.role.valid || (myForm.controls.role.pristine && !isSubmitted)"
+                                        class="text-danger">{{"Translation.Role" | translate}} {{"Translation.is required" | translate}}.</div>
+                                </div>
+                                <div class="col-sm-6 fields_box">
+                                    <div style="height:27px;"></div>
+                                    <button class="btn btn-success btn-rounded" id="savebutton"  type="submit" *ngIf="!isEditing && userService.isAuhtorized(userService.EB_ACCESS_CONTROL_PRIVILEGE_NEW)">{{"Common.Update" | translate}}</button>
+                                    <button class="btn btn-success btn-rounded" id="savebutton"  type="submit" *ngIf="isEditing && userService.isAuhtorized(userService.EB_ACCESS_CONTROL_PRIVILEGE_UPDATE)">{{"Common.Update" | translate}}</button>
+                                    <button class="btn btn-primary" id="checkAllbutton"  type="button" (click)="checkAll()">{{"Translation.Check All" | translate}}</button>
+                                    <button class="btn btn-primary" id="uncheckAllbutton"  type="button" (click)="unCheckAll()">{{"Translation.UnCheck All" | translate}}</button>
+                                    <button class="btn btn-default btn-rounded" id="clearbutton"  type="button" (click)="clearAction()">{{"Common.Clear" | translate}}</button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-group mb-lg" id="accordion" style="color: #3f3f3f;" >
+                    <div class="marlin_accordian">
+                            <ol style="list-style-type: none;margin:0;padding:0px;">
+                                <li *ngFor="let item of itemsList; let ind = index">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading collapsed">
+                                            <h5 class="panel-title">
+                                                <a class="collapsed" data-toggle="collapse" data-parent="#accordion" [attr.data-target]="'#'+ind" aria-expanded="false">
+                                                {{item.optionName}} 
+                                                <i class="fa fa-angle-down pull-right"></i></a></h5>
+                                        </div>
+                                        <div [attr.id]="ind" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+                                            <div class="panel-body">
+                                                <ul class="ul_list">
+                                                    <li *ngFor="let childOne of item.childs">
+                                                        <div class="ul_border_box blue_first_box" style="background-color:#48c9b0;font-weight:bold;">{{childOne.optionName}}
+                                                        </div>
+
+                                                        <ul>
+                                                            <li *ngFor="let childTwo of childOne.childs">
+                                                                <div class="ul_border_box" style="font-weight:bold;">{{childTwo.optionName}}</div>
+                                                                <ul>
+                                                                    <li *ngFor="let childThree of childTwo.childs" style="background-color: #f8f9f9;">
+                                                                        <div class="ul_border_box">{{childThree.optionName}}
+                                                                            <div class="check_box">
+                                                                                <input type="checkbox" 
+                                                                                    [checked]="childThree.allowed" 
+                                                                                    (change)="allowCheckBoxEvent(childThree.privilegeId,$event)" />
+                                                                            </div>
+                                                                        </div>
+                                                                    </li>
+                                                                </ul>
+                                                            </li>
+                                                        </ul>
+
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ol>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+        </section>
+
+<dialog-cmp #dialogCmp (btnClick)="getNotification($event)"> </dialog-cmp> 

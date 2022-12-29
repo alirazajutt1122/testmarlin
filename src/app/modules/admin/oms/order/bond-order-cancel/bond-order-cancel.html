@@ -1,0 +1,336 @@
+<!-- <div id="{{modalId}}" class="modal fade" role="dialog" data-keyboard="true">
+    <div class="modal-dialog modal-md">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close cancel_dialog_close" (click)="onClose()">&times;</button>
+          <h4 class="modal-title">{{ 'Translation.Cancel Order' | translate }}: <span class="fw-semi-bold">{{ 'Translation.Bond' | translate }}</span></h4>
+        </div> -->
+        <form role="form" [formGroup]="myForm" class="form-horizontal form-label-left parsleyjs" method="post" id="{{modalId}}" data-parsley-priority-enabled="false"
+          novalidate (ngSubmit)="cancelOrderSubmit(myForm.value, myForm.valid)">
+          <div class="modal-body" style="overflow-y: hidden; padding: 10px 0px;">
+            <alert *ngIf="isConfirmationSuccess && alertMessage.message.length>0" [type]="'success alert-sm'" (close)="closeAlert()"
+              dismissible="true">
+              <div [innerHTML]="alertMessage.message"></div>
+              </alert>
+              <alert *ngIf="isConfirmationRejected && alertMessage.message.length>0" [type]="'danger alert-sm'" (close)="closeAlert()"
+                dismissible="true">
+                <div [innerHTML]="alertMessage.message"></div>
+                </alert>
+                <div class="col-sm-12" style="margin-bottom:10px; margin-top: -10px;">
+                  <!--<div class="stock_box" [style.background]="order.side=='sell' ? '#EA4C88'  : '#22A7F0'">-->
+                  <div [class.stock_box_sell]="order.side === 'sell'"
+                    [class.stock_box_buy]="order.side === 'buy'"
+                    [class.stock_box]="order.side === '' || order.side === undefined">
+                    <div class="row stock_header">
+                      <div class="col-sm-6">
+                        <h3><b>{{order.symbol}}</b></h3>
+                      </div>
+                      <div *ngIf="order.symbol.length > 0" class="col-sm-3" style="text-align:left;">
+                        <h3 *ngIf="symbolStats.last_trade_price !== '0.0000'">{{symbolStats.last_trade_price}}</h3>
+                        <h3 *ngIf="symbolStats.last_trade_price === '0.0000'">{{symbolStats.last_day_close_price}}</h3>
+                      </div>
+                      <div *ngIf="order.symbol.length > 0" class="col-sm-3" style="text-align:left;">{{symbolStats.net_change}}
+                        <span *ngIf="symbolStats.net_change > 0"><i class="fa fa-arrow-up arrow-up-clr"></i></span>
+                        <span *ngIf="symbolStats.net_change < 0"><i class="fa fa-arrow-down arrow-down-clr"></i></span>
+                      </div>
+                    </div>
+                    <div class="row stock_rates">
+                      <div class="col-sm-3">
+                        <div><b>LDCP</b></div>
+                        {{symbolStats.last_day_close_price}}
+                      </div>
+                      <div class="col-sm-3">
+                        <div><b>{{ 'Translation.High' | translate }}</b></div>
+                        {{symbolStats.high}}
+                      </div>
+                      <div class="col-sm-3">
+                        <div><b>{{ 'Translation.Low' | translate }}</b></div>
+                        {{symbolStats.low}}
+                      </div>
+                      <div class="col-sm-3">
+                        <div><b>{{ 'Translation.Turnover' | translate }}</b></div>
+                        {{symbolStats.turn_over}}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <label for="search-input">{{ 'Translation.Order No' | translate }}. <span class="validation">*</span></label>
+                      <div class="input-group">
+                        <wj-input-mask id="orderNo" formControlName="orderNo" #orderNo [(ngModel)]="order.order_no" (valueChanged)="orderNoChanged()"
+                          required>
+                          </wj-input-mask>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <label for="search-input">{{ 'Translation.Security' | translate }} <span class="validation">*</span></label>
+                      <div class="input-group">
+                        <wj-input-mask id="symbol" formControlName="symbol" [isDisabled]="true" [ngModel]="order.symbolMktExch">
+                        </wj-input-mask>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <label for="search-input">{{ 'Translation.Quantity' | translate }} <span class="validation">*</span></label>
+                      <div class="input-group">
+                        <wj-input-number id="volume" formControlName="volume" #inputVolume [(ngModel)]="order.volume" [format]="'n0'" maxlength="10"
+                          [max]="9999999999" [min]="0" [isDisabled]="true" required>
+                          </wj-input-number>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <label for="search-input">{{ 'Translation.Yield' | translate }} <span *ngIf="isBondPricingMechanismPercentage">%</span></label>
+                      <div class="input-group">
+                        <wj-input-number id="yield" formControlName="yield" [(ngModel)]="order.yield" [max]="999999.9999" [min]="0" [isDisabled]="true"
+                          [format]="'n4'">
+                          </wj-input-number>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <label for="search-input">{{ 'Translation.Price' | translate }} <span *ngIf="isBondPricingMechanismPercentage">%</span><span class="validation">*</span></label>
+                      <div class="input-group">
+                        <wj-input-number id="price" formControlName="price" #inputPrice [(ngModel)]="order.price_" [format]="'n4'"
+                          [max]="999999.9999" [min]="0" [isDisabled]="true" required>
+                          </wj-input-number>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <label for="search-input">{{ 'Translation.Settlement Amount' | translate }}</label>
+                      <div class="input-group">
+                        <wj-input-number type="text" id="orderSettlementValue" formControlName="orderSettlementValue" readonly [isDisabled]="true" [(ngModel)]="order.settlementValue"
+                          [format]="'n4'"> </wj-input-number>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <label for="search-input">{{ 'Translation.Client' | translate }} <span class="validation">*</span></label>
+                      <div class="input-group">
+                        <wj-input-mask id="account" formControlName="account" [ngModel]="order.account" [required]="false" [isDisabled]="true">
+                        </wj-input-mask>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-4" *ngIf="userType === 'PARTICIPANT' || userType === 'PARTICIPANT ADMIN'">
+                    <div class="form-group">
+                      <label for="search-input">{{ 'Translation.Trader' | translate }}</label>
+                      <div class="input-group">
+                        <wj-input-mask id="trader" formControlName="trader" [ngModel]="order.username" [required]="false" [isDisabled]="true">
+                        </wj-input-mask>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <label for="search-input">{{ 'Translation.Custodian' | translate }}</label>
+                      <div class="input-group">
+                        <wj-input-mask id="custodian" formControlName="custodian" [ngModel]="order.custodian" [required]="false" [isDisabled]="true">
+                        </wj-input-mask>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <label for="search-input">{{ 'Translation.Type' | translate }} <span class="validation">*</span></label>
+                      <div class="input-group">
+                        <wj-input-mask id="orderType" formControlName="orderType" [(ngModel)]="order.type_" [isDisabled]="true">
+                        </wj-input-mask>
+                      </div>
+                    </div>
+                  </div>
+                  <div *ngIf="order?.type_ === 'SL' || order?.type_ === 'SM'" class="col-sm-4">
+                    <div class="form-group">
+                      <label for="search-input">{{ 'Translation.Trigger Price' | translate }}</label>
+                      <div class="input-group">
+                        <wj-input-number id="triggerPrice" formControlName="triggerPrice" #inputTriggerPrice [(ngModel)]="order.triggerPrice_" [max]="100000"
+                          [min]="0" [isDisabled]="triggerPriceDisable" [format]="'n4'" [isRequired]="false">
+                          </wj-input-number>
+                      </div>
+                    </div>
+                  </div>
+                  <div *ngIf="order?.type_ === 'Limit'" class="col-sm-4">
+                    <div class="form-group">
+                      <label for="tifOption">TIF {{ 'Translation.Option' | translate }}</label>
+                      <div class="input-group">
+                        <wj-input-mask id="tifOption" formControlName="tifOption" [(ngModel)]="order.tifOption" [isDisabled]="true">
+                        </wj-input-mask>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-4" *ngIf="order?.type_ === 'Limit' && (order?.tifOption === 'GTD' || order?.tifOption === 'GTC')">
+                    <div class="form-group">
+                      <label for="gtd">{{ 'Translation.Good Till Date' | translate }}</label>
+                      <div class="input-group">
+                        <wj-input-date id="gtd" formControlName="gtd" class="wijmo_style" [(ngModel)]="order.gtd"
+                          [format]="dateFormat" [mask]="'0000-00-00'" [isRequired]="false" [isDisabled]="true" [showYearPicker]="false">
+                        </wj-input-date>
+                      </div>
+                    </div>
+                  </div>
+                  <div *ngIf="order?.type_ === 'Limit' && order?.tifOption === 'DO'" class="col-sm-4">
+                    <div class="form-group">
+                      <label for="qualifier"> {{ 'Translation.Qualifier' | translate }}</label>
+                      <div class="input-group">
+                        <wj-input-mask id="qualifier" formControlName="qualifier" [(ngModel)]="order.qualifier" [isDisabled]="true">
+                        </wj-input-mask>
+                      </div>
+                    </div>
+                  </div>
+                  <div *ngIf="order?.type_ === 'Limit' && order?.tifOption === 'DO' && order?.qualifier === 'HO'" class="col-sm-4">
+                    <div class="form-group">
+                      <label for="discQuantity">Disc. {{ 'Translation.Quantity' | translate }}</label>
+                      <div class="input-group">
+                        <wj-input-number id="discQuantity" formControlName="discQuantity" [(ngModel)]="order.discQuantity" [max]="999999999"
+                          [min]="0" maxlength="10" [format]="'n0'" [isRequired]="false" [isDisabled]="true">
+                        </wj-input-number>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="accordian_adjs">
+                  <accordion [closeOthers]="true" class="mb-lg show" id="accordion2">
+                    <accordion-group>
+                      <div accordion-heading>
+                        {{ 'Translation.Details' | translate }}
+                        <i class="fa fa-angle-down pull-xs-right"></i>
+                      </div>
+                      <!--<div class="grey_box">-->
+                      <div>
+                        <!--<h1>Details</h1>-->
+                        <div class="row mt-2">
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                  <label for="search-input">{{ 'Translation.Category' | translate }} </label>
+                                  <div class="input-group">
+                                     <wj-input-mask formControlName="subCategory" #subCategory placeholder=""  [isDisabled]="true"
+                                      [isRequired]="false"> </wj-input-mask>
+                                  </div>
+                                </div>
+                              </div>
+                          <div class="col-sm-3">
+                            <div class="form-group">
+                              <label for="search-input">{{ 'Translation.Coupon Type' | translate }} </label>
+                              <div class="input-group">
+                                <!--<input type="text" [(ngModel)]="symbolDetail.lowerCircuitBreakerLimit"  class="form-control" style="text-align: right" disabled="true">-->
+                                <wj-input-mask formControlName="bondType" placeholder="" [ngModel]="securityMarketDetails.fisDetail.bondType.bondType" [isDisabled]="true"
+                                  [isRequired]="false"> </wj-input-mask>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-sm-3">
+                            <div class="form-group">
+                              <label for="search-input"> {{ 'Translation.Coupon Rate' | translate }} </label>
+                              <div class="input-group">
+                                <!--<input type="text" [(ngModel)]="symbolDetail.upperOrderVolumeLimit"  class="form-control" style="text-align: right" disabled="true">-->
+                                <wj-input-number formControlName="couponRate" [format]="'n4'" [ngModel]="securityMarketDetails.fisDetail.couponRate" [isDisabled]="true"
+                                  placeholder="" [isRequired]="false"> </wj-input-number>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-sm-3">
+                            <div class="form-group">
+                              <label for="search-input">{{ 'Translation.Last Coupon Date' | translate }}</label>
+                              <div class="input-group">
+                                <!--<input type="text" [(ngModel)]="symbolDetail.lowerOrderVolumeLimit"  class="form-control" style="text-align: right" disabled="true">-->
+                                <wj-input-mask formControlName="lastCouponDate" placeholder="" [ngModel]="securityMarketDetails.lastCouponDate" [isDisabled]="true"
+                                  [isRequired]="false"> </wj-input-mask>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-sm-3">
+                            <div class="form-group">
+                              <label for="search-input">{{ 'Translation.Next Coupon Date' | translate }}</label>
+                              <div class="input-group">
+                                <!--<input type="text" [(ngModel)]="symbolDetail.upperOrderValueLimit"  class="form-control" style="text-align: right" disabled="true">-->
+                                <wj-input-mask formControlName="nextCouponDate" placeholder="" [ngModel]="securityMarketDetails.nextCouponDate" [isDisabled]="true"
+                                  [isRequired]="false"> </wj-input-mask>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-sm-3">
+                            <div class="form-group">
+                              <label for="search-input">{{ 'Translation.Accrued Profit' | translate }}</label>
+                              <div class="input-group">
+                                <!--<input type="text" [(ngModel)]="symbolDetail.lowerOrderValueLimit"  class="form-control" style="text-align: right" disabled="true">-->
+                                <wj-input-number formControlName="accrudeProfit" [format]="'n4'" [ngModel]="securityMarketDetails.accrudeProfit" [isDisabled]="true"
+                                  [format]="'n4'" placeholder="" [isRequired]="false"> </wj-input-number>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-sm-3">
+                            <div class="form-group">
+                              <label for="search-input"> {{ 'Translation.Bond' | translate }}Maturity Date </label>
+                              <div class="input-group">
+                                <!--<input type="text" [(ngModel)]="symbolDetail.boardLot"  class="form-control" style="text-align: right" disabled="true">-->
+                                <wj-input-mask formControlName="maturityDate" placeholder="" [ngModel]="securityMarketDetails.maturityDate" [isDisabled]="true"
+                                  [isRequired]="false"> </wj-input-mask>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-sm-3">
+                            <div class="form-group">
+                              <label for="search-input"> {{ 'Translation.Tenure To Maturity' | translate }} </label>
+                              <div class="input-group">
+                                <!--<input type="text" [(ngModel)]="symbolDetail.tickSize"  class="form-control" style="text-align: right" disabled="true">-->
+                                <wj-input-number formControlName="tenure" [ngModel]="securityMarketDetails.tenure" [isDisabled]="true" [format]="'n0'" placeholder=""
+                                  [isRequired]="false"> </wj-input-number>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-sm-3">
+                            <div class="form-group">
+                              <label for="search-input"> PAR {{ 'Translation.Value' | translate }} </label>
+                              <div class="input-group">
+                                <!--<input type="text" [(ngModel)]="symbolDetail.tickSize"  class="form-control" style="text-align: right" disabled="true">-->
+                                <wj-input-number formControlName="parValue" [ngModel]="securityMarketDetails.securityFaceValue" [isDisabled]="true" [format]="'n4'"
+                                  placeholder="" [isRequired]="false"> </wj-input-number>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </accordion-group>
+                  </accordion>
+                </div>
+          </div>
+          <div class="modal-footer" style="margin-left: -25px; margin-right: -25px; margin-top: 20px;">
+
+
+            <button type="submit"   *ngIf="authService.isAuhtorized(authService.OM_BOND_ORDER_CANCEL)" [class.stock_box_sell-btn]="order.side === 'sell'" [class.stock_box_buy-btn]="order.side === 'buy'" [class.stock_box_sell-btn-close]="order.side === '' || order.side === null"
+            class="mx-3 btn stock_box_sell-btn-close" >{{ 'Translation.Submit' | translate }} <i class="fa fa-check" aria-hidden="true"></i></button>
+            <button type="button" class="btn stock_box_sell-btn-close" (click)="onClose()">{{ 'Translation.Close' | translate }} <i class="fa fa-times" aria-hidden="true"></i></button>
+
+        </div>
+          </form>
+      <!-- </div>
+    </div>
+  </div> -->
+  <wj-popup [class.order_dialog]="modalId === 'cancelBond_dialogBox'" class="modal-dialog grey_Dialog" #orderSubmittedDlg>
+    <div class="modal-content">
+      <div class="modal-body">
+        <h2 class="page-title"> {{ 'Translation.Confirmation Dialog' | translate }}</h2>
+        <p>{{statusMsg}}</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn wj-hide" style="outline:black;" (click)="submitOrder()">{{ 'Common.Yes' | translate }}</button>
+        <button type="button" class="btn wj-hide" style="outline:black;" (click)="onAlertCancel()">{{ 'Common.No' | translate }}</button>
+      </div>
+    </div>
+    <!--<legend class="h4"> Alert </legend>
+      <b> {{orderConfirmMsg}} </b>
+      <div align="center"> <button id="alertSBtn" class="btn wj-hide" (click)="onAlertOk()">Ok</button> </div>         -->
+  </wj-popup>
+
+
+    <dialog-cmp #dialogCmp > </dialog-cmp>

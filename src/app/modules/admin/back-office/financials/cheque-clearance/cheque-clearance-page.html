@@ -1,0 +1,75 @@
+
+
+		<section class="widget" widget="">
+			<header>
+				<h3><span class="fw-semi-bold">{{ 'Translation.Cheque Clearance of Voucher' | translate }}</span></h3>
+				<div class="other_btns">
+
+					<button data-toggle="collapse" data-target="#filter_box" class="filter_btn"><i class="fa fa-filter mr-2" aria-hidden="true"></i> </button>
+					<div class="dropdown action_box">
+						<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true"
+						 aria-expanded="true"> {{ 'Common.Action' | translate }} <span class="caret"></span> </button>
+						<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+							<li *ngIf="userService.isAuhtorized(userService.EB_FINANCIALS_VOUCHER_CHEQUE_CLEARANCE)"><a href="javascript:void(0);" (click)="onPostAction('CLEARED')">{{ 'Translation.Cheque Cleared' | translate }}</a></li>
+						</ul>
+					</div>
+				</div>
+			</header>
+
+
+			<div id="filter_box" class="collapse in">
+				<div class="row mt-2">
+					<div class="col-sm-10 fields_box">
+						<label for="search-input"> <span class="fw-semi-bold">{{ 'Translation.Voucher Type' | translate }} : </span>	{{ 'Translation.Bank Receipt Voucher' | translate }}</label>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-3 fields_box">
+						<label for="search-input">{{ 'Translation.From Date' | translate }} <span class="validation">*</span></label>
+						<wj-input-date tabindex="1" #fromDate class="wijmo_style" [format]="'yyyy-MM-dd'" required [showYearPicker]="false">
+						</wj-input-date>
+					</div>
+					<div class="col-sm-3 fields_box">
+						<label for="search-input">{{ 'Translation.To Date' | translate }} <span class="validation">*</span></label>
+						<wj-input-date tabindex="2" #toDate class="wijmo_style" [format]="'yyyy-MM-dd'" required [showYearPicker]="false">
+						</wj-input-date>
+					</div>
+					<div class="col-sm-2">
+						<div class="form_search part-btn">
+							<button *ngIf="userService.isAuhtorized(userService.EB_FINANCIALS_VOUCHER_CHEQUE_CLEARANCE)" class="add_new_btn" (click)="onSearchTransaction(fromDate.value,toDate.value)"
+							 title="{{ 'Translation.Search' | translate }}" data-toggle="collapse in" data-target="#filter_box"><span class="fa fa-search"></span> </button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="table_container">
+				<wj-flex-grid class="grid" [isReadOnly]="true" [itemsSource]="itemsList" [selectionMode]="'Row'" [autoSizeMode]="'Headers'"
+				 [headersVisibility]="'Column'" style="height: 350px;" #flex>
+					<wj-flex-grid-filter [filterColumns]="['vouNo', 'voucherType.typeDesc','vouDate','vouNaration']"></wj-flex-grid-filter>
+					<wj-flex-grid-column [header]="'Translation.Voucher No' | translate" [align]="'left'" [binding]="'vouNo'" [minWidth]="30" [width]="'0.6*'"></wj-flex-grid-column>
+					<wj-flex-grid-column [header]="'Translation.Voucher Type' | translate" [align]="'left'" [binding]="'voucherType.typeDesc'" [minWidth]="30" [width]="'0.6*'"></wj-flex-grid-column>
+					<wj-flex-grid-column [header]="'Translation.Voucher Date' | translate" [align]="'left'" [binding]="'vouDate'" [minWidth]="30" [width]="'0.4*'"></wj-flex-grid-column>
+					<wj-flex-grid-column [header]="'Translation.Voucher Narration' | translate" [align]="'left'" [binding]="'vouNaration'" [minWidth]="30" [width]="'*'"></wj-flex-grid-column>
+				</wj-flex-grid>
+
+			</div>
+			<div class="row"></div>
+			<div class="btn-group col-xs-12 align-right">
+				<!-- Paginator -->
+				<wj-collection-view-pager [cv]="flex?.collectionView"></wj-collection-view-pager>
+				<!-- page size -->
+				<wj-menu [(value)]="pageSize" [header]= "'Common.Page Size' | translate">
+					<wj-menu-item [value]="0">{{ 'Common.No Paging' | translate }}</wj-menu-item>
+					<wj-menu-item [value]="5">5 {{ 'Common.items' | translate }}</wj-menu-item>
+					<wj-menu-item [value]="10">10 {{ 'Common.items' | translate }}</wj-menu-item>
+					<wj-menu-item [value]="20">20 {{ 'Common.items' | translate }}</wj-menu-item>
+					<wj-menu-item [value]="30">30 {{ 'Common.items' | translate }}</wj-menu-item>
+					<wj-menu-item [value]="50">50 {{ 'Common.items' | translate }}</wj-menu-item>
+					<wj-menu-item [value]="100">100 {{ 'Common.items' | translate }}</wj-menu-item>
+				</wj-menu>
+			</div>
+		</section>
+
+
+<dialog-cmp #dialogCmp (btnClick)="getNotification($event)"> </dialog-cmp>

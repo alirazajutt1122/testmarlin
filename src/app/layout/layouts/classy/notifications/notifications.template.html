@@ -1,0 +1,65 @@
+<section class="card notifications">
+    <header class="card-header" style="border-bottom: 1px solid rgb(0, 0, 0);">
+      <div class="text-xs-center mb-sm" *ngIf="type === 0">
+        <strong>{{ 'Translation.You have' | translate }} {{messages.length}} {{ 'Translation.messages' | translate }}</strong>
+      </div>
+      <div class="text-xs-center mb-sm" *ngIf="type === 1">
+        <strong>{{ 'Translation.You have' | translate }} {{alerts.length}} {{ 'Translation.alerts' | translate }}</strong>
+      </div>
+      <div class="text-xs-center mb-sm" *ngIf="type === 2">
+        <strong>{{ 'Translation.You have' | translate }} {{announcements.length}} {{ 'Translation.announcements' | translate }}</strong>
+      </div>
+    </header>
+
+    <!-- notification list with .thin-scroll which styles scrollbar for webkit -->
+    <div class="list-group thin-scroll" *ngIf="type === 0" style="background: #121B2C;">
+      <div class="list-group-item" *ngFor="let message of messages">
+        <span class="thumb-sm pull-xs-left mr clearfix">
+          <img class="img-circle" style="width: 75%;" src="assets/img/alert2.gif" alt="...">
+        </span>
+        <p class="no-margin overflow-hidden" 
+        [class.messages-red-confirm]="message.type === 'submitted_Sell' || message.type === 'trade_Sell' || message.type === 'changed_Sell' || message.type === 'cancelled_Sell'  || message.type === 'cancelled_Buy'" [class.messages-yellow-rejected]="message.type === 'rejected_Buy' || message.type === 'rejected_Sell'"  
+        [class.messages-green-confirm]="message.type === 'trade' || message.type === 'submitted_Buy' || message.type === 'changed_Buy'  "  style="font-size: 12px; text-align: left;">
+          {{message.content}}
+          <time class="help-block no-margin" [class.messages-red-confirm]="message.type === 'submitted_Sell' || message.type === 'trade_Sell' || message.type === 'changed_Sell' || message.type === 'cancelled_Sell'  || message.type === 'cancelled_Buy'" [class.messages-yellow-rejected]="message.type === 'rejected_Buy' || message.type === 'rejected_Sell'"  
+          [class.messages-green-confirm]="message.type === 'trade' || message.type === 'submitted_Buy' || message.type === 'changed_Buy'  ">{{message.timestamp | date:'hh:mm:ss a'}}</time>
+        </p>
+      </div>
+    </div>
+    <div class="list-group thin-scroll" *ngIf="type === 1" style="background: #121B2C;">
+      <div class="list-group-item" *ngFor="let alert of alerts">
+        <span class="thumb-sm pull-xs-left mr clearfix">
+          <img class="img-circle" style="width : 75%" src="assets/img/alert2.gif" alt="...">
+        </span>
+        <p class="no-margin overflow-hidden" style="font-size: 12px; text-align: left;">
+          {{alert.content}}
+          <time class="help-block no-margin">{{alert.timestamp | date:'hh:mm:ss a'}}</time>
+        </p>
+      </div>
+    </div>
+    <div class="list-group thin-scroll" *ngIf="type === 2" style="background: #121B2C;">
+      <div class="list-group-item" *ngFor="let announcement of announcements">
+        <span class="thumb-sm pull-xs-left mr clearfix">
+          <img class="img-circle" style="width : 75%" src="assets/img/alert2.gif" alt="...">
+        </span>
+        <p class="no-margin overflow-hidden" style="font-size: 12px; text-align: left;">
+          {{announcement.content}}
+          <time class="help-block no-margin">{{announcement.timestamp | date:'hh:mm:ss a'}}</time>
+        </p>
+      </div>
+    </div>
+
+    <!--<footer class="card-footer text-sm">-->
+      <!-- ajax-load button. loads assets/demo/notifications/notifications.php to #notifications-list
+           when clicked -->
+      <!--<button class="btn btn-xs btn-link pull-xs-right btn-notifications-reload"
+              id="load-notifications-btn"
+              notification-load
+              data-ajax-load="assets/demo/notifications/notifications.php"
+              data-ajax-target="#notifications-list"
+              data-loading-text="<i class='fa fa-refresh fa-spin mr-xs'></i> Loading...">
+        <i class="fa fa-refresh"></i>
+      </button>-->
+      <!--<span class="fs-mini">Synced at: 21 Apr 2014 18:36</span>
+    </footer>-->
+  </section>

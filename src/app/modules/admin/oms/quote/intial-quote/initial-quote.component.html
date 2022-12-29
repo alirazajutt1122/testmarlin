@@ -1,0 +1,131 @@
+<div class="modal fade" tabindex="-1" role="dialog" id="{{modalId}}">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title"><span class="font-weight-bold">{{'Translation.Initiate Quote' | translate}}</span></h4>
+         
+        </div>
+        <div class="modal-body mb-4 p-0">
+           <div class="px-4 mt-2">
+             <alert *ngIf="isConfirmationSuccess" [type]="'success alert-sm'" (close)="closeAlert()" dismissible="true" >
+               <div [innerHTML]="alertMessage.message"></div>
+             </alert>
+             <alert *ngIf="isConfirmationRejected" [type]="'danger alert-sm'" (close)="closeAlert()" dismissible="true" >
+                 <div [innerHTML]="alertMessage.message"></div>
+             </alert>
+           </div>
+          <div class="px-4 mt-4">
+            <div class="row border border-secondary p-6 mb-4" [ngStyle]="{ borderRadius : '10px' , border : '2px solid gray'}">
+                <div class="col-sm-3">
+                   <div><b>{{'Translation.Bid Qty' | translate}}</b></div><span class="text-success">{{symbolStats.bid_qty}}</span>
+                </div>
+                <div class="col-sm-3">
+                   <div><b>{{ 'Translation.Bid' | translate }}</b></div><span class="text-success">{{symbolStats.bid}}</span>
+                </div>
+                <div class="col-sm-3">
+                   <div><b>{{ 'Translation.Offer' | translate }}</b></div><span class="text-danger">{{symbolStats.offer}}</span>
+                </div>
+                <div class="col-sm-3">
+                   <div><b>{{ 'Translation.Offer Qty' | translate }}</b></div><span class="text-danger">{{symbolStats.offer_qty}}</span>
+                </div>
+           </div>
+          </div>
+
+            <form role="form" [formGroup]="myForm" class="form-horizontal form-label-left parsleyjs" method="post" data-parsley-priority-enabled="false"
+            novalidate (ngSubmit)="onSubmit(myForm.value, myForm.valid)"  >
+            <div class="row mb-4 px-4">
+                <div class="col-sm-4">
+                  <div class="form-group">
+  
+                    <label for="search-input">{{ 'Translation.Security' | translate }} <span class="validation">*</span></label>
+                    <div class="input-group">
+                      <wj-auto-complete id="cmbSymbol" formControlName="cmbSymbol" [isEditable]="true" #cmbSymbol [(ngModel)]="order.symbolMktExch"
+                        [itemsSource]="symbolExchMktList" (selectedIndexChanged)="onSymbolChange()" displayMemberPath="displayName_"
+                        selectedValuePath="value" [isRequired]="true">
+                      </wj-auto-complete>
+                    </div>
+                    <div class="text-danger" *ngIf="errorMsg">{{errorMsg}}</div>
+                  </div>
+                </div>
+                
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label for="search-input">{{ 'Translation.Custodian' | translate }}</label>
+                    <div class="input-group">
+                      <wj-combo-box id="custodian" formControlName="custodian" [(ngModel)]="order.custodian" [itemsSource]="custodians" [isEditable]="true"
+                        displayMemberPath="label" selectedValuePath="value" >
+                      </wj-combo-box>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label for="search-input">{{ 'Translation.Client' | translate }} <span class="validation">*</span></label>
+                    <div class="input-group">
+                      <!-- <wj-input-mask id="account" formControlName="account" [(ngModel)]="order.account" #account [isRequired]="true">
+                      </wj-input-mask> -->
+                      <wj-auto-complete #account id="account" class="wijmo_style" formControlName="account" [headerPath]="'clientCode'" [isRequired]="true"
+                        [itemsSource]="fromClientList" displayMemberPath="displayValue_" selectedValuePath="clientCode" [(ngModel)]="order.account" ></wj-auto-complete>
+                    </div>
+                    <div *ngIf="checkClientCode" [hidden]="!checkClientCode || !isSubmitted" class="text-danger">{{ 'Translation.Client' | translate }} {{ 'Translation.is required' | translate }}.</div>
+                  </div>
+                </div>
+    
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="search-input">{{'Translation.Good Till' | translate}}</label>
+                        <div class="input-group">
+                            <wj-input-date id="gtd" formControlName="gtd" class="wijmo_style" [(ngModel)]="order.gtd" [format]="dateFormat" [mask]="'0000-00-00'"
+                              [isRequired]="false"  [showYearPicker]="false">
+                            </wj-input-date>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex col-sm-12 w-100 p-4 border" [ngStyle]="{ borderRadius : '10px'}">
+                  <div class="row mb-2">
+                       <div class="col-sm-6">
+                        <label for="" class="text-success" >{{'Translation.Price' | translate}}</label>
+                        <wj-input-number id="buy_price" formControlName="buy_price" #inputBuyPrice [(ngModel)]="quote.buyorder.price_" [max]="999999.9999" [min]="0"
+                        [isDisabled]="isPriceDisable" (textChanged)="onBuyPriceChange()" [format]="'n4'" [isRequired]="true" class="col-sm-12">
+                        </wj-input-number>
+                      <!-- <div class="col-sm-12 py-2" *ngIf="sellBuyPriceLimitErrorMsg"><div class="text-danger ">{{sellBuyPriceLimitErrorMsg}}</div></div> -->
+                       </div>
+                       <div class="col-sm-6">
+                        <label for="" class="text-danger">{{'Translation.Price' | translate}}</label>
+                         <wj-input-number id="sell_price" formControlName="sell_price" #inputSellPrice [(ngModel)]="quote.sellorder.price_" [max]="999999.9999" [min]="0"
+                        [isDisabled]="isPriceDisable" (textChanged)="onSellPriceChange()" [format]="'n4'" [isRequired]="true" class="col-sm-12">
+                         </wj-input-number>
+                       </div>
+
+                  </div>
+                  <div class="row m-0">
+                       <div class="col-sm-12 py-2" [ngStyle]="{ color : '#DD5353'}" *ngIf="sellBuyPriceLimitErrorMsg"><span>{{'Translation.Buy price should be less than sell price' | translate}}</span></div>
+                  </div>
+                  <div class="row mb-2">
+                    <div class="col-sm-6">
+                      <label for="" class="mt-2 text-success">{{'Translation.Volume' | translate}}</label>
+                      <wj-input-number id="buy_volume" formControlName="buy_volume" #inputBuyVolume [(ngModel)]="quote.buyorder.volume" [max]="999999999" [min]="0"
+                      maxlength="10" (textChanged)="onBuyVolumeChange()" [format]="'n0'" [isRequired]="true" class="col-sm-12">
+                    </wj-input-number>
+                    </div>
+                    <div class="col-sm-6">
+                      <label for="" class="mt-2 text-danger">{{'Translation.Volume' | translate}}</label>
+                      <wj-input-number id="sell_volume" formControlName="sell_volume" #inputSellVolume [(ngModel)]="quote.sellorder.volume" [max]="999999999" [min]="0"
+                      maxlength="10" (textChanged)="onSellVolumeChange()" [format]="'n0'" [isRequired]="true" class="col-sm-12">
+                      </wj-input-number>
+                    </div>
+
+                  </div>
+                </div>
+                
+            </div>
+            <div class="modal-footer">
+                <button type="submit"   [class.stock_box_sell-btn]="order.side === 'sell'" [class.stock_box_buy-btn]="order.side === 'buy'" [class.stock_box_sell-btn-close]="order.side === '' || order.side === null"
+                class="mx-3 btn stock_box_sell-btn-close" >{{ 'Translation.Submit' | translate }} <i class="fa fa-check" aria-hidden="true"></i></button>
+                <button type="button" class="btn stock_box_sell-btn-close" (click)="onClose()">{{ 'Translation.Close' | translate }} <i class="fa fa-times" aria-hidden="true"></i></button>
+            </div>
+            </form>
+      </div>
+    </div>
+  </div>

@@ -1,0 +1,1108 @@
+<div class=" sm:py-12 sm:pr-12 sm:pl-8 bg-local text-on-primary-600">
+
+    <div class="flex justify-between w-full pb-2">
+        <span></span>
+        <div [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}" class="flex justify-center ml-6">
+
+            <span [ngClass]="{'text-primary-500 underline': selectedAssetClass === 'equities'}"
+                class="pl-2 lg:text-xl md:text-md font-semibold hover:underline hover:text-primary-500 cursor-pointer"
+                (click)="selectAssetClass('equities')">
+                {{'EQUITIES' | transloco}}
+            </span>
+            <span [ngClass]="{'text-primary-500 underline': selectedAssetClass === 'bond'}"
+                class="ml-2 pl-2 lg:text-xl md:text-md font-semibold hover:underline hover:text-primary-500 cursor-pointer"
+                (click)="selectAssetClass('bond')">
+                {{'BONDS' | transloco}}
+            </span>
+            <span [ngClass]="{'text-primary-500 underline': selectedAssetClass === 'ETF'}"
+                class="ml-2 pl-2 lg:text-xl md:text-md font-semibold hover:underline hover:text-primary-500 cursor-pointer"
+                (click)="selectAssetClass('ETF')">
+                ETFs
+            </span>
+
+            <!-- <span [ngClass]="{'text-primary-500 underline': selectedAssetClass === 'crypto'}"
+                
+                class="disable ml-2 pl-2 lg:text-xl md:text-md font-semibold hover:underline hover:text-primary-500 cursor-pointer"
+                (click)="selectedAssetClass = 'crypto'">
+                {{'CRYPTO' | transloco}}
+            </span>
+            <span (click)="selectedAssetClass = 'commodities'"
+                [ngClass]="{'text-primary-500 underline': selectedAssetClass === 'commodities'}"
+                class="disable ml-2 pl-2 lg:text-xl md:text-md font-semibold cursor-pointer hover:underline hover:text-primary-500">
+                {{'COMMODITIES' | transloco}}
+            </span>
+            <span (click)="selectedAssetClass = 'realestate'"
+                [ngClass]="{'text-primary-500 underline': selectedAssetClass === 'realestate'}"
+                class="disable ml-2 pl-2 lg:text-xl md:text-md font-semibold hover:underline hover:text-primary-500 cursor-pointer">
+                {{'REAL ESTATE' | transloco}}
+            </span> -->
+
+        </div>
+        <span class="mr-2 mt-2 fa fa-refresh hover:text-primary-500" style="cursor: pointer;" type="button"
+            (click)="selectAssetClass(selectedAssetClass)">
+        </span>
+
+    </div>
+
+    <div class="sm:col-span-2 lg:col-span-2 dark flex flex-col flex-auto overflow-hidden">
+        <div class="xl:col-span-2 flex flex-col flex-auto bg-card overflow-hidden">
+            <div class="overflow-x-auto overflow-y-hidden" style="min-height: 15.6rem;">
+                <ng-container *ngIf="selectedAssetClass === 'equities'">
+                    <table class="w-full bg-transparent" mat-table [dataSource]="equitiesTransactionsDataSource">
+                        <ng-container matColumnDef="Name">
+                            <th style="background-color: #193c5d; width: 12%"
+                                class="text-primary-500 xl:text-xl lg:text-md md:text-sm sm:text-sm" mat-header-cell
+                                *matHeaderCellDef>
+                                {{' Security' | transloco}}
+                            </th>
+                            <td [@animate]="{value:'*',params:{delay:'70ms',scale:'0.2'}}" mat-cell
+                                *matCellDef="let transaction">
+                                <div class="flex items-center pt-2 pb-2">
+                                    <img class="w-10" [src]=transaction.src>
+                                    <div class="flex flex-col hover:underline cursor-pointer"
+                                        (click)="onClickSymbol(transaction)">
+                                        <div
+                                            class="pl-2 text-lg font-semibold  xl:text-lg lg:text-md md:text-sm sm:text-sm">
+                                            {{transaction.securityDescription | truncate:[28]}}
+                                        </div>
+                                        <div class="pl-2 font-extralight text-sm"
+                                            [ngStyle]="{'color': marketCodeColor}">
+                                            ({{transaction.marketCode }})
+                                        </div>
+                                        <!-- <div class="text-primary-500 pl-2 font-medium text-md xl:text-xl lg:text-md md:text-sm sm:text-sm">{{transaction.securityCode}}
+                                        </div> -->
+                                    </div>
+                                </div>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="Favourites">
+                            <th style="background-color: #193c5d ; width: 1%"
+                                class="text-primary-500 xl:text-xl lg:text-md md:text-sm sm:text-sm" mat-header-cell
+                                *matHeaderCellDef>
+                            </th>
+                            <td [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}" mat-cell
+                                *matCellDef="let transaction">
+                                <div *ngIf="dashboard">
+                                    <button mat-icon-button color="primary">
+                                        <mat-icon color="primary"
+                                            class="text-hint icon-size-6 xl:icon-size-6 lg:icon-size-4 md:icon-size-3 sm:icon-size-3"
+                                            [svgIcon]="'mat_solid:star'">
+                                        </mat-icon>
+                                    </button>
+
+                                    <button mat-icon-button>
+                                        <mat-icon
+                                            class="text-hint icon-size-6 xl:icon-size-6 lg:icon-size-4 md:icon-size-3 sm:icon-size-3"
+                                            [svgIcon]="'mat_solid:notifications_active'">
+                                        </mat-icon>
+                                    </button>
+                                </div>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="Price">
+                            <th style="background-color: #193c5d; width: 5.5%"
+                                class="text-primary-500 xl:text-xl lg:text-md md:text-sm sm:text-sm" mat-header-cell
+                                *matHeaderCellDef>
+                                {{'Price' | transloco}}
+                            </th>
+                            <td [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}" mat-cell
+                                *matCellDef="let transaction">
+                                <span
+                                    class="pr-6 whitespace-nowrap text-lg xl:text-lg lg:text-md md:text-md sm:text-sm">
+                                    {{transaction.cprice | number : '1.2-2'}}
+                                </span>
+                            </td>
+                        </ng-container>
+                        <!-- ................................................................................................................... -->
+                        <ng-container matColumnDef="bidVolume">
+                            <th style="background-color: #193c5d; width: 7.5%"
+                                class="text-primary-500 xl:text-xl lg:text-md md:text-sm sm:text-sm" mat-header-cell
+                                *matHeaderCellDef>
+                                {{'Bid Vol' | transloco}}
+                            </th>
+                            <td [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}" mat-cell
+                                *matCellDef="let transaction">
+                                <span
+                                    class="text-green-500 pr-6 whitespace-nowrap text-lg xl:text-lg lg:text-md md:text-md sm:text-sm">
+                                    {{transaction.bidVolume}}
+                                </span>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="Bid">
+                            <th style="background-color: #193c5d; width: 5.5%"
+                                class="text-primary-500 xl:text-xl lg:text-md md:text-sm sm:text-sm" mat-header-cell
+                                *matHeaderCellDef>
+                                {{'Bid' | transloco}}
+                            </th>
+                            <td [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}" mat-cell
+                                *matCellDef="let transaction">
+                                <span
+                                    class="text-green-500 pr-6 whitespace-nowrap text-lg xl:text-lg lg:text-md md:text-md sm:text-sm">
+                                    {{transaction.bid| number : '1.2-2'}}
+                                </span>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="askVolume">
+                            <th style="background-color: #193c5d; width: 7.5%"
+                                class="text-primary-500 xl:text-xl lg:text-md md:text-sm sm:text-sm" mat-header-cell
+                                *matHeaderCellDef>
+                                {{'Ask Vol' | transloco}}
+                            </th>
+                            <td [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}" mat-cell
+                                *matCellDef="let transaction">
+                                <span
+                                    class="text-red-500 pr-6 whitespace-nowrap text-lg xl:text-lg lg:text-md md:text-md sm:text-sm">
+                                    {{transaction.askVolume}}
+                                </span>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="Ask">
+                            <th style="background-color: #193c5d; width: 5.5%"
+                                class="text-primary-500 xl:text-xl lg:text-md md:text-sm sm:text-sm" mat-header-cell
+                                *matHeaderCellDef>
+                                {{'Ask' | transloco}}
+                            </th>
+                            <td [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}" mat-cell
+                                *matCellDef="let transaction">
+                                <span
+                                    class="text-red-500 pr-6 whitespace-nowrap text-lg xl:text-lg lg:text-md md:text-md sm:text-sm">
+                                    {{transaction.ask| number : '1.2-2'}}
+                                </span>
+                            </td>
+                        </ng-container>
+
+
+                        <ng-container matColumnDef="Turnover">
+                            <th style="background-color: #193c5d; width: 7.5%"
+                                class="text-primary-500 xl:text-xl lg:text-md md:text-sm sm:text-sm" mat-header-cell
+                                *matHeaderCellDef>
+                                {{'Turnover' | transloco}}
+                            </th>
+                            <td [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}" mat-cell
+                                *matCellDef="let transaction">
+                                <span
+                                    class="pr-6 whitespace-nowrap text-lg xl:text-lg lg:text-md md:text-md sm:text-sm">
+                                    {{transaction.turnOver}}
+                                </span>
+                            </td>
+                        </ng-container>
+
+
+                        <ng-container matColumnDef="Change">
+                            <th style="background-color: #193c5d; width: 8.5%"
+                                class="text-primary-500 xl:text-xl lg:text-md md:text-sm sm:text-sm" mat-header-cell
+                                *matHeaderCellDef>
+                                {{'Change' | transloco}}
+                            </th>
+                            <td [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}" mat-cell
+                                *matCellDef="let transaction">
+
+                                <div class="flex items-end mt-2">
+                                    <span
+                                        class="font-mono font-medium text-lg xl:text-lg lg:text-md md:text-md sm:text-sm leading-none mb-px"
+                                        [ngClass]="{'text-green-500': transaction.dir === 'up', 'text-red-500': transaction.dir === 'down'}">
+                                        {{transaction.change}}
+                                    </span>
+                                    <div class="font-mono font-medium text-lg xl:text-lg lg:text-md md:text-md sm:text-sm leading-none mb-px"
+                                        [ngClass]="{'text-green-500': transaction.dir === 'up', 'text-red-500': transaction.dir === 'down'}">
+                                        ({{transaction.changePercentage}}%)
+                                    </div>
+                                    <mat-icon class="text-green-500 icon-size-3.5 mx-0.5 mb-px"
+                                        [ngClass]="{'text-green-500': transaction.dir === 'up', 'text-red-500': transaction.dir === 'down'}"
+                                        [svgIcon]="transaction.dir === 'up' ? 'heroicons_solid:arrow-narrow-up' : 'heroicons_solid:arrow-narrow-down'">
+                                    </mat-icon>
+
+                                </div>
+                            </td>
+                        </ng-container>
+
+                        <!-- Graph -->
+                        <ng-container matColumnDef="Graph">
+                            <th style="background-color: #193c5d; width: 10%"
+                                class="text-primary-500 xl:text-xl lg:text-md md:text-sm sm:text-sm" mat-header-cell
+                                *matHeaderCellDef>
+                                {{'Graph' | transloco}}
+                            </th>
+                            <td [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}" mat-cell
+                                *matCellDef="let transaction">
+                                <apx-chart class="inline-flex items-center w-20 h-8"
+                                    [chart]="watchlistChartOptions.chart"
+                                    [colors]="transaction.dir === 'up' ? ['#48BB78']: ['#F56565']"
+                                    [series]="transaction.series" [stroke]="watchlistChartOptions.stroke"
+                                    [tooltip]="watchlistChartOptions.tooltip" [xaxis]="watchlistChartOptions.xaxis">
+                                </apx-chart>
+                            </td>
+                        </ng-container>
+                        <!-- Actions -->
+                        <ng-container matColumnDef="Actions">
+                            <th style="background-color: #193c5d; width: 10%" mat-header-cell *matHeaderCellDef
+                                class="text-primary-500 xl:text-xl lg:text-md md:text-sm sm:text-sm">
+                            </th>
+                            <td mat-cell [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}"
+                                *matCellDef="let transaction">
+                                <!-- (click)="buyAndSellFromAuth()" -->
+                                <span (click)="buySellDialogue('B',transaction)"
+                                    class="cursor-pointer transformHover ml-4  items-center font-bold text-md px-2.5 py-0.5 tracking-wider  uppercase border-green-600 border-2 text-green-600"
+                                    style="border-radius:4px;">
+                                    <span class="leading-relaxed whitespace-nowrap">{{'Buy' | transloco}}</span>
+                                </span>
+
+                                <span (click)="buySellDialogue('S',transaction)"
+                                    class="cursor-pointer transformHover ml-4  items-center font-bold text-md px-2.5 py-0.5 tracking-wider  uppercase border-red-600 border-2 text-red-600"
+                                    style="border-radius:4px;">
+                                    <span class="leading-relaxed whitespace-nowrap">{{'Sell' | transloco}}</span>
+                                </span>
+                            </td>
+                        </ng-container>
+
+                        <!-- Footer -->
+                        <tr mat-header-row *matHeaderRowDef="recentTransactionsTableColumns"></tr>
+                        <tr class="order-row h-16" mat-row
+                            *matRowDef="let row; columns: recentTransactionsTableColumns;"></tr>
+                    </table>
+                </ng-container>
+
+                <ng-container *ngIf="selectedAssetClass === 'bond'">
+                    <table class="w-full bg-transparent" mat-table [dataSource]="bondsTransactionsDataSource">
+                        <ng-container matColumnDef="Name">
+                            <th style="background-color: #193c5d; width: 12%"
+                                class="text-primary-500 xl:text-xl lg:text-md md:text-sm sm:text-sm" mat-header-cell
+                                *matHeaderCellDef>
+                                {{' Security' | transloco}}
+                            </th>
+                            <td [@animate]="{value:'*',params:{delay:'70ms',scale:'0.2'}}" mat-cell
+                                *matCellDef="let transaction">
+                                <div class="flex items-center pt-2 pb-2">
+                                    <!-- <img class="w-10" [src]=transaction.src> -->
+                                    <div class="flex flex-col hover:underline cursor-pointer"
+                                        (click)="onClickSymbol(transaction)">
+                                        <div
+                                            class="pl-2 text-lg font-semibold  xl:text-lg lg:text-md md:text-sm sm:text-sm">
+                                            {{transaction.securityDescription | truncate:[28]}}
+                                        </div>
+                                        <div class="pl-2 font-extralight text-sm"
+                                            [ngStyle]="{'color': marketCodeColor}">
+                                            ({{transaction.marketCode }})
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="Favourites">
+                            <th style="background-color: #193c5d ; width: 1%"
+                                class="text-primary-500 xl:text-xl lg:text-md md:text-sm sm:text-sm " mat-header-cell
+                                *matHeaderCellDef>
+                            </th>
+                            <td [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}" mat-cell
+                                *matCellDef="let transaction">
+                                <div *ngIf="dashboard">
+                                    <button mat-icon-button color="primary">
+                                        <mat-icon color="primary"
+                                            class="text-hint icon-size-6 xl:icon-size-6 lg:icon-size-4 md:icon-size-3 sm:icon-size-3"
+                                            [svgIcon]="'mat_solid:star'">
+                                        </mat-icon>
+                                    </button>
+
+                                    <button mat-icon-button>
+                                        <mat-icon
+                                            class="text-hint icon-size-6 xl:icon-size-6 lg:icon-size-4 md:icon-size-3 sm:icon-size-3"
+                                            [svgIcon]="'mat_solid:notifications_active'">
+                                        </mat-icon>
+                                    </button>
+                                </div>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="Price">
+                            <th style="background-color: #193c5d; width: 5.5%"
+                                class="text-primary-500 xl:text-xl lg:text-md md:text-sm sm:text-sm" mat-header-cell
+                                *matHeaderCellDef>
+                                {{'Price' | transloco}}
+                            </th>
+                            <td [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}" mat-cell
+                                *matCellDef="let transaction">
+                                <span
+                                    class="pr-6 whitespace-nowrap text-lg xl:text-lg lg:text-md md:text-md sm:text-sm">
+                                    {{transaction.cprice | number : '1.2-2'}}
+                                </span>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="bidVolume">
+                            <th style="background-color: #193c5d; width: 7.5%"
+                                class="text-primary-500 xl:text-xl lg:text-md md:text-sm sm:text-sm" mat-header-cell
+                                *matHeaderCellDef>
+                                {{'Bid Vol' | transloco}}
+                            </th>
+                            <td [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}" mat-cell
+                                *matCellDef="let transaction">
+                                <span
+                                    class="text-green-500 pr-6 whitespace-nowrap text-lg xl:text-lg lg:text-md md:text-md sm:text-sm">
+                                    {{transaction.bidVolume}}
+                                </span>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="Bid">
+                            <th style="background-color: #193c5d; width: 5.5%"
+                                class="text-primary-500 xl:text-xl lg:text-md md:text-sm sm:text-sm" mat-header-cell
+                                *matHeaderCellDef>
+                                {{'Bid' | transloco}}
+                            </th>
+                            <td [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}" mat-cell
+                                *matCellDef="let transaction">
+                                <span
+                                    class="text-green-500 pr-6 whitespace-nowrap text-lg xl:text-lg lg:text-md md:text-md sm:text-sm">
+                                    {{transaction.bid| number : '1.2-2'}}
+                                </span>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="askVolume">
+                            <th style="background-color: #193c5d; width: 7.5%"
+                                class="text-primary-500 xl:text-xl lg:text-md md:text-sm sm:text-sm" mat-header-cell
+                                *matHeaderCellDef>
+                                {{'Ask Vol' | transloco}}
+                            </th>
+                            <td [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}" mat-cell
+                                *matCellDef="let transaction">
+                                <span
+                                    class="text-red-500 pr-6 whitespace-nowrap text-lg xl:text-lg lg:text-md md:text-md sm:text-sm">
+                                    {{transaction.askVolume}}
+                                </span>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="Ask">
+                            <th style="background-color: #193c5d; width: 5.5%"
+                                class="text-primary-500 xl:text-xl lg:text-md md:text-sm sm:text-sm" mat-header-cell
+                                *matHeaderCellDef>
+                                {{'Ask' | transloco}}
+                            </th>
+                            <td [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}" mat-cell
+                                *matCellDef="let transaction">
+                                <span
+                                    class="text-red-500 pr-6 whitespace-nowrap text-lg xl:text-lg lg:text-md md:text-md sm:text-sm">
+                                    {{transaction.ask| number : '1.2-2'}}
+                                </span>
+                            </td>
+                        </ng-container>
+
+
+                        <ng-container matColumnDef="Turnover">
+                            <th style="background-color: #193c5d; width: 7.5%"
+                                class="text-primary-500 xl:text-xl lg:text-md md:text-sm sm:text-sm" mat-header-cell
+                                *matHeaderCellDef>
+                                {{'Turnover' | transloco}}
+                            </th>
+                            <td [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}" mat-cell
+                                *matCellDef="let transaction">
+                                <span
+                                    class="pr-6 whitespace-nowrap text-lg xl:text-lg lg:text-md md:text-md sm:text-sm">
+                                    {{transaction.turnOver}}
+                                </span>
+                            </td>
+                        </ng-container>
+
+
+                        <ng-container matColumnDef="Change">
+                            <th style="background-color: #193c5d; width: 7.5%"
+                                class="text-primary-500 xl:text-xl lg:text-md md:text-sm sm:text-sm" mat-header-cell
+                                *matHeaderCellDef>
+                                {{'Change' | transloco}}
+                            </th>
+                            <td [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}" mat-cell
+                                *matCellDef="let transaction">
+                                <span
+                                    class="font-mono font-medium text-lg xl:text-lg lg:text-md md:text-md sm:text-sm leading-none mb-px"
+                                    [ngClass]="{'text-green-500': transaction.dir === 'up', 'text-red-500': transaction.dir === 'down'}">
+                                    {{transaction.change}}
+                                </span>
+                            </td>
+                        </ng-container>
+
+
+                        <ng-container matColumnDef="ChangePerc">
+                            <th style="background-color: #193c5d; width: 7.5%"
+                                class="text-primary-500 xl:text-xl lg:text-md md:text-sm sm:text-sm" mat-header-cell
+                                *matHeaderCellDef>
+                                {{'Change' | transloco}}%
+                            </th>
+                            <td [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}" mat-cell
+                                *matCellDef="let transaction">
+                                <div class="flex items-end mt-2">
+                                    <mat-icon class="text-green-500 icon-size-3.5 mx-0.5 mb-px"
+                                        [ngClass]="{'text-green-500': transaction.dir === 'up', 'text-red-500': transaction.dir === 'down'}"
+                                        [svgIcon]="transaction.dir === 'up' ? 'heroicons_solid:arrow-narrow-up' : 'heroicons_solid:arrow-narrow-down'">
+                                    </mat-icon>
+                                    <div class="font-mono font-medium text-lg xl:text-lg lg:text-md md:text-md sm:text-sm leading-none mb-px"
+                                        [ngClass]="{'text-green-500': transaction.dir === 'up', 'text-red-500': transaction.dir === 'down'}">
+                                        {{transaction.changePercentage}}%
+                                    </div>
+                                </div>
+                            </td>
+                        </ng-container>
+
+                        <!-- Graph -->
+                        <ng-container matColumnDef="Graph">
+                            <th style="background-color: #193c5d; width: 10%"
+                                class="text-primary-500 xl:text-xl lg:text-md md:text-sm sm:text-sm" mat-header-cell
+                                *matHeaderCellDef>
+                                {{'Graph' | transloco}}
+                            </th>
+                            <td [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}" mat-cell
+                                *matCellDef="let transaction">
+                                <apx-chart class="inline-flex items-center w-20 h-8"
+                                    [chart]="watchlistChartOptions.chart"
+                                    [colors]="transaction.dir === 'up' ? ['#48BB78']: ['#F56565']"
+                                    [series]="transaction.series" [stroke]="watchlistChartOptions.stroke"
+                                    [tooltip]="watchlistChartOptions.tooltip" [xaxis]="watchlistChartOptions.xaxis">
+                                </apx-chart>
+                            </td>
+                        </ng-container>
+                        <!-- Actions -->
+                        <ng-container matColumnDef="Actions">
+                            <th style="background-color: #193c5d; width: 10%" mat-header-cell *matHeaderCellDef
+                                class="text-primary-500 xl:text-xl lg:text-md md:text-sm sm:text-sm">
+                            </th>
+                            <td mat-cell [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}"
+                                *matCellDef="let transaction">
+                                <!-- (click)="buyAndSellFromAuth()" -->
+                                <span (click)="buySellDialogue('B',transaction)"
+                                    class="cursor-pointer transformHover ml-4  items-center font-bold text-md px-2.5 py-0.5 tracking-wider  uppercase border-green-600 border-2 text-green-600"
+                                    style="border-radius:4px;">
+                                    <span class="leading-relaxed whitespace-nowrap">{{'Buy' | transloco}}</span>
+                                </span>
+
+                                <span (click)="buySellDialogue('S',transaction)"
+                                    class="cursor-pointer transformHover ml-4  items-center font-bold text-md px-2.5 py-0.5 tracking-wider  uppercase border-red-600 border-2 text-red-600"
+                                    style="border-radius:4px;">
+                                    <span class="leading-relaxed whitespace-nowrap">{{'Sell' | transloco}}</span>
+                                </span>
+                            </td>
+                        </ng-container>
+
+                        <!-- Footer -->
+                        <tr mat-header-row *matHeaderRowDef="recentTransactionsTableColumns"></tr>
+                        <tr class="order-row h-16" mat-row
+                            *matRowDef="let row; columns: recentTransactionsTableColumns;"></tr>
+                    </table>
+                </ng-container>
+
+                <ng-container *ngIf="selectedAssetClass === 'ETF'">
+                    <table class="w-full bg-transparent" mat-table [dataSource]="etfTransactionsDataSource">
+                        <ng-container matColumnDef="Name">
+                            <th style="background-color: #193c5d; width: 12%"
+                                class="text-primary-500 xl:text-xl lg:text-md md:text-sm sm:text-sm" mat-header-cell
+                                *matHeaderCellDef>
+                                {{' Security' | transloco}}
+                            </th>
+                            <td [@animate]="{value:'*',params:{delay:'70ms',scale:'0.2'}}" mat-cell
+                                *matCellDef="let transaction">
+                                <div class="flex items-center pt-2 pb-2">
+                                    <img class="w-10" [src]=transaction.src>
+                                    <div class="flex flex-col hover:underline cursor-pointer"
+                                        (click)="onClickSymbol(transaction)">
+                                        <div
+                                            class="pl-2 text-lg font-semibold  xl:text-lg lg:text-md md:text-sm sm:text-sm">
+                                            {{transaction.securityDescription }}
+                                        </div>
+                                        <div class="pl-2 font-extralight text-sm"
+                                            [ngStyle]="{'color': marketCodeColor}">
+                                            ({{transaction.marketCode }})
+                                        </div>
+                                        <!-- <div class="text-primary-500 pl-2 font-medium text-md xl:text-xl lg:text-md md:text-sm sm:text-sm">{{transaction.securityCode}}
+                                        </div> -->
+                                    </div>
+                                </div>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="Favourites">
+                            <th style="background-color: #193c5d ; width: 1%"
+                                class="text-primary-500 xl:text-xl lg:text-md md:text-sm sm:text-sm " mat-header-cell
+                                *matHeaderCellDef>
+                            </th>
+                            <td [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}" mat-cell
+                                *matCellDef="let element">
+                                <div *ngIf="dashboard">
+
+                                    <button *ngIf="!element?.favourite" mat-icon-button title="Add to Watch List"
+                                        ngDefaultControl color="primary" (click)="addToWatchList(element)">
+                                        <mat-icon color="primary"
+                                            class="text-hint icon-size-6 xl:icon-size-6 lg:icon-size-4 md:icon-size-3 sm:icon-size-3"
+                                            [svgIcon]="'heroicons_outline:star'">
+                                        </mat-icon>
+                                    </button>
+
+
+                                    <button *ngIf="element?.favourite" mat-icon-button title="Remove form Watch List"
+                                        ngDefaultControl color="primary" (click)="removeFromWatchList(element)">
+                                        <mat-icon color="primary"
+                                            class="text-hint icon-size-6 xl:icon-size-6 lg:icon-size-4 md:icon-size-3 sm:icon-size-3"
+                                            [svgIcon]="'mat_solid:star'">
+                                        </mat-icon>
+                                    </button>
+
+                                </div>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="Price">
+                            <th style="background-color: #193c5d; width: 5.5%"
+                                class="text-primary-500 xl:text-xl lg:text-md md:text-sm sm:text-sm" mat-header-cell
+                                *matHeaderCellDef>
+                                {{' Price' | transloco}}
+                            </th>
+                            <td [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}" mat-cell
+                                *matCellDef="let transaction">
+                                <span
+                                    class="pr-6 whitespace-nowrap text-lg xl:text-lg lg:text-md md:text-md sm:text-sm">
+                                    {{transaction.cprice | number : '1.2-2'}}
+                                </span>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="bidVolume">
+                            <th style="background-color: #193c5d; width: 7.5%"
+                                class="text-primary-500 xl:text-xl lg:text-md md:text-sm sm:text-sm" mat-header-cell
+                                *matHeaderCellDef>
+                                {{'Bid Vol' | transloco}}
+                            </th>
+                            <td [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}" mat-cell
+                                *matCellDef="let transaction">
+                                <span
+                                    class="text-green-500 pr-6 whitespace-nowrap text-lg xl:text-lg lg:text-md md:text-md sm:text-sm">
+                                    {{transaction.bidVolume}}
+                                </span>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="Bid">
+                            <th style="background-color: #193c5d; width: 5.5%"
+                                class="text-primary-500 xl:text-xl lg:text-md md:text-sm sm:text-sm" mat-header-cell
+                                *matHeaderCellDef>
+                                {{'Bid' | transloco}}
+                            </th>
+                            <td [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}" mat-cell
+                                *matCellDef="let transaction">
+                                <span
+                                    class="text-green-500 pr-6 whitespace-nowrap text-lg xl:text-lg lg:text-md md:text-md sm:text-sm">
+                                    {{transaction.bid| number : '1.2-2'}}
+                                </span>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="askVolume">
+                            <th style="background-color: #193c5d; width: 7.5%"
+                                class="text-primary-500 xl:text-xl lg:text-md md:text-sm sm:text-sm" mat-header-cell
+                                *matHeaderCellDef>
+                                {{'Ask Vol' | transloco}}
+                            </th>
+                            <td [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}" mat-cell
+                                *matCellDef="let transaction">
+                                <span
+                                    class="text-red-500 pr-6 whitespace-nowrap text-lg xl:text-lg lg:text-md md:text-md sm:text-sm">
+                                    {{transaction.askVolume}}
+                                </span>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="Ask">
+                            <th style="background-color: #193c5d; width: 5.5%"
+                                class="text-primary-500 xl:text-xl lg:text-md md:text-sm sm:text-sm" mat-header-cell
+                                *matHeaderCellDef>
+                                {{'Ask' | transloco}}
+                            </th>
+                            <td [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}" mat-cell
+                                *matCellDef="let transaction">
+                                <span
+                                    class="text-red-500 pr-6 whitespace-nowrap text-lg xl:text-lg lg:text-md md:text-md sm:text-sm">
+                                    {{transaction.ask| number : '1.2-2'}}
+                                </span>
+                            </td>
+                        </ng-container>
+
+
+                        <ng-container matColumnDef="Turnover">
+                            <th style="background-color: #193c5d; width: 7.5%"
+                                class="text-primary-500 xl:text-xl lg:text-md md:text-sm sm:text-sm" mat-header-cell
+                                *matHeaderCellDef>
+                                {{' Turnover' | transloco}}
+                            </th>
+                            <td [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}" mat-cell
+                                *matCellDef="let transaction">
+                                <span
+                                    class="pr-6 whitespace-nowrap text-lg xl:text-lg lg:text-md md:text-md sm:text-sm">
+                                    {{transaction.turnOver}}
+                                </span>
+                            </td>
+                        </ng-container>
+
+
+                        <ng-container matColumnDef="Change">
+                            <th style="background-color: #193c5d; width: 7.5%"
+                                class="text-primary-500 xl:text-xl lg:text-md md:text-sm sm:text-sm" mat-header-cell
+                                *matHeaderCellDef>
+                                {{' Change' | transloco}}
+                            </th>
+                            <td [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}" mat-cell
+                                *matCellDef="let transaction">
+                                <span
+                                    class="font-mono font-medium text-lg xl:text-lg lg:text-md md:text-md sm:text-sm leading-none mb-px"
+                                    [ngClass]="{'text-green-500': transaction.dir === 'up', 'text-red-500': transaction.dir === 'down'}">
+                                    {{transaction.change}}
+                                </span>
+                            </td>
+                        </ng-container>
+
+
+                        <ng-container matColumnDef="ChangePerc">
+                            <th style="background-color: #193c5d; width: 7.5%"
+                                class="text-primary-500 xl:text-xl lg:text-md md:text-sm sm:text-sm" mat-header-cell
+                                *matHeaderCellDef>
+                                {{' Change' | transloco}}%
+                            </th>
+                            <td [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}" mat-cell
+                                *matCellDef="let transaction">
+                                <div class="flex items-end mt-2">
+                                    <mat-icon class="text-green-500 icon-size-3.5 mx-0.5 mb-px"
+                                        [ngClass]="{'text-green-500': transaction.dir === 'up', 'text-red-500': transaction.dir === 'down'}"
+                                        [svgIcon]="transaction.dir === 'up' ? 'heroicons_solid:arrow-narrow-up' : 'heroicons_solid:arrow-narrow-down'">
+                                    </mat-icon>
+                                    <div class="font-mono font-medium text-lg xl:text-lg lg:text-md md:text-md sm:text-sm leading-none mb-px"
+                                        [ngClass]="{'text-green-500': transaction.dir === 'up', 'text-red-500': transaction.dir === 'down'}">
+                                        {{transaction.changePercentage}}%
+                                    </div>
+                                </div>
+                            </td>
+                        </ng-container>
+
+                        <!-- Graph -->
+                        <ng-container matColumnDef="Graph">
+                            <th style="background-color: #193c5d; width: 10%"
+                                class="text-primary-500 xl:text-xl lg:text-md md:text-sm sm:text-sm" mat-header-cell
+                                *matHeaderCellDef>
+                                {{' Graph' | transloco}}
+                            </th>
+                            <td [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}" mat-cell
+                                *matCellDef="let transaction">
+                                <apx-chart class="inline-flex items-center w-20 h-8"
+                                    [chart]="watchlistChartOptions.chart"
+                                    [colors]="transaction.dir === 'up' ? ['#48BB78']: ['#F56565']"
+                                    [series]="transaction.series" [stroke]="watchlistChartOptions.stroke"
+                                    [tooltip]="watchlistChartOptions.tooltip" [xaxis]="watchlistChartOptions.xaxis">
+                                </apx-chart>
+                            </td>
+                        </ng-container>
+                        <!-- Actions -->
+                        <ng-container matColumnDef="Actions">
+                            <th style="background-color: #193c5d; width: 10%" mat-header-cell *matHeaderCellDef
+                                class="text-primary-500 xl:text-xl lg:text-md md:text-sm sm:text-sm">
+                            </th>
+                            <td mat-cell [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}"
+                                *matCellDef="let transaction">
+                                <span (click)="newOrderAll.show(transaction , 'B' , 'equities'); "
+                                    class="cursor-pointer transformHover ml-4  items-center font-bold text-md px-2.5 py-0.5 tracking-wider  uppercase border-green-600 border-2 text-green-600"
+                                    style="border-radius:4px;">
+                                    <span class="leading-relaxed whitespace-nowrap">{{'Buy' | transloco}}</span>
+                                </span>
+
+                                <span (click)="newOrderAll.show(transaction , 'S' , 'equities')"
+                                    class="cursor-pointer transformHover ml-4  items-center font-bold text-md px-2.5 py-0.5 tracking-wider  uppercase border-red-600 border-2 text-red-600"
+                                    style="border-radius:4px;">
+                                    <span class="leading-relaxed whitespace-nowrap">{{'Sell' | transloco}}</span>
+                                </span>
+
+
+
+
+
+                            </td>
+                        </ng-container>
+
+                        <!-- Footer -->
+                        <tr mat-header-row *matHeaderRowDef="recentTransactionsTableColumns"></tr>
+                        <tr class="order-row h-16" mat-row
+                            *matRowDef="let row; columns: recentTransactionsTableColumns;"></tr>
+                    </table>
+                </ng-container>
+
+                <!-- <ng-container *ngIf="selectedAssetClass === 'crypto'">
+                    <table class="w-full bg-transparent" mat-table [dataSource]="cryptoTransactionsDataSource">
+
+                        <ng-container matColumnDef="Name">
+                            <th style="background-color: #193c5d; width: 12%"
+                                class="text-primary-500 xl:text-xl lg:text-md md:text-sm sm:text-sm" mat-header-cell
+                                *matHeaderCellDef>
+                                {{' Security' | transloco}}
+                            </th>
+                            <td [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}" mat-cell
+                                *matCellDef="let transaction">
+                                <div class="flex items-center pt-2 pb-2">
+                                    <img class="w-10" [src]=transaction.src>
+                                    <div class="flex flex-col hover:underline cursor-pointer"
+                                        (click)="onClickSymbol(transaction)">
+                                        <div
+                                            class="pl-2 text-lg font-semibold xl:text-lg lg:text-md md:text-sm sm:text-sm">
+                                            {{transaction.securityDescription | truncate:[28]}}
+                                        </div>
+                                        <div
+                                            class="text-primary-500 pl-2 font-medium xl:text-lg lg:text-md md:text-sm sm:text-sm">
+                                            {{transaction.securityCode}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="Favourites">
+                            <th style="background-color: #193c5d"
+                                class="text-primary-500 xl:text-xl lg:text-md md:text-sm sm:text-sm w-1/12 lg:w-2/12 md:w-1/12 sm:w-1/12"
+                                mat-header-cell *matHeaderCellDef>
+                            </th>
+                            <td [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}" mat-cell
+                                *matCellDef="let transaction">
+                                <div *ngIf="dashboard">
+                                    <button mat-icon-button color="primary">
+                                        <mat-icon color="primary" class="text-hint" [svgIcon]="'mat_solid:star'">
+                                        </mat-icon>
+                                    </button>
+
+                                    <button mat-icon-button>
+                                        <mat-icon class="text-hint" [svgIcon]="'mat_solid:notifications_active'">
+                                        </mat-icon>
+                                    </button>
+                                </div>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="Price">
+                            <th style="background-color: #193c5d; width: 7.5%"
+                                class="text-primary-500 xl:text-xl lg:text-md md:text-sm sm:text-sm" mat-header-cell
+                                *matHeaderCellDef>
+                                {{'Price' | transloco}}
+                            </th>
+                            <td [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}" mat-cell
+                                *matCellDef="let transaction">
+                                <span
+                                    class="pr-6 whitespace-nowrap text-lg xl:text-lg lg:text-md md:text-md sm:text-sm">
+                                    {{transaction.cprice | number : '1.2-2'}}
+                                </span>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="Turnover">
+                            <th style="background-color: #193c5d; width: 7.5%"
+                                class="text-primary-500 xl:text-xl lg:text-md md:text-sm sm:text-sm" mat-header-cell
+                                *matHeaderCellDef>
+                                {{'Turnover' | transloco}}
+                            </th>
+                            <td [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}" mat-cell
+                                *matCellDef="let transaction">
+                                <span
+                                    class="pr-6 whitespace-nowrap text-lg xl:text-lg lg:text-md md:text-md sm:text-sm">
+                                    {{transaction.turnOver}}
+                                </span>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="Bid">
+                            <th style="background-color: #193c5d; width: 7.5%"
+                                class="text-primary-500 xl:text-xl lg:text-md md:text-sm sm:text-sm" mat-header-cell
+                                *matHeaderCellDef>
+                                {{'Bid' | transloco}}
+                            </th>
+                            <td [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}" mat-cell
+                                *matCellDef="let transaction">
+                                <span
+                                    class="pr-6 whitespace-nowrap text-lg xl:text-lg lg:text-md md:text-md sm:text-sm">
+                                    {{transaction.bidPrice}}
+                                </span>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="Ask">
+                            <th style="background-color: #193c5d; width: 7.5%"
+                                class="text-primary-500 xl:text-xl lg:text-md md:text-sm sm:text-sm" mat-header-cell
+                                *matHeaderCellDef>
+                                {{'Ask' | transloco}}
+                            </th>
+                            <td [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}" mat-cell
+                                *matCellDef="let transaction">
+                                <span
+                                    class="pr-6 whitespace-nowrap text-lg xl:text-lg lg:text-md md:text-md sm:text-sm">
+                                    {{transaction.bidPrice}}
+                                </span>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="Change">
+                            <th style="background-color: #193c5d; width: 10%"
+                                class="text-primary-500 xl:text-xl lg:text-md md:text-sm sm:text-sm" mat-header-cell
+                                *matHeaderCellDef>
+                                {{'Change' | transloco}}%
+                            </th>
+                            <td [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}" mat-cell
+                                *matCellDef="let transaction">
+                                <div class="flex items-end mt-2">
+                                    <mat-icon class="text-green-500 icon-size-3.5 mx-0.5 mb-px"
+                                        [ngClass]="{'text-green-500': transaction.dir === 'up', 'text-red-500': transaction.dir === 'down'}"
+                                        [svgIcon]="transaction.dir === 'up' ? 'heroicons_solid:arrow-narrow-up' : 'heroicons_solid:arrow-narrow-down'">
+                                    </mat-icon>
+                                    <div class="font-mono font-medium  leading-none mb-px text-lg xl:text-lg lg:text-md md:text-md sm:text-sm"
+                                        [ngClass]="{'text-green-500': transaction.dir === 'up', 'text-red-500': transaction.dir === 'down'}">
+                                        {{transaction?.securityStatsDTO?.change}}%
+                                    </div>
+                                </div>
+                            </td>
+                        </ng-container>
+
+                       
+                        <ng-container matColumnDef="Graph">
+                            <th style="background-color: #193c5d; width: 10%"
+                                class="text-primary-500 xl:text-xl lg:text-md md:text-sm sm:text-sm" mat-header-cell
+                                *matHeaderCellDef>
+                                {{'Graph' | transloco}}
+                            </th>
+                            <td [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}" mat-cell
+                                *matCellDef="let transaction">
+                                <apx-chart class="inline-flex items-center w-20 h-8"
+                                    [chart]="watchlistChartOptions.chart"
+                                    [colors]="transaction.dir === 'up' ? ['#48BB78']: ['#F56565']"
+                                    [series]="transaction.series" [stroke]="watchlistChartOptions.stroke"
+                                    [tooltip]="watchlistChartOptions.tooltip" [xaxis]="watchlistChartOptions.xaxis">
+                                </apx-chart>
+                            </td>
+                        </ng-container>
+                      
+                        <ng-container matColumnDef="Actions">
+                            <th style="background-color: #193c5d; width: 15%" mat-header-cell *matHeaderCellDef
+                                class="text-primary-500 xl:text-xl lg:text-md md:text-sm sm:text-sm ">
+                            </th>
+                            <td mat-cell [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}"
+                                *matCellDef="let transaction">
+                                <span (click)="buyAndSellFromAuth()"
+                                    class="cursor-pointer transformHover ml-4  items-center font-bold text-md px-2.5 py-0.5 tracking-wider  uppercase border-green-600 border-2 text-green-600"
+                                    style="border-radius:4px;">
+                                    <span class="leading-relaxed whitespace-nowrap">{{'Buy' | transloco}}</span>
+                                </span>
+
+                                <span (click)="buyAndSellFromAuth()"
+                                    class="ml-4 cursor-pointer  items-center font-bold text-md px-2.5 py-0.5 tracking-wider rounded uppercase bg-green-200 text-green-800 dark:bg-green-600 dark:text-green-50">
+                                    <span class="leading-relaxed whitespace-nowrap">{{'Buy' | transloco}}</span>
+                                </span>
+                                <span (click)="buyAndSellFromAuth()"
+                                    class="cursor-pointer transformHover ml-4  items-center font-bold text-md px-2.5 py-0.5 tracking-wider  uppercase border-red-600 border-2 text-red-600"
+                                    style="border-radius:4px;">
+                                    <span class="leading-relaxed whitespace-nowrap">{{'Sell' | transloco}}</span>
+                                </span>
+                            </td>
+                        </ng-container>
+
+                        
+                        <tr mat-header-row *matHeaderRowDef="recentTransactionsTableColumns"></tr>
+                        <tr class="order-row h-16" mat-row
+                            *matRowDef="let row; columns: recentTransactionsTableColumns;"></tr>
+                    </table>
+                </ng-container>
+
+                <ng-container *ngIf="selectedAssetClass === 'commodities'">
+                    <table class="w-full bg-transparent" mat-table [dataSource]="commoditiesTransactionsDataSource">
+
+                        <ng-container matColumnDef="Name">
+                            <th style="background-color: #193c5d; width: 12%"
+                                class="text-primary-500 xl:text-xl lg:text-md md:text-sm sm:text-sm" mat-header-cell
+                                *matHeaderCellDef>
+                                {{' Security' | transloco}}
+                            </th>
+                            <td [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}" mat-cell
+                                *matCellDef="let transaction">
+                                <div class="flex items-center pt-2 pb-2">
+                                    <img class="w-10" [src]=transaction.src>
+                                    <div class="flex flex-col hover:underline cursor-pointer"
+                                        (click)="onClickSymbol(transaction)">
+                                        <div
+                                            class="pl-2 text-lg font-semibold xl:text-lg lg:text-md md:text-sm sm:text-sm">
+                                            {{transaction.securityDescription | truncate:[28]}}
+                                        </div>
+                                        <div
+                                            class="text-primary-500 pl-2 font-medium xl:text-lg lg:text-md md:text-sm sm:text-sm">
+                                            {{transaction.securityCode}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="Favourites">
+                            <th style="background-color: #193c5d"
+                                class="text-primary-500 xl:text-xl lg:text-md md:text-sm sm:text-sm w-1/12 lg:w-2/12 md:w-1/12 sm:w-1/12"
+                                mat-header-cell *matHeaderCellDef>
+                            </th>
+                            <td [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}" mat-cell
+                                *matCellDef="let transaction">
+                                <div *ngIf="dashboard">
+                                    <button mat-icon-button color="primary">
+                                        <mat-icon color="primary" class="text-hint" [svgIcon]="'mat_solid:star'">
+                                        </mat-icon>
+                                    </button>
+
+                                    <button mat-icon-button>
+                                        <mat-icon class="text-hint" [svgIcon]="'mat_solid:notifications_active'">
+                                        </mat-icon>
+                                    </button>
+                                </div>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="Price">
+                            <th style="background-color: #193c5d; width: 7.5%"
+                                class="text-primary-500 xl:text-xl lg:text-md md:text-sm sm:text-sm" mat-header-cell
+                                *matHeaderCellDef>
+                                {{'Price' | transloco}}
+                            </th>
+                            <td [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}" mat-cell
+                                *matCellDef="let transaction">
+                                <span
+                                    class="pr-6 whitespace-nowrap text-lg xl:text-lg lg:text-md md:text-md sm:text-sm">
+                                    {{transaction.cprice | number : '1.2-2'}}
+                                </span>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="Turnover">
+                            <th style="background-color: #193c5d; width: 7.5%"
+                                class="text-primary-500 xl:text-xl lg:text-md md:text-sm sm:text-sm" mat-header-cell
+                                *matHeaderCellDef>
+                                {{'Turnover' | transloco}}
+                            </th>
+                            <td [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}" mat-cell
+                                *matCellDef="let transaction">
+                                <span
+                                    class="pr-6 whitespace-nowrap text-lg xl:text-lg lg:text-md md:text-md sm:text-sm">
+                                    {{transaction.turnOver}}
+                                </span>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="Bid">
+                            <th style="background-color: #193c5d; width: 7.5%"
+                                class="text-primary-500 xl:text-xl lg:text-md md:text-sm sm:text-sm" mat-header-cell
+                                *matHeaderCellDef>
+                                {{'Bid' | transloco}}
+                            </th>
+                            <td [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}" mat-cell
+                                *matCellDef="let transaction">
+                                <span
+                                    class="pr-6 whitespace-nowrap text-lg xl:text-lg lg:text-md md:text-md sm:text-sm">
+                                    {{transaction.bidPrice}}
+                                </span>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="Ask">
+                            <th style="background-color: #193c5d; width: 7.5%"
+                                class="text-primary-500 xl:text-xl lg:text-md md:text-sm sm:text-sm" mat-header-cell
+                                *matHeaderCellDef>
+                                {{'Ask' | transloco}}
+                            </th>
+                            <td [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}" mat-cell
+                                *matCellDef="let transaction">
+                                <span
+                                    class="pr-6 whitespace-nowrap text-lg xl:text-lg lg:text-md md:text-md sm:text-sm">
+                                    {{transaction.bidPrice}}
+                                </span>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="Change">
+                            <th style="background-color: #193c5d; width: 10%"
+                                class="text-primary-500 xl:text-xl lg:text-md md:text-sm sm:text-sm" mat-header-cell
+                                *matHeaderCellDef>
+                                {{'Change' | transloco}}%
+                            </th>
+                            <td [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}" mat-cell
+                                *matCellDef="let transaction">
+                                <div class="flex items-end mt-2">
+                                    <mat-icon class="text-green-500 icon-size-3.5 mx-0.5 mb-px"
+                                        [ngClass]="{'text-green-500': transaction.dir === 'up', 'text-red-500': transaction.dir === 'down'}"
+                                        [svgIcon]="transaction.dir === 'up' ? 'heroicons_solid:arrow-narrow-up' : 'heroicons_solid:arrow-narrow-down'">
+                                    </mat-icon>
+                                    <div class="font-mono font-medium text-lg leading-none mb-px  xl:text-lg lg:text-md md:text-md sm:text-sm"
+                                        [ngClass]="{'text-green-500': transaction.dir === 'up', 'text-red-500': transaction.dir === 'down'}">
+                                        {{transaction?.securityStatsDTO?.change}}%
+                                    </div>
+                                </div>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="Graph">
+                            <th style="background-color: #193c5d; width: 10%"
+                                class="text-primary-500 xl:text-xl lg:text-md md:text-sm sm:text-sm" mat-header-cell
+                                *matHeaderCellDef>
+                                {{'Graph' | transloco}}
+                            </th>
+                            <td [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}" mat-cell
+                                *matCellDef="let transaction">
+                                <apx-chart class="inline-flex items-center w-20 h-8"
+                                    [chart]="watchlistChartOptions.chart"
+                                    [colors]="transaction.dir === 'up' ? ['#48BB78']: ['#F56565']"
+                                    [series]="transaction.series" [stroke]="watchlistChartOptions.stroke"
+                                    [tooltip]="watchlistChartOptions.tooltip" [xaxis]="watchlistChartOptions.xaxis">
+                                </apx-chart>
+                            </td>
+                        </ng-container>
+                        
+                        <ng-container matColumnDef="Actions">
+                            <th style="background-color: #193c5d; width: 15%" mat-header-cell *matHeaderCellDef
+                                class="text-primary-500 xl:text-xl lg:text-md md:text-sm sm:text-sm ">
+                            </th>
+                            <td mat-cell [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}"
+                                *matCellDef="let transaction">
+                                <span (click)="buyAndSellFromAuth()"
+                                    class="cursor-pointer transformHover ml-4  items-center font-bold text-md px-2.5 py-0.5 tracking-wider  uppercase border-green-600 border-2 text-green-600"
+                                    style="border-radius:4px;">
+                                    <span class="leading-relaxed whitespace-nowrap">{{'Buy' | transloco}}</span>
+                                </span>
+                                <span (click)="buyAndSellFromAuth()"
+                                    class="cursor-pointer transformHover ml-4  items-center font-bold text-md px-2.5 py-0.5 tracking-wider  uppercase border-red-600 border-2 text-red-600"
+                                    style="border-radius:4px;">
+                                    <span class="leading-relaxed whitespace-nowrap">{{'Sell' | transloco}}</span>
+                                </span>
+                            </td>
+                        </ng-container>
+
+                        
+                        <tr mat-header-row *matHeaderRowDef="recentTransactionsTableColumns"></tr>
+                        <tr class="order-row h-16" mat-row
+                            *matRowDef="let row; columns: recentTransactionsTableColumns;"></tr>
+                    </table>
+                </ng-container>
+
+                <ng-container *ngIf="selectedAssetClass === 'realestate'">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 lg:grid-cols-5 gap-1 w-full min-w-0"
+                        style="height: 100%;">
+                        <fuse-card *ngFor="let pro of propertiesData"
+                            class="flex flex-col flex-auto items-center overflow-hidden shadow-2xl border-t-4 border-primary">
+                            <div class="flex flex-col flex-auto w-full p-8 text-center">
+                                <div class="w-full mx-auto lg:max-w-70 md:max-w-40 md:mb-4 overflow-hidden">
+                                    <img [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}"
+                                        class="w-full h-full object-fill" [src]="pro.src" alt="Card cover image">
+                                </div>
+                            </div>
+                        </fuse-card>
+                    </div>
+                </ng-container> -->
+
+            </div>
+        </div>
+    </div>
+</div>

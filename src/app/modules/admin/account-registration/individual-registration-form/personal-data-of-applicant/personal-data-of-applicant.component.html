@@ -1,0 +1,461 @@
+<div class="w-full max-w-4xl">
+    <div [formGroup]="personalDataOfApplicantFormGroup">
+
+        <div class="w-full">
+            <div class="text-xl">Personal Information</div>
+            <div class="text-secondary">Personal data of Main Applicant</div>
+        </div>
+        <div class="grid sm:grid-cols-6 gap-6 w-full mt-8">
+
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Salutation</mat-label>
+                    <mat-select [disabled]="isApprovedByNCCPL" name="SALUTATION"
+                                formControlName="SALUTATION">
+                        <mat-option *ngFor="let salutate of salutationArr" [value]="salutate.value">
+                            {{ salutate.label }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Client Name</mat-label>
+                    <input matInput name="clientName" formControlName="clientName"
+                    [value]="getClientName()"
+                    />
+                </mat-form-field>
+            </div>
+            <div class="sm:col-span-2">
+                <mat-label class="mb-2 font-medium leading-4">Account Type</mat-label>
+                <mat-radio-group class="flex flex-row" [disabled]="isApprovedByNCCPL" name="ACCOUNT_TYPE"
+                                 formControlName="ACCOUNT_TYPE" required aria-label="Account Type">
+                    <mat-radio-button class="ml-2 justify-between" [color]="'primary'"
+                                      (change)="onAccountValueChange($event)"
+                                      *ngFor="let nature of accountNatureArr"
+                                      [value]="nature.value"> {{ nature.label }}
+                    </mat-radio-button>
+                </mat-radio-group>
+            </div>
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Identification Number</mat-label>
+                    <input minlength="13" maxlength="13" matInput name="UIN"
+                           formControlName="UIN" [value]="UIN" />
+                </mat-form-field>
+            </div>
+
+            <div class="sm:col-span-2">
+
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Fathers/Husband Name</mat-label>
+                    <input [readOnly]="isApprovedByNCCPL" matInput name="FATHER_HUSBAND_NAME"
+                           formControlName="FATHER_HUSBAND_NAME" required/>
+                </mat-form-field>
+            </div>
+            <div class="sm:col-span-2">
+                <mat-label class="mb-2 font-medium leading-4">Fathers/Husband</mat-label>
+                <mat-radio-group class="flex flex-row" [disabled]="isApprovedByNCCPL" name="RELATIONSHIP"
+                                 formControlName="RELATIONSHIP" required aria-label="RELATIONSHIP">
+                    <mat-radio-button class="ml-2" [color]="'primary'" *ngFor="let relationType of relationArr"
+                                      [value]="relationType.value"> {{ relationType.label }}
+                    </mat-radio-button>
+                </mat-radio-group>
+            </div>
+            <div class="sm:col-span-2">
+
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Nationality</mat-label>
+                    <mat-select [disabled]="isApprovedByNCCPL" name="NATIONALITY"
+                                formControlName="NATIONALITY">
+                        <mat-option *ngFor="let national of countries" [value]="national.countryId">
+                            {{ national.countryName }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Marital Status</mat-label>
+                    <mat-select [disabled]="isApprovedByNCCPL" name="MARITAL_STATUS"
+                                formControlName="MARITAL_STATUS">
+                        <mat-option *ngFor="let status of maritalStatuses" [value]="status.statusId">
+                            {{ status.statusDesc }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+            <div class="sm:col-span-2">
+                <mat-label class="mb-2 font-medium leading-4">Life Time Expiry of Identification</mat-label>
+                <mat-radio-group class="flex flex-row" [disabled]="isApprovedByNCCPL" name="LIFETIME"
+                                 formControlName="LIFETIME"
+                                 required aria-label="LIFETIME">
+                    <mat-radio-button class="ml-2" [color]="'primary'" *ngFor="let status of lttStatusArr"
+                                      [value]="status.value"> {{ status.label }}
+                    </mat-radio-button>
+                </mat-radio-group>
+            </div>
+            <div class="sm:col-span-2" *ngIf="personalDataOfApplicantFormGroup.value.LIFETIME == 'N'">
+
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Date of Expiry</mat-label>
+                    <input [disabled]="isApprovedByNCCPL" matInput [matDatepicker]="picker1"
+                           name="DATE_OF_EXPIRY" formControlName="DATE_OF_EXPIRY"
+                           required/>
+                    <mat-datepicker-toggle matSuffix [for]="picker1">
+                        <!-- <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon> -->
+                    </mat-datepicker-toggle>
+                    <mat-datepicker #picker1></mat-datepicker>
+                </mat-form-field>
+            </div>
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Date of Birth</mat-label>
+                    <input [disabled]="isApprovedByNCCPL" matInput [matDatepicker]="picker2"
+                           name="DATE_OF_BIRTH" formControlName="DATE_OF_BIRTH"
+                           required/>
+                    <mat-datepicker-toggle matSuffix [for]="picker2">
+                    </mat-datepicker-toggle>
+                    <mat-datepicker #picker2></mat-datepicker>
+                </mat-form-field>
+            </div>
+            <div class="sm:col-span-2">
+
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Mailing Address Line 1</mat-label>
+                    <input [readOnly]="isApprovedByNCCPL" matInput name="MAILING_ADDRESS_1"
+                           formControlName="MAILING_ADDRESS_1" required/>
+                </mat-form-field>
+            </div>
+            <div class="sm:col-span-2">
+
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Mailing Address Line 2</mat-label>
+                    <input [readOnly]="isApprovedByNCCPL" matInput name="MAILING_ADDRESS_2"
+                           formControlName="MAILING_ADDRESS_2" required/>
+                </mat-form-field>
+            </div>
+            <div class="sm:col-span-2">
+
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Mailing Address Line 3</mat-label>
+                    <input [readOnly]="isApprovedByNCCPL" matInput name="MAILING_ADDRESS_3"
+                           formControlName="MAILING_ADDRESS_3" required/>
+                </mat-form-field>
+            </div>
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Country</mat-label>
+                    <mat-select [disabled]="isApprovedByNCCPL"
+                                (selectionChange)="onCountryChange($event.value)" name="COUNTRY"
+                                formControlName="COUNTRY">
+                        <mat-option *ngFor="let country of countries" [value]="country.countryId">
+                            {{ country.countryName }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+            <div class="sm:col-span-2">
+
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Mailing Province</mat-label>
+                    <mat-select [disabled]="isApprovedByNCCPL"
+                                (selectionChange)="onProvinceChange($event.value)" name="PROVINCE_STATE"
+                                formControlName="PROVINCE_STATE">
+                        <mat-option *ngFor="let province of provinces" [value]="province.provinceId">
+                            {{ province.provinceDesc }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="sm:col-span-2">
+
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Mailing City</mat-label>
+                    <mat-select [disabled]="isApprovedByNCCPL" name="CITY_TOWN_VILLAGE"
+                                formControlName="CITY_TOWN_VILLAGE">
+                        <mat-option *ngFor="let city of cities" [value]="city.cityId">
+                            {{ city.cityName }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Other City</mat-label>
+                    <input [readOnly]="isApprovedByNCCPL" matInput name="OTHERCITY_TOWN_VILLAGE"
+                           formControlName="OTHERCITY_TOWN_VILLAGE"/>
+                </mat-form-field>
+            </div>
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Other Province</mat-label>
+                    <input [readOnly]="isApprovedByNCCPL" matInput name="OTHERPROVINCE_STATE"
+                           formControlName="OTHERPROVINCE_STATE"/>
+                </mat-form-field>
+            </div>
+            <div class="sm:col-span-2">
+
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Land Line Number (Office)</mat-label>
+                    <input [readOnly]="isApprovedByNCCPL" matInput name="TELEPHONE_OFFICE"
+                           formControlName="TELEPHONE_OFFICE"/>
+                </mat-form-field>
+            </div>
+            <div class="sm:col-span-2">
+
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Land Line Number (Residence)</mat-label>
+                    <input [readOnly]="isApprovedByNCCPL" matInput name="TELEPHONE_RESIDENCE"
+                           formControlName="TELEPHONE_RESIDENCE"/>
+                </mat-form-field>
+            </div>
+            <div class="sm:col-span-2">
+
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>FAX</mat-label>
+                    <input [readOnly]="isApprovedByNCCPL" matInput name="FAX" formControlName="FAX"/>
+                </mat-form-field>
+            </div>
+            <div class="sm:col-span-2">
+
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Permanent Address Line 1</mat-label>
+                    <input [readOnly]="isApprovedByNCCPL" matInput name="PERMANENT_ADDRESS_1"
+                           formControlName="PERMANENT_ADDRESS_1" required/>
+                </mat-form-field>
+            </div>
+            <div class="sm:col-span-2">
+
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Permanent Address Line 2</mat-label>
+                    <input [readOnly]="isApprovedByNCCPL" matInput name="PERMANENT_ADDRESS_2"
+                           formControlName="PERMANENT_ADDRESS_2" required/>
+                </mat-form-field>
+            </div>
+            <div class="sm:col-span-2">
+
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Permanent Address Line 3</mat-label>
+                    <input [readOnly]="isApprovedByNCCPL" matInput name="PERMANENT_ADDRESS_3"
+                           formControlName="PERMANENT_ADDRESS_3" required/>
+                </mat-form-field>
+            </div>
+            <div class="sm:col-span-2">
+
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Permanent Country</mat-label>
+                    <mat-select [disabled]="isApprovedByNCCPL"
+                                (selectionChange)="onPermanentCountryChange($event.value)"
+                                name="PERMANENT_COUNTRY" formControlName="PERMANENT_COUNTRY">
+                        <mat-option *ngFor="let country of permanentCountries" [value]="country.countryId">
+                            {{ country.countryName }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="sm:col-span-2">
+
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Permanent Province</mat-label>
+                    <mat-select [disabled]="isApprovedByNCCPL"
+                                (selectionChange)="onPermanentProvinceChange($event.value)"
+                                name="PERMANENT_PROVINCE" formControlName="PERMANENT_PROVINCE">
+                        <mat-option *ngFor="let province of permanentProvinces"
+                                    [value]="province.provinceId">
+                            {{ province.provinceDesc }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="sm:col-span-2">
+
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Permanent City</mat-label>
+                    <mat-select [disabled]="isApprovedByNCCPL" name="PERMANENT_CITY_TOWN" required
+                                formControlName="PERMANENT_CITY_TOWN">
+                        <mat-option *ngFor="let city of permanentCities" [value]="city.cityId">
+                            {{ city.cityName }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="sm:col-span-2">
+
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Other Permanent Province</mat-label>
+                    <input [readOnly]="isApprovedByNCCPL" matInput name="PERMANENT_OTHERPROVINCE"
+                           formControlName="PERMANENT_OTHERPROVINCE"/>
+                </mat-form-field>
+            </div>
+            <div class="sm:col-span-2">
+
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Other Permanent City</mat-label>
+                    <input [readOnly]="isApprovedByNCCPL" matInput name="PERMANENT_OTHERCITY_TOWN"
+                           formControlName="PERMANENT_OTHERCITY_TOWN"/>
+                </mat-form-field>
+            </div>
+            <div class="sm:col-span-2">
+
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Permanent Telephone Office</mat-label>
+                    <input [readOnly]="isApprovedByNCCPL" matInput name="PERMANENT_TELEPHONE_OFFICE"
+                           formControlName="PERMANENT_TELEPHONE_OFFICE"/>
+                </mat-form-field>
+            </div>
+            <div class="sm:col-span-2">
+
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Permanent Telephone Residence</mat-label>
+                    <input [readOnly]="isApprovedByNCCPL" matInput name="PERMANENT_TELEPHONE_RESIDENCE"
+                           formControlName="PERMANENT_TELEPHONE_RESIDENCE"/>
+                </mat-form-field>
+            </div>
+            <div class="sm:col-span-2">
+
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Permanent Cell No</mat-label>
+                    <input [readOnly]="isApprovedByNCCPL" matInput name="PERMANENT_CELL_NO"
+                           formControlName="PERMANENT_CELL_NO" required/>
+                </mat-form-field>
+            </div>
+            <div class="sm:col-span-2">
+
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Permanent Email</mat-label>
+                    <input [readOnly]="isApprovedByNCCPL" matInput name="PERMANENT_EMAIL"
+                           formControlName="PERMANENT_EMAIL"
+                           [value]="getClientEmail()"
+                            required/>
+                </mat-form-field>
+            </div>
+            <div class="sm:col-span-2">
+
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Permanent Fax</mat-label>
+                    <input [readOnly]="isApprovedByNCCPL" matInput name="PERMANENT_FAX"
+                           formControlName="PERMANENT_FAX"/>
+                </mat-form-field>
+            </div>
+            <div class="sm:col-span-2">
+
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Gross Annual Income Details</mat-label>
+                    <mat-select [disabled]="isApprovedByNCCPL" name="GROSS_ANNUAL_INCOME"
+                                formControlName="GROSS_ANNUAL_INCOME">
+                        <mat-option *ngFor="let income of grossAnnualIncomeArr" [value]="income.incomeId">
+                            {{ income.incomeDesc }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="sm:col-span-2">
+
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Source of Income</mat-label>
+                    <input [readOnly]="isApprovedByNCCPL" matInput name="SOURCE_OF_INCOME"
+                           formControlName="SOURCE_OF_INCOME" required/>
+                </mat-form-field>
+            </div>
+            <div class="sm:col-span-2">
+
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Client’s Occupation</mat-label>
+                    <mat-select [disabled]="isApprovedByNCCPL" name="clientOccupation"
+                                formControlName="clientOccupation">
+                        <mat-option *ngFor="let pro of occupations" [value]="pro.occupationId">
+                            {{ pro.occupationDesc }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Other Occupation</mat-label>
+                    <input [readOnly]="isApprovedByNCCPL" matInput name="OTHER_OCCUPATION"
+                           formControlName="OTHER_OCCUPATION"/>
+                </mat-form-field>
+
+            </div>
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Job Title/ Designation</mat-label>
+                    <input [readOnly]="isApprovedByNCCPL" matInput name="JOB_TITLE"
+                           formControlName="JOB_TITLE" required/>
+                </mat-form-field>
+
+            </div>
+            <div class="sm:col-span-2">
+
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Department</mat-label>
+                    <input [readOnly]="isApprovedByNCCPL" matInput name="Department"
+                           formControlName="Department" required/>
+                </mat-form-field>
+            </div>
+            <div class="sm:col-span-2">
+
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Name of Employer/ Business</mat-label>
+                    <input [readOnly]="isApprovedByNCCPL" matInput name="EMPLOYER_NAME"
+                           formControlName="EMPLOYER_NAME" required/>
+                </mat-form-field>
+            </div>
+            <div class="sm:col-span-2">
+
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Address of Employer/ Business</mat-label>
+                    <input [readOnly]="isApprovedByNCCPL" matInput name="EMPLOYER_ADDRESS"
+                           formControlName="EMPLOYER_ADDRESS" required/>
+                </mat-form-field>
+            </div>
+            <div class="sm:col-span-2">
+
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Zakat Status</mat-label>
+                    <mat-select [disabled]="isApprovedByNCCPL" name="ZAKAT_STATUS"
+                                formControlName="ZAKAT_STATUS">
+                        <mat-option *ngFor="let zakat of zakatTypeArr" [value]="zakat.code">
+                            {{ zakat.type }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="sm:col-span-2">
+
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Relative name</mat-label>
+                    <input [readOnly]="isApprovedByNCCPL" matInput name="RELATIVE_NAME"
+                           formControlName="RELATIVE_NAME"/>
+                </mat-form-field>
+            </div>
+            <div class="sm:col-span-2">
+
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Bank Name</mat-label>
+                    <input [readOnly]="isApprovedByNCCPL" matInput name="BANK_NAME"
+                           formControlName="BANK_NAME" required/>
+                </mat-form-field>
+            </div>
+            <div class="sm:col-span-2">
+
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Basis of Remittance</mat-label>
+                    <mat-select [disabled]="isApprovedByNCCPL" name="Remittance"
+                                formControlName="Remittance">
+                        <mat-option *ngFor="let remittance of remittances"
+                                    [value]="remittance.remittanceId">
+                            {{ remittance.remittanceDesc }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+        </div>
+    </div>
+</div>

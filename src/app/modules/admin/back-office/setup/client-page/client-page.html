@@ -1,0 +1,114 @@
+
+ 
+        <section class="widget">
+            <header>
+                <h3>{{ 'Translation.Client' | translate }} <span class="fw-semi-bold">{{ 'Translation.Management' | translate }}</span></h3>
+                <div   class="other_btns">
+                        <a class="add_new_btn mx-2" *ngIf="userService.isAuhtorized(userService.EB_CONF_CLIENTS_NEW)"  title="{{ 'Translation.Add Client' | translate }}"  
+                        (click)="onNewActionShowForm()"  ><i class="fa fa-plus" aria-hidden="true"></i></a>
+                    <button data-toggle="collapse" data-target="#filter_box" class="filter_btn"><i class="fa fa-filter mr-2" aria-hidden="true"></i></button>
+                    <button class="mx-2" title="{{ 'Translation.Refresh' | translate }}"   (click)="onRefreshCDCStatus()" role="button"><span class="fa fa-refresh"></span> </button>
+                </div>
+               
+            </header>
+        
+            <div   id="filter_box" class="collapse in">
+                <div class="row mt-2">
+                    <div class="col-sm-5 form-group">
+                        <label for="search-input">{{ 'Translation.Client Code' | translate }} <span class="validation"></span></label>
+                        <wj-input-mask class="wijmo_style" [(ngModel)]="searchClientCode" [isRequired]="false"> </wj-input-mask>
+                    </div>
+                    <div class="col-sm-5 form-group">
+                        <label for="search-input">{{ 'Translation.Client Name' | translate }} <span class="validation"></span></label>
+                        <wj-input-mask class="wijmo_style" [(ngModel)]="searchClientName" [isRequired]="false"> </wj-input-mask>
+                    </div>
+                    <div class="col-sm-2">
+                        <div class="form_search part-btn">
+                            <button class="add_new_btn" title="{{ 'Translation.Search' | translate }}" data-toggle="collapse in" data-target="#filter_box" (click)="onSearchAction()" role="button"><span class="fa fa-search"></span> </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div   class="table_container">
+                <wj-flex-grid class="grid" [isReadOnly]="true" [itemsSource]="itemsList" [isReadOnly]="true" [selectionMode]="'Row'" [autoSizeMode]="'Headers'"
+                    [headersVisibility]="'Column'" style="height: 250px;" #flex>
+                    <wj-flex-grid-filter [filterColumns]="['clientCode', 'displayName_','depositoryAccountNo','contactDetail.identificationType','commissionSlabMaster.slabNameDisplay_','contactDetail.cellNo','agent.agentCode','contactDetail.profession','contactDetail.email','active']"></wj-flex-grid-filter>
+                    <wj-flex-grid-column [header]="'Translation.Account Code' | translate" [align]="'left'" [binding]="'clientCode'" [width]="'0.25*'" [minWidth]="20"></wj-flex-grid-column>
+                    <wj-flex-grid-column [header]="'Translation.Name' | translate" [align]="'left'" [binding]="'displayName_'" [width]="'0.25*'" [minWidth]="20"></wj-flex-grid-column>
+                   
+                        <wj-flex-grid-column [header]="'Translation.Identification Number' | translate" [align]="'left'" [binding]="'contactDetail.identificationType'" [width]="'0.25*'"
+                        [minWidth]="20"></wj-flex-grid-column>
+                        <wj-flex-grid-column [header]="'Translation.Com-Slab' | translate" [align]="'left'" [binding]="'commissionSlabMaster.slabNameDisplay_'" [width]="'0.25*'"
+                        [minWidth]="20"></wj-flex-grid-column>
+                        <wj-flex-grid-column [header]="'Translation.Mobile' | translate" [align]="'left'" [binding]="'contactDetail.cellNo'" [width]="'0.25*'"
+                        [minWidth]="20"></wj-flex-grid-column>
+                        <wj-flex-grid-column [header]="'Translation.Agent' | translate" [align]="'left'" [binding]="'agent.agentCode'" [width]="'0.2*'"
+                        [minWidth]="20"></wj-flex-grid-column>
+                    <wj-flex-grid-column [header]="'Translation.Branch' | translate" [align]="'left'" [binding]="'participantBranch.branchCode'" [width]="'0.15*'" [minWidth]="20"></wj-flex-grid-column>
+                    <wj-flex-grid-column [header]="'Translation.Email' | translate" [align]="'left'" [binding]="'contactDetail.email'" [width]="'0.3*'"
+                    [minWidth]="20"></wj-flex-grid-column>           
+                    <wj-flex-grid-column [header]="'Translation.Control Account' | translate" [align]="'left'" [binding]="'chartOfAccount.glCode'" [width]="'0.3*'"
+                    [minWidth]="20"></wj-flex-grid-column>   
+                  
+                    <wj-flex-grid-column [header]="'Translation.Profession' | translate" [align]="'left'" [binding]="'contactDetail.professionDesc'" [width]="'0.25*'"
+                    [minWidth]="20"></wj-flex-grid-column> 
+                    <wj-flex-grid-column [header]="'Translation.Account Type' | translate" [align]="'left'" [binding]="'clientType'" [width]="'0.25*'" [minWidth]="20">
+                        <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-cell="cell">
+                            <span *ngIf="cell.item.clientType === 'I'">{{ 'Translation.Individual' | translate }}</span>
+                            <span *ngIf="cell.item.clientType === 'C'">{{ 'Translation.Corporate' | translate }}</span>
+                        </ng-template>
+                     </wj-flex-grid-column>    
+                    <wj-flex-grid-column [header]="'Translation.Status' | translate" [align]="'left'" [binding]="'statusDesc'" [width]="'0.25*'"
+                    [minWidth]="20"></wj-flex-grid-column>         
+                    <wj-flex-grid-column [header]="'Common.Active' | translate" [binding]="'active'" [width]="'0.18*'" [minWidth]="10"></wj-flex-grid-column>
+                    <wj-flex-grid-column [header]="'Common.Action' | translate" [align]="'center'" [width]="'0.15*'" *ngIf="userService.isAuhtorized(userService.EB_CONF_CLIENTS_UPDATE)">
+        
+                        <ng-template wjFlexGridCellTemplate [cellType]="'Cell'">
+                            <img class="gridImg" 
+                            src="assets/img/edit_orange.png" title="{{ 'Translation.Edit' | translate }}" (click)="onGetClientClientId()"  />
+                           
+        
+                        </ng-template>
+                    </wj-flex-grid-column>
+        
+                </wj-flex-grid>
+        
+            </div>
+      
+        
+       
+            <div   class="btn-group col-xs-12 align-right">
+                <!-- Paginator -->
+                <wj-collection-view-pager [cv]="flex?.collectionView"></wj-collection-view-pager>
+                <!-- page size -->
+                <wj-menu [(value)]="pageSize" [header]="'Common.Page Size' | translate">
+                    <wj-menu-item [value]="0">{{ 'Common.No Paging' | translate }}</wj-menu-item>
+                    <wj-menu-item [value]="5">5 {{ 'Common.items' | translate }}</wj-menu-item>
+                    <wj-menu-item [value]="10">10 {{ 'Common.items' | translate }}</wj-menu-item>
+                    <wj-menu-item [value]="20">20 {{ 'Common.items' | translate }}</wj-menu-item>
+                    <wj-menu-item [value]="30">30 {{ 'Common.items' | translate }}</wj-menu-item>
+                    <wj-menu-item [value]="50">50 {{ 'Common.items' | translate }}</wj-menu-item>
+                    <wj-menu-item [value]="100">100 {{ 'Common.items' | translate }}</wj-menu-item>
+                  </wj-menu>
+            </div>
+
+
+          
+               <!--===========================================================================================-->
+               <!-------------------------------------Client Registration Form-------------------------------->
+               <!--===========================================================================================-->
+                <client-registration [class.displayNone]="isNewActionForm === false"></client-registration>
+               <!--===========================================================================================-->
+               <!-------------------------------------Client Registration Form-------------------------------->
+               <!--===========================================================================================-->
+           
+      
+      
+            </section>
+        
+        
+  
+
+
+        
+        <dialog-cmp #dialogCmp (btnClick)="getNotification($event)"> </dialog-cmp>

@@ -1,0 +1,11 @@
+<div  style="width: 113% !important;margin-left: -23px;" [ngStyle]="{'background-color': buySellColor }">
+    <h2 mat-dialog-title style="text-align: center;">Confirmation</h2>
+</div>
+<mat-dialog-content class="mat-typography">
+    <h3>{{confirmationMsg}}</h3>
+   
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close class="hover:bg-gray-700">Cancel</button>
+    <button mat-button [mat-dialog-close]="true" cdkFocusInitial class="hover:bg-gray-700">Yes</button>
+</mat-dialog-actions>

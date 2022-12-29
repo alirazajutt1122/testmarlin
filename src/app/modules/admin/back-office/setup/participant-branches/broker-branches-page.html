@@ -1,0 +1,209 @@
+
+<!--<div class="row">
+  <div class="col-lg-12 col-xs-12">-->
+<section class="widget" widget="">
+    <header>
+        <h3><span class="fw-semi-bold">{{ 'Menu.Participant Branches' | translate }}</span></h3>
+        <div class="other_btns">
+            <button class="add_new_btn" id="btnNew" data-toggle="modal" *ngIf="userService.isAuhtorized(userService.EB_PARTICIPANT_BRANCH_NEW)"
+                (click)="onNewAction()" data-target="#add_new" type="button" data-backdrop="static" title="{{ 'Translation.Add' | translate }} {{ 'Translation.Participant Branch' | translate }}"><i class="fa fa-plus" aria-hidden="true"></i> </button>
+        </div>
+        <!--<div class="widget-controls">
+          <a data-widgster="expand" title="Expand" href="#"><i class="glyphicon glyphicon-chevron-up"></i></a>
+          <a data-widgster="collapse" title="Collapse" href="#"><i class="glyphicon glyphicon-chevron-down"></i></a>
+        </div>-->
+    </header>
+
+    <div class="table_container">
+        <wj-flex-grid [itemsSource]="itemsList" [isReadOnly]="true" [selectionMode]="'Row'" [autoSizeMode]="'Headers'" [headersVisibility]="'Column'"
+            style="height: 320px;" #flex>
+
+            <wj-flex-grid-filter [filterColumns]="['branchCode','branchDesc','active']"></wj-flex-grid-filter>
+            <wj-flex-grid-column [header]="'Translation.Branch Code' | translate" [align]="'left'" [binding]="'branchCode'" [width]="'0.5*'" [minWidth]="30"></wj-flex-grid-column>
+            <wj-flex-grid-column [header]="'Translation.Branch Name' | translate" [align]="'left'" [binding]="'branchDesc'" [width]="'0.5*'" [minWidth]="30"></wj-flex-grid-column>
+            <wj-flex-grid-column [header]="'Common.Active' | translate" [binding]="'active'" [width]="'0.2*'" [minWidth]="30"></wj-flex-grid-column>
+            <wj-flex-grid-column *ngIf="userService.isAuhtorized(userService.EB_PARTICIPANT_BRANCH_UPDATE)" [header]="'Common.Action' | translate" [width]="'0.2*'"
+                [align]="'center'" [minWidth]="30">
+                <ng-template wjFlexGridCellTemplate [cellType]="'Cell'">
+
+                    <!--<input type="image" src="assets/img/edit_orange.png" *ngIf="userService.isAuhtorized(userService.EB_PARTICIPANT_BRANCH_UPDATE)"
+                class="btTxt submit" (click)="onEditAction()" title="Edit" data-target="#add_new" data-toggle="modal" data-backdrop="static"
+                id="btnEdit" />-->
+
+                    <!--<button id="btnEdit" class="on_edit_button" role="button"
+            (click)="onEditAction()" title="Edit" data-target="#add_new" data-toggle="modal" data-backdrop="static"> <img src="assets/img/edit_orange.png"/> </button>-->
+                    <img src="assets/img/edit_orange.png" title="{{ 'Translation.Edit' | translate }}" (click)="onEditAction()" data-target="#add_new" data-toggle="modal" data-backdrop="static"
+                    style="height: 14px; width: 14px; display: -webkit-inline-box;"
+                    />
+                </ng-template>
+            </wj-flex-grid-column>
+        </wj-flex-grid>
+
+    </div>
+    <div class="row"></div>
+    <div class="btn-group col-xs-12 align-right">
+        <!-- Paginator -->
+        <wj-collection-view-pager [cv]="flex?.collectionView"></wj-collection-view-pager>
+        <!-- page size -->
+        <wj-menu [(value)]="pageSize" [header]="'Common.Page Size' | translate">
+			<wj-menu-item [value]="0">{{ 'Common.No Paging' | translate }}</wj-menu-item>
+			<wj-menu-item [value]="5">5 {{ 'Common.items' | translate }}</wj-menu-item>
+			<wj-menu-item [value]="10">10 {{ 'Common.items' | translate }}</wj-menu-item>
+			<wj-menu-item [value]="20">20 {{ 'Common.items' | translate }}</wj-menu-item>
+			<wj-menu-item [value]="30">30 {{ 'Common.items' | translate }}</wj-menu-item>
+			<wj-menu-item [value]="50">50 {{ 'Common.items' | translate }}</wj-menu-item>
+			<wj-menu-item [value]="100">100 {{ 'Common.items' | translate }}</wj-menu-item>
+		  </wj-menu>
+    </div>
+</section>
+<!--</div>
+</div>-->
+
+
+<div id="add_new" class="modal fade" role="dialog" data-keyboard="true">
+    <div class="modal-dialog modal-lg">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+
+            <!--<div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" (click)="onCancelAction()">&times;</button>
+        <h4 class="modal-title">Participant Branch</h4>
+      </div>-->
+
+            <form class="form-horizontal form-label-left" method="post" data-parsley-priority-enabled="false" novalidate="novalidate"
+                role="form" [formGroup]="myForm" (ngSubmit)="onSaveAction(myForm.value, myForm.valid)">
+                <div class="modal-body modal-no-border">
+
+
+                    <div class="row setup_box_container">
+                        <div class="col-md-3 col-sm-5 modal_left">
+                            <div class="wizard_Logo">
+                                <img src="assets/img/Participant-Branches.png" class="formImg"/>
+                                <h4>{{ 'Menu.Participant Branches' | translate }}</h4>
+                                <p>{{ 'Translation.Management of Participant Branches, contact details & configurations' | translate }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-9 col-sm-7 modal_center">
+                            <div class="row" style="padding:30px; padding-bottom:0;">
+
+
+
+
+                                <div class="col-sm-6 fields_box">
+                                    <label for="branchCode">{{ 'Translation.Participant Branch Code' | translate }} <span class="validation">*</span></label>
+                                    <wj-input-mask #branchCode id="branchCode" class="wijmo_style" formControlName="branchCode" maxlength="10" [(ngModel)]="selectedItem.branchCode"
+                                        myForm required [isRequired]="true"> </wj-input-mask>
+                                    <div *ngIf="myForm.controls['branchCode'].hasError('required')" [hidden]="myForm.controls.branchCode.valid || (myForm.controls.branchCode.pristine && !isSubmitted)"
+                                        class="text-danger">{{ 'Translation.Participant Branch Code' | translate }} {{ 'Translation.is required' | translate }}.</div>
+                                    <div *ngIf="myForm.controls['branchCode'].hasError('pattern')" class="text-danger">{{ 'Translation.Invalid' | translate }} {{ 'Translation.Participant Branch Code' | translate }}.</div>
+                                </div>
+                                <div class="col-sm-6 fields_box">
+                                    <label for="branchDesc">{{ 'Translation.Participant Branch Name' | translate }} <span class="validation">*</span></label>
+                                    <wj-input-mask id="branchDesc" class="wijmo_style" formControlName="branchDesc" maxlength="30" [(ngModel)]="selectedItem.branchDesc"
+                                        myForm required [isRequired]="true"> </wj-input-mask>
+                                    <div *ngIf="myForm.controls['branchDesc'].hasError('required')" [hidden]="myForm.controls.branchDesc.valid || (myForm.controls.branchDesc.pristine && !isSubmitted)"
+                                        class="text-danger">{{ 'Translation.Participant Branch Name' | translate }} {{ 'Translation.is required' | translate }}.</div>
+                                    <div *ngIf="myForm.controls['branchDesc'].hasError('pattern')" class="text-danger">{{ 'Translation.Invalid' | translate }} {{ 'Translation.Participant Branch Name' | translate }}.</div>
+                                </div>
+
+                                <div class="row col-sm-6">
+                                    <div class="abc-checkbox abc-checkbox-primary">
+                                        <input id="active" type="checkbox" [(ngModel)]='selectedItem.active' formControlName="active">
+                                        <label for="active"> {{ 'Common.Active' | translate }} </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" style="padding:30px;">
+                                <h3 class="global-heading">{{ 'Translation.Contact Details' | translate }}</h3>
+                                <div class="col-sm-12"></div>
+
+                                <div class="col-sm-6">
+                                    <label for="countryId">{{ 'Translation.Country' | translate }} <span class="validation">*</span></label>
+                                    <wj-combo-box id="countryId" formControlName="countryId" class="wijmo_style" [isEditable]="true" [itemsSource]="countryList"
+                                        (ngModelChange)="onCountryChangeEvent($event)" displayMemberPath="countryName" selectedValuePath="countryId"
+                                        [(ngModel)]="selectedItem.contactDetail.countryId" [isRequired]="true">
+                                    </wj-combo-box>
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <label for="cityId">{{ 'Translation.City' | translate }} <span class="validation">*</span></label>
+                                    <wj-combo-box #cmbCityId id="cityId" formControlName="cityId" class="wijmo_style" [isEditable]="true" [itemsSource]="cityList"
+                                        displayMemberPath="cityName" selectedValuePath="cityId" [(ngModel)]="selectedItem.contactDetail.cityId"
+                                        [isRequired]="true">
+                                    </wj-combo-box>
+                                </div>
+
+                                <div class="col-sm-6" *ngIf="hideForm">
+                                    <div *ngIf="myForm.controls['countryId'].hasError('required')" [hidden]="myForm.controls.countryId.valid || (myForm.controls.countryId.pristine && !isSubmitted)"
+                                        class="text-danger">{{ 'Translation.Country' | translate }} {{ 'Translation.is required' | translate }}.</div>
+                                </div>
+
+                                <div class="col-sm-6" *ngIf="hideForm">
+                                    <div *ngIf="myForm.controls['cityId'].hasError('required')" [hidden]="myForm.controls.cityId.valid || (myForm.controls.cityId.pristine && !isSubmitted)"
+                                        class="text-danger">{{ 'Translation.City' | translate }} {{ 'Translation.is required' | translate }}.</div>
+                                </div>
+
+                                <br/>
+
+                                <div class="col-sm-12">
+                                    <label for="address">{{ 'Translation.Address' | translate }} <span class="validation">*</span></label>
+                                    <wj-input-mask id="address" class="wijmo_style" formControlName="address" maxlength="250" [(ngModel)]="selectedItem.contactDetail.address1"
+                                        myForm required [isRequired]="true"> </wj-input-mask>
+                                    <div *ngIf="myForm.controls['address'].hasError('required') && hideForm" [hidden]="myForm.controls.address.valid || (myForm.controls.address.pristine && !isSubmitted)"
+                                        class="text-danger">{{ 'Translation.Address' | translate }} {{ 'Translation.is required' | translate }}.</div>
+                                </div>
+
+                                <br/>
+
+                                <div class="col-sm-6">
+                                    <label for="postalCode">{{ 'Translation.Postal Code' | translate }} <span class="validation">*</span></label>
+                                    <wj-input-mask id="postalCode" class="wijmo_style" formControlName="postalCode" maxlength="10" [(ngModel)]="selectedItem.contactDetail.postalCode"
+                                        myForm required [isRequired]="true"> </wj-input-mask>
+                                    <div *ngIf="myForm.controls['postalCode'].hasError('required')" [hidden]="myForm.controls.postalCode.valid || (myForm.controls.postalCode.pristine && !isSubmitted)"
+                                        class="text-danger">{{ 'Translation.Postal Code' | translate }} {{ 'Translation.is required' | translate }}.</div>
+                                    <div *ngIf="myForm.controls['postalCode'].hasError('pattern')" class="text-danger">{{ 'Translation.Invalid' | translate }} {{ 'Translation.Postal Code' | translate }}.</div>
+
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <label for="phone1">{{ 'Translation.Phone Number' | translate }}. <span class="validation">*</span></label>
+                                    <wj-input-mask id="phone1" class="wijmo_style" formControlName="phone1" maxlength="20" [(ngModel)]="selectedItem.contactDetail.phone1"
+                                        myForm required [isRequired]="true"> </wj-input-mask>
+                                    <div *ngIf="myForm.controls['phone1'].hasError('required')" [hidden]="myForm.controls.phone1.valid || (myForm.controls.phone1.pristine && !isSubmitted)"
+                                        class="text-danger">{{ 'Translation.Phone Number' | translate }}. {{ 'Translation.is required' | translate }}.</div>
+                                    <div *ngIf="myForm.controls['phone1'].hasError('pattern')" class="text-danger">{{ 'Translation.Invalid' | translate }} {{ 'Translation.Phone Number' | translate }}.</div>
+
+                                </div>
+                                <br/>
+
+                                <div class="col-sm-6">
+                                    <label for="cellNo">{{ 'Translation.Mobile Number' | translate }}.</label>
+                                    <wj-input-mask id="cellNo" class="wijmo_style" formControlName="cellNo" maxlength="20" [(ngModel)]="selectedItem.contactDetail.cellNo"
+                                        myForm [isRequired]="false"> </wj-input-mask>
+
+                                    <div *ngIf="myForm.controls['cellNo'].hasError('pattern') && hideForm" class="text-danger">{{ 'Translation.Invalid' | translate }} {{ 'Translation.Mobile Number' | translate }}.</div>
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <label for="email">{{ 'Email' | translate }} </label>
+                                    <wj-input-mask id="email" placeholder="abc@xyz.com" class="wijmo_style" maxlength="100" formControlName="email" [(ngModel)]="selectedItem.contactDetail.email"
+                                        myForm [isRequired]="false"> </wj-input-mask>
+                                    <div *ngIf="hideForm">
+                                        <div *ngIf="myForm.controls['email'].hasError('pattern')" class="text-danger">{{ 'Translation.Invalid' | translate }} {{ 'Email' | translate }}.</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="orange_footer">
+                    <button id="btnSave" type="submit" class="save_btn" *ngIf="!isEditing && userService.isAuhtorized(userService.EB_PARTICIPANT_BRANCH_NEW)">{{ 'Common.Save' | translate }}</button>
+                    <button id="btnEdit" type="submit" class="save_btn" *ngIf="isEditing && userService.isAuhtorized(userService.EB_PARTICIPANT_BRANCH_UPDATE)">{{ 'Common.Update' | translate }}</button>
+                    <button type="button" class="cancel_btn" data-dismiss="modal" (click)="onCancelAction()">{{ 'Common.Cancel' | translate }}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<dialog-cmp #dialogCmp (btnClick)="getNotification($event)"> </dialog-cmp>

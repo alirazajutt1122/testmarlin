@@ -1,0 +1,222 @@
+<order-new-all #newOrderAll [modalId]="'new-order-all-market'"></order-new-all>
+
+
+<div class="absolute inset-0 flex flex-col min-w-0 overflow-y-auto overflow-x-hidden"
+    style="background-image: url('assets/images/marlin-dashboard/dashboard-back.png');">
+    <div class="bg-transparent m-8 w-auto">
+
+        <div class="flex w-full justify-between  mt-4">
+            <div class="flex justify-start w-auto mt-4">
+                <div class="flex ">
+
+                    <span class="tabsBtns" class="tabsBtns" [class.tabsBtnsActive]="selectedAssetClass === 'equities'"
+                        style="height: max-content;" (click)="assetClassSelected('equities')">
+                        <a>
+                            <span [class.tabsBtnsTextActive]="selectedAssetClass === 'equities'"
+                                class="tabsBtnsText">Equities</span>
+                        </a>
+                    </span>
+
+                    <span class="tabsBtns" class="tabsBtns" [class.tabsBtnsActive]="selectedAssetClass === 'crypto'"
+                        style="height: max-content;" (click)="assetClassSelected('crypto')">
+                        <a>
+                            <span [class.tabsBtnsTextActive]="selectedAssetClass === 'crypto'"
+                                class="tabsBtnsText">Bonds</span>
+                        </a>
+                    </span>
+
+                    <span class="tabsBtns" class="tabsBtns"
+                        [class.tabsBtnsActive]="selectedAssetClass === 'commodities'" style="height: max-content;"
+                        (click)="assetClassSelected('commodities')">
+                        <a>
+                            <span [class.tabsBtnsTextActive]="selectedAssetClass === 'commodities'"
+                                class="tabsBtnsText">ETFs</span>
+                        </a>
+                    </span>
+                </div>
+            </div>
+
+
+            
+            <div class="bg-transparent w-160">
+                <div class="row-custom">
+                    <div class="column-custom">
+                        <div class="ml-4 text-gray-300">Total Value: <span class="text-primary">{{totalValue$ |
+                                async}}</span></div>
+                    </div>
+                    <div class="column-custom">
+                        <div class="text-gray-300"> Volume: <span class="text-primary">{{volume$ | async}}</span>
+                        </div>
+                    </div>
+                    <div class="column-custom">
+                        <span *ngIf="DayLoss" [ngStyle]="{'color':DayPLColor}" class="ml-2"> Day P/L: {{DayPL$ | async}}
+                            <mat-icon [ngStyle]="{'color':DayPLColor}" class="icon-size-3.5"
+                                [svgIcon]="'heroicons_solid:arrow-narrow-down'">
+                            </mat-icon>
+                        </span>
+                        <span *ngIf="DayProfit" [ngStyle]="{'color':DayPLColor}" class="ml-1.5"> Day P/L: +{{DayPL$ |
+                            async}}
+                            <mat-icon [ngStyle]="{'color':DayPLColor}" class="icon-size-3.5"
+                                [svgIcon]="'heroicons_solid:arrow-narrow-up'">
+                            </mat-icon>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="row-custom">
+                    <div class="column-custom">
+                        <div class="text-gray-300">Current Value: <span class="text-primary">{{currentValue$ |
+                                async}}</span> </div>
+                    </div>
+                    <div class="column-custom">
+                        <span *ngIf="Loss" [ngStyle]="{'color':PLColor}"> Net P/L: {{netPL$ | async}}
+                            <mat-icon [ngStyle]="{'color':PLColor}" class="icon-size-3.5"
+                                [svgIcon]="'heroicons_solid:arrow-narrow-down'">
+                            </mat-icon>
+                        </span>
+                        <span *ngIf="Profit" [ngStyle]="{'color':PLColor}"> Net P/L: {{netPL$ | async}}
+                            <mat-icon [ngStyle]="{'color':PLColor}" class="icon-size-3.5"
+                                [svgIcon]="'heroicons_solid:arrow-narrow-up'">
+                            </mat-icon>
+                        </span>
+                    </div>
+                    <div class="column-custom">
+                        <span *ngIf="TotalLoss" [ngStyle]="{'color':TotalPLColor}"> Total P/L: {{TotalPL$ | async}}
+                            <mat-icon [ngStyle]="{'color':TotalPLColor}" class="icon-size-3.5"
+                                [svgIcon]="'heroicons_solid:arrow-narrow-down'">
+                            </mat-icon>
+                        </span>
+                        <span *ngIf="TotalProfit" [ngStyle]="{'color':TotalPLColor}"> Total P/L: +{{TotalPL$ | async}}
+                            <mat-icon [ngStyle]="{'color':TotalPLColor}" class="icon-size-3.5"
+                                [svgIcon]="'heroicons_solid:arrow-narrow-up'">
+                            </mat-icon>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="flex justify-end">
+            <span class="mr-2 mt-2 fa fa-refresh text-gray-100 hover:text-primary-500" style="cursor: pointer;"
+                type="button" (click)="getuserHoldings()">
+            </span>
+        </div>
+        <div class="w-auto mt-2">
+            <div>
+                <section class="overflow-y-auto h-full sm:h-100 md:h-120 lg:h-100 xl:h-180 mat-elevation-z8"
+                    tabindex="0">
+                    <table class="w-full bg-transparent " mat-table [dataSource]="userHoldingSymbolsDataSource">
+                        <ng-container matColumnDef="Name">
+                            <th class="text-primary-500 xl:text-xl lg:text-md md:text-sm sm:text-sm"
+                                style="background-color: #193c5d; width: 13%" mat-header-cell *matHeaderCellDef>Name
+                            </th>
+                            <td mat-cell *matCellDef="let element" class="font-medium"
+                                [@animate]="{value:'*',params:{delay:'100ms',scale:'0.3'}}">
+                                <div class="flex items-center pt-2 pb-2">
+                                    <!-- <img class="w-10" [src]=element.src> -->
+                                    <div class="flex flex-col hover:underline cursor-pointer ml-2"
+                                        (click)="onClickSymbol(element)">
+                                        {{element.securityCode}}
+                                    </div>
+                                </div>
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="Volume">
+                            <th class="text-primary-500 xl:text-xl lg:text-md md:text-sm sm:text-sm"
+                                style="background-color: #193c5d; width: 7%" mat-header-cell *matHeaderCellDef>Volume
+                            </th>
+                            <td mat-cell *matCellDef="let element"
+                                [@animate]="{value:'*',params:{delay:'100ms',scale:'0.3'}}">
+                                {{element.holding}}
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="AveragePrice">
+                            <th class="text-primary-500 xl:text-xl lg:text-md md:text-sm sm:text-sm"
+                                style="background-color: #193c5d; width: 9%" mat-header-cell *matHeaderCellDef>Average
+                                Price
+                            </th>
+                            <td mat-cell *matCellDef="let element"
+                                [@animate]="{value:'*',params:{delay:'100ms',scale:'0.3'}}">
+                                {{element.averageBuyPrice}}
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="CurrentPrice">
+                            <th class="text-primary-500 xl:text-xl lg:text-md md:text-sm sm:text-sm"
+                                style="background-color: #193c5d; width: 9%" mat-header-cell *matHeaderCellDef>Current
+                                Price
+                            </th>
+                            <td mat-cell *matCellDef="let element"
+                                [@animate]="{value:'*',params:{delay:'100ms',scale:'0.3'}}">
+                                {{element.securityStatsDTO?.currentPrice}}
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="MarketValue">
+                            <th class="text-primary-500 xl:text-xl lg:text-md md:text-sm sm:text-sm"
+                                style="background-color: #193c5d; width: 9%" mat-header-cell *matHeaderCellDef>Market
+                                Value
+                            </th>
+                            <td mat-cell *matCellDef="let element"
+                                [@animate]="{value:'*',params:{delay:'100ms',scale:'0.3'}}">
+                                {{element.marketValue}}
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="DayP/L">
+                            <th class="text-primary-500 xl:text-xl lg:text-md md:text-sm sm:text-sm"
+                                style="background-color: #193c5d; width: 7%" mat-header-cell *matHeaderCellDef>Day P/L
+                            </th>
+                            <td mat-cell *matCellDef="let element"
+                                [@animate]="{value:'*',params:{delay:'100ms',scale:'0.3'}}">
+
+                                <div class="leading-none mb-px"
+                                    [ngClass]="{'text-green-500': element.DayPLDir === 'up', 'text-red-500': element.DayPLDir === 'down'}">
+                                    {{element.DayPL}}
+                                </div>
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="TotalP/L">
+                            <th class="text-primary-500 xl:text-xl lg:text-md md:text-sm sm:text-sm"
+                                style="background-color: #193c5d; width: 7%" mat-header-cell *matHeaderCellDef>Total P/L
+                            </th>
+                            <td mat-cell *matCellDef="let element"
+                                [@animate]="{value:'*',params:{delay:'100ms',scale:'0.3'}}">
+                                <div class="leading-none mb-px"
+                                    [ngClass]="{'text-green-500': element.totalPLDir === 'up', 'text-red-500': element.totalPLDir === 'down'}">
+                                    {{element.totalPL}}
+                                </div>
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="LastPurchaseDate">
+                            <th class="text-primary-500 xl:text-xl lg:text-md md:text-sm sm:text-sm"
+                                style="background-color: #193c5d; width: 13%" mat-header-cell *matHeaderCellDef>Last
+                                Purchase Date</th>
+                            <td mat-cell *matCellDef="let element"
+                                [@animate]="{value:'*',params:{delay:'100ms',scale:'0.3'}}">
+                                {{element.lastPurchaseDate}}
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="BuySell">
+                            <th class="text-primary-500 xl:text-xl lg:text-md md:text-sm sm:text-sm"
+                                style="background-color: #193c5d; width: 12%" mat-header-cell *matHeaderCellDef></th>
+                            <td mat-cell *matCellDef="let element"
+                                [@animate]="{value:'*',params:{delay:'100ms',scale:'0.3'}}">
+                                <span (click)="showModalForOrder(element , 'B' , 'equities')"
+                                    class="ml-4 transformHover cursor-pointer  items-center font-bold text-md lg:text-md sm:text-sm px-2.5 lg:px-1.5 md:px-1.0  py-0.5 tracking-wider uppercase border-green-600 border-2 text-green-600"
+                                    style="border-radius:4px;">
+                                    <span class="leading-relaxed whitespace-nowrap">Buy</span>
+                                </span>
+                                <span (click)="showModalForOrder(element , 'S' , 'equities')"
+                                    class="cursor-pointer transformHover ml-4  items-center font-bold text-md lg:text-md sm:text-sm px-2.5 lg:px-1.5 md:px-1.0  py-0.5 tracking-wider uppercase border-red-600 border-2 text-red-600"
+                                    style="border-radius:4px;">
+                                    <span class="leading-relaxed whitespace-nowrap">Sell</span>
+                                </span>
+                            </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="menu; sticky: true "></tr>
+                        <tr class="order-row h-16" mat-row *matRowDef="let row; columns: menu;"></tr>
+                    </table>
+                </section>
+            </div>
+        </div>
+
+    </div>
+</div>

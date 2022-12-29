@@ -1,0 +1,133 @@
+<div class="relative flex flex-col flex-auto min-w-0 overflow-hidden" style="background-image: url('assets/images/marlin-dashboard/dashboard-back.png');
+                background-size: cover;
+                background-repeat: no-repeat;">
+
+    <!-- <div class="relative flex flex-col flex-auto min-w-0 overflow-hidden" style="background-image: url('assets/images/marlin-dashboard/dashboard-back.png');
+                background-size: cover;
+                background-repeat: no-repeat;"> -->
+
+
+    <!-- Header & Cards -->
+    <div class="relative pb-12 sm:pb-24 overflow-hidden">
+        <!-- Header -->
+        <div class="flex flex-col items-center">
+            <!-- Recurring selector -->
+
+            <!-- Main -->
+            <div class="flex flex-col flex-auto items-center h-full">
+                <!-- @formatter:off -->
+                <div class="w-full max-w-4xl">
+                    <!-- <div class="w-full md:max-w-screen-md sm:max-w-screen-sm"> -->
+
+                    <mat-horizontal-stepper style="background-color:transparent !important" [linear]="isLinear"
+                        #stepper>
+
+                        <mat-step [stepControl]="personalDataOfApplicantFormGroup">
+                            <form class="bg-inherit" [formGroup]="personalDataOfApplicantFormGroup">
+                                <personal-data-of-applicant (accountTypeChange)='onAccountTypeChanged($event)'
+                                    [personalDataOfApplicantFormGroup]="personalDataOfApplicantFormGroup"
+                                    [isApprovedByNCCPL]="isApprovedByNCCPL" [UIN]="UIN">
+                                </personal-data-of-applicant>
+                            </form>
+                            <ng-template matStepLabel>Personal</ng-template>
+
+                            <!-- Divider -->
+                            <div class="mt-4 mb-4 border-t"></div>
+                            <div class="flex items-center justify-end">
+                                <button mat-flat-button (click)="saveDataOnNext('clientNccplDataBO')" matStepperNext>
+                                    Next
+                                </button>
+                                <button *ngIf="isDrafted || isApprovedByNCCPL"
+                                    [disabled]="!personalDataOfApplicantFormGroup.valid || isApprovedByNCCPL"
+                                    mat-flat-button [color]="'primary'" class="ml-4"
+                                    (click)="saveDataAsDraft('stepper', personalDataOfApplicantFormGroup)">
+                                    Save as Draft
+                                </button>
+                            </div>
+                        </mat-step>
+
+                        <mat-step [stepControl]="nominationFormGroup">
+                            <form [formGroup]="nominationFormGroup">
+                                <app-nominee-form [savedFiles]="filesDataObj" (fileChange)='getAllFiles($event)'
+                                    [nominationFormGroup]="nominationFormGroup" [isApprovedByNCCPL]="isApprovedByNCCPL">
+                                </app-nominee-form>
+                            </form>
+                            <ng-template matStepLabel>Nominee</ng-template>
+
+                            <!-- Divider -->
+                            <div class="mt-4 mb-4 border-t"></div>
+
+                            <!-- Actions -->
+                            <div class="flex items-center justify-end">
+                                <button mat-flat-button matStepperPrevious>Back</button>
+                                <button mat-flat-button matStepperNext (click)="saveDataOnNext('clientNomineeNccplBO')">
+                                    Next
+                                </button>
+                                <button class="ml-4" *ngIf="isDrafted || isApprovedByNCCPL"
+                                    [disabled]="!nominationFormGroup.valid || isApprovedByNCCPL" mat-flat-button
+                                    (click)="saveDataAsDraft('stepper', nominationFormGroup)" [color]="'primary'">
+                                    Save as Draft
+                                </button>
+                            </div>
+
+                        </mat-step>
+                        <mat-step [stepControl]="attorneyFormGroup">
+                            <form [formGroup]="attorneyFormGroup">
+                                <app-attorney-form (uinChange)='updateAttorneyValidations($event)'
+                                    [attorneyFormGroup]="attorneyFormGroup" [isApprovedByNCCPL]="isApprovedByNCCPL">
+                                </app-attorney-form>
+                            </form>
+                            <ng-template matStepLabel>Attorney</ng-template>
+
+                            <!-- Divider -->
+                            <div class="mt-4 mb-4 border-t"></div>
+
+                            <!-- Actions -->
+                            <div class="flex items-center justify-end">
+
+                                <button mat-flat-button matStepperPrevious>Back</button>
+                                <button class="nextBtn" mat-flat-button matStepperNext
+                                    (click)="saveDataOnNext('clientAttorneyBO')">
+                                    Next
+                                </button>
+                                <button *ngIf="isDrafted || isApprovedByNCCPL"
+                                    [disabled]="!attorneyFormGroup.valid || isApprovedByNCCPL" class="ml-4"
+                                    mat-flat-button (click)="saveDataAsDraft('stepper', attorneyFormGroup)"
+                                    [color]="'primary'">
+                                    Save as Draft
+                                </button>
+                            </div>
+
+                        </mat-step>
+
+                        <mat-step [stepControl]="declarationIndFormGroup">
+                            <form [formGroup]="declarationIndFormGroup">
+                                <app-declaration-ind [declarationIndFormGroup]="declarationIndFormGroup">
+                                </app-declaration-ind>
+                            </form>
+
+                            <ng-template matStepLabel>Done</ng-template>
+
+                            <!-- Divider -->
+                            <div class="mt-4 mb-4 border-t"></div>
+
+                            <!-- Actions -->
+                            <div class="flex items-center justify-end">
+
+                                <button mat-flat-button matStepperPrevious>Back</button>
+                                <button class="ml-4" [color]="'warn'" [disabled]="isApprovedByNCCPL" mat-flat-button
+                                    (click)="stepper.reset()">
+                                    Reset
+                                </button>
+                                <button [disabled]="!declarationIndFormGroup.value.isAgree || isApprovedByNCCPL"
+                                    class="ml-4" mat-flat-button (click)="submit(stepper, false)"
+                                    [color]="'primary'">Submit
+                                </button>
+                            </div>
+
+                        </mat-step>
+                    </mat-horizontal-stepper>
+                </div>
+            </div>
+        </div>
+    </div>

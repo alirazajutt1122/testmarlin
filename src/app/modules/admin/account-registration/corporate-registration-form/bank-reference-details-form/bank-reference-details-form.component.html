@@ -1,0 +1,89 @@
+<div class="w-full max-w-4xl">
+    <div [formGroup]="bankReferenceDetailFormGroup">
+
+        <div class="w-full">
+            <div class="text-xl">BANK REFERENCE DETAILS (ATLEAST TWO)</div>
+            <div class="text-secondary mt-4">BANK REFERENCE DETAILS (Bank 1)</div>
+        </div>
+
+        <div class="grid sm:grid-cols-6 gap-6 w-full mt-8">
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Bank Name</mat-label>
+                    <input matInput name="bankName1" formControlName="bankName1">
+                </mat-form-field>
+            </div>
+
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Account No.</mat-label>
+                    <input matInput name="accountNo1" formControlName="accountNo1">
+                </mat-form-field>
+            </div>
+
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Contact Name</mat-label>
+                    <input matInput name="contactName1" formControlName="contactName1">
+                </mat-form-field>
+            </div>
+
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Registered / Branch Name Address</mat-label>
+                    <input matInput name="registeredBranchAddress1" formControlName="registeredBranchAddress1">
+                </mat-form-field>
+            </div>
+
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Phone / Cell no.</mat-label>
+                    <input matInput name="phoneNo1" formControlName="phoneNo1">
+                </mat-form-field>
+            </div>
+        </div>
+
+        <div class="w-full mt-4">
+            <div class="text-secondary">BANK REFERENCE DETAILS (Bank 2)</div>
+        </div>
+
+        <div class="grid sm:grid-cols-6 gap-6 w-full mt-8">
+
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Bank Name</mat-label>
+                    <input matInput name="bankName2" formControlName="bankName2">
+                </mat-form-field>
+            </div>
+
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Account No.</mat-label>
+                    <input matInput name="accountNo2" formControlName="accountNo2">
+                </mat-form-field>
+            </div>
+
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Contact Name</mat-label>
+                    <input matInput name="contactName2" formControlName="contactName2">
+                </mat-form-field>
+            </div>
+
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Registered / Branch Name Address</mat-label>
+                    <input matInput name="registeredBranchAddress2" formControlName="registeredBranchAddress2">
+                </mat-form-field>
+            </div>
+
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Phone / Cell no.</mat-label>
+                    <input matInput name="phoneNo2" formControlName="phoneNo2">
+                </mat-form-field>
+            </div>
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,33 @@
+<wj-popup class="modal-dialog" #marketStateDlg [modal]=true hideTrigger="None">
+    <div class="modal-content">
+      <div class="modal-body modal-no-border">
+        <div class="row setup_box_container">
+          <div class="col-md-4 modal_left">
+            <div class="wizard_Logo">
+              <img src="assets/img/Market-State.png" style="width: 30%; margin : auto;"/>
+              <h4>{{ 'Translation.Market State' | translate }} </h4>
+              <p>{{ 'Translation.Shows the current status of different markets' | translate }}</p>
+            </div>
+          </div>
+          <div class="col-md-8 modal_center">
+            <div class="row" style="margin: 40px 40px 40px 40px">
+              <wj-flex-grid [isReadOnly]="true" [itemsSource]="marketStates" [selectionMode]="'Row'"
+                [headersVisibility]="'Column'" #flexGrid>
+                <wj-flex-grid-filter [filterColumns]="filterColumns"></wj-flex-grid-filter>
+                <wj-flex-grid-column [header]="'Translation.Market' | translate" [binding]="'market'" [width]="'*'" [align]="'left'">
+                </wj-flex-grid-column>
+                <wj-flex-grid-column [header]="'Translation.State' | translate" [binding]="'state'" [width]="'*'" [align]="'left'">
+                  <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-item="item">
+                    <span [style.color]="getStateColor(item.state)"> {{item.state}} </span>
+                  </ng-template>
+                </wj-flex-grid-column>
+              </wj-flex-grid>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="orange_footer_small">
+        <button type="button" class="cancel_btn" (click)="onOK()">{{ 'Common.OK' | translate }}</button>
+      </div>
+    </div>
+  </wj-popup>

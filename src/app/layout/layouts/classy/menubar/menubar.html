@@ -1,0 +1,683 @@
+<intial-quote #initializeQuote [modalId]="'initialize-quote'"></intial-quote>
+<order-new-all  #newOrderAllMenu [modalId]="'new-order-all-menu'" ></order-new-all>
+<negotiated-deals #newNegotiatedOrderAllMenu [modalId]="'new-negotiated-order-all-menu'"></negotiated-deals>
+<repo-order #repoOrder [modalId]="'repo-order'"></repo-order>
+<change-order-all #changeOrderAll [modalId]="'change-order-all-menu'"></change-order-all>
+<cancel-order-all #cancelOrderAll [modalId]="'cancel-order-all-menu'"></cancel-order-all>
+
+
+<market-state #marketState></market-state>
+
+
+<header class="top_nav clearfix collapse navbar-collapse" id="mainNav">
+  <div>
+    <nav>
+      <ul class="main-navigation">
+        <!-- <li *ngIf="userService.isAuhtorized(userService.EB_HOME)">
+          <a [routerLink]=" ['/dashboard'] "><img src="assets/img/main/dashboard.png" /> {{"Menu.Home" | translate}}</a>
+        </li> -->
+        <li *ngIf="userService.isAuhtorized(userService.EB_HOME) || publicMenu">
+          <a [routerLink]=" ['/dashboard'] "><img src="assets/img/dashboard.png" /> {{"Menu.Dashboard" | translate}}</a>
+        </li>
+        <li *ngIf="userService.isAuhtorized(userService.EB_HOME) && isParticipant">
+          <a [routerLink]=" ['/dashboard-bo'] "><img src="assets/img/dashboard.png" /> {{"Menu.Dashboard" | translate}}-BO</a>
+        </li>
+        <li *ngIf="userService.isAuhtorized(userService.OM_EQUITY_MARKET_WATCH_VIEW) || userService.isAuhtorized(userService.OM_BOND_MARKET_WATCH_VIEW) || publicMenu">
+          <a><img src="assets/images2/main/future_open_trade.png" /> {{"Menu.Asset Classes" | translate}}</a>
+          <ul>
+            <li *ngIf="publicMenu">
+              <a><img src="assets/img/setup/bank-branches.png" /> {{"Menu.Asset Classes" | translate}}</a>
+            </li>
+            <li *ngIf="userService.isAuhtorized(userService.OM_EQUITY_MARKET_WATCH_VIEW) || userService.isAuhtorized(userService.OM_BOND_MARKET_WATCH_VIEW) || publicMenu">
+              <a [routerLink]=" ['/oms-reports/market-watch']"><img src="assets/img/admin_config/market.png" /> {{"Menu.Market Watch" | translate}} </a>
+            </li>
+            <li
+              *ngIf="userService.isAuhtorized(userService.EB_EQUITY_TRANSACTION_VIEW) || userService.isAuhtorized(userService.EB_BOND_TRANSACTION_VIEW)">
+              <a [routerLink]="['/back-office/equities/manual-transaction-page']"><img
+                  src="assets/images2/Equities/transactions.png" /> {{"Menu.Transactions" | translate}}</a>
+            </li>
+            <li *ngIf="userService.isAuhtorized(userService.EB_EQUITY_SETTLEMENT_VIEW)">
+              <a [routerLink]="['/back-office/equities/settlement-page']"><img
+                  src="assets/images2/Equities/settlement.png" /> {{"Menu.Settlement" | translate}}</a>
+            </li>
+            <li>
+              <a [routerLink]="['/oms-reports/configure-alerts']"> <img src="assets/img/access_control/privilege.png" class="mr-2" />
+                {{'Translation.Alert Management' | translate}}</a>
+            </li>
+          </ul>
+        </li>
+        <li
+          *ngIf="userService.isAuhtorized(userService.OM_BOND_ORDER_NEW) || userService.isAuhtorized(userService.OM_EQUITY_ORDER_NEW) ||
+        userService.isAuhtorized(userService.OM_EQUITY_ORDER_CHANGE) || userService.isAuhtorized(userService.OM_BOND_ORDER_CHANGE) ||
+        userService.isAuhtorized(userService.OM_EQUITY_ORDER_CANCEL) || userService.isAuhtorized(userService.OM_BOND_ORDER_CANCEL) || loggedInUserType === userType.CLIENT">
+          <a><img src="assets/images2/Equities/account-activity.png" /> {{"Menu.Order Management" | translate}}</a>
+          <ul>
+            <!-- (click)="newOrderAllMenu.show(null , null , null)" -->
+            <li
+              *ngIf="userService.isAuhtorized(userService.OM_BOND_ORDER_NEW) || userService.isAuhtorized(userService.OM_EQUITY_ORDER_NEW) || loggedInUserType === userType.CLIENT">
+              <a (click)="newOrderAllMenu.showMenu()"><img src="assets/img/new-order.png" /> {{"Menu.New Order" |
+                translate}}</a>
+            </li>
+            <li
+              *ngIf="userService.isAuhtorized(userService.OM_EQUITY_ORDER_CHANGE) || userService.isAuhtorized(userService.OM_BOND_ORDER_CHANGE)">
+              <a (click)="changeOrderAll.show()"><img src="assets/img/change-order.png" /> {{"Menu.Change Order" |
+                translate}} </a>
+            </li>
+            <li
+              *ngIf="userService.isAuhtorized(userService.OM_EQUITY_ORDER_CANCEL) || userService.isAuhtorized(userService.OM_BOND_ORDER_CANCEL)">
+              <a (click)="cancelOrderAll.show()"><img src="assets/img/cancel-order.png" /> {{"Menu.Cancel Order" |
+                translate}}</a>
+            </li>
+
+            <li  *ngIf="userService.isAuhtorized(userService.OM_EQUITY_ORDER_CHANGE) || userService.isAuhtorized(userService.OM_BOND_ORDER_CHANGE)">
+            <a><img src="assets/img/negotiation.png" /> {{"Menu.Negotiated Deals" | translate}}<span style="float: right;"><i class="fa fa-caret-right"></i></span></a>
+            <ul class="tree-drop-ul">
+              <li >
+                <a (click)="newNegotiatedOrderAllMenu.showMenu('new')"><img
+                    src="assets/img/new-order.png" />{{"Menu.Initiate" | translate}}</a>
+              </li>
+              <li>
+                <a [routerLink]="['/negotiation/negotiated-deals-list']" ><img
+                    src="assets/img/Stock-Deposit-Withdraw.png" />{{"Menu.Negotiated Deals List" | translate}}</a>
+              </li>
+            </ul>
+          </li>
+
+          <li  *ngIf="userService.isAuhtorized(userService.OM_EQUITY_ORDER_CHANGE) || userService.isAuhtorized(userService.OM_BOND_ORDER_CHANGE)">
+            <a><img src="assets/img/repo.png" /> {{"Menu.Repo" | translate}}<span style="float: right;"><i class="fa fa-caret-right"></i></span></a>
+            <ul class="tree-drop-ul">
+              <li >
+                <a (click)="repoOrder.showMenu()"><img
+                    src="assets/img/new-order.png" />{{"Menu.Repo Order" | translate}}</a>
+              </li>
+              <li>
+                <a ><img
+                    src="assets/img/Stock-Deposit-Withdraw.png" />{{"Menu.Repo Order List" | translate}}</a>
+              </li>
+              <li>
+                <a ><img
+                    src="assets/img/financials/profit-n-loss-statment.png" />{{"Menu.Repo Open Position" | translate}}</a>
+              </li>
+            </ul>
+          </li>
+          <li>
+            <a><img src="assets/img/new-order.png" />{{'Translation.Quote' | translate}} <span style="float: right;"><i class="fa fa-caret-right"></i></span></a>
+            <ul class="tree-drop-ul">
+              <li><a (click)="initializeQuote.show()"><img src="assets/img/new-order.png" />{{'Translation.Initiate Quote' | translate}}</a></li>
+              <li><a><img src="assets/img/cancel-order.png" />{{'Translation.Cancel Quote' | translate}}</a></li>
+            </ul>
+          </li>
+
+
+          </ul>
+        </li>
+        <li
+          *ngIf="userService.isAuhtorized(userService.EB_VAULT_DEPOSIT_WITHDRAW_VIEW) || userService.isAuhtorized(userService.EB_STOCK_RECEIPT_REPORT_VIEW) || userService.isAuhtorized(userService.EB_STOCK_ACTIVITY_REPORT_VIEW)">
+          <a><img src="assets/img/main/vault.png" /> {{"Menu.Vault" | translate}}</a>
+          <ul>
+            <li>
+              <a [routerLink]="['/back-office/vault/stock-deposit-withdraw',Deposit]"><img
+                  src="assets/img/vault/stock-deposit-withdraw.png" /> {{ 'Menu.Stock Deposits' | translate }}</a>
+            </li>
+            <li>
+              <a [routerLink]="['/back-office/vault/stock-deposit-withdraw',Withdraw]"><img
+                  src="assets/img/research/Strongest-Performing-Investments.png" /> {{ 'Menu.Stock Withdrawal' | translate }}</a>
+            </li>
+            <li>
+              <a [routerLink]="['/back-office/vault/stock-deposit-withdraw',Pledge]"><img
+                  src="assets/img/research/Historical-Payouts.png" /> {{ 'Menu.Stock Pledge' | translate }}</a>
+            </li>
+            <li>
+              <a [routerLink]="['/back-office/vault/stock-deposit-withdraw',Release]"><img
+                  src="assets/img/research/security-lookup-quote.png" /> {{ 'Menu.Stock Release' | translate }}</a>
+            </li>
+          </ul>
+        </li>
+        <li
+          *ngIf="userService.isAuhtorized(userService.EB_FINANCIALS_CHART_OF_ACCOUNT_VIEW) || userService.isAuhtorized(userService.EB_FINANCIALS_VOUCHER_VIEW) || userService.isAuhtorized(userService.EB_FINANCIALS_VOUCHER_CHEQUE_CLEARANCE) || userService.isAuhtorized(userService.EB_FINANCIALS_FISCAL_YEAR_VIEW) || userService.isAuhtorized(userService.EB_CHART_OF_ACCOUNT_REPORT_VIEW) || userService.isAuhtorized(userService.EB_GENERAL_LEDGER_REPORT_VIEW) || userService.isAuhtorized(userService.EB_TRIAL_BALANCE_REPORT_VIEW) || userService.isAuhtorized(userService.EB_PROFIT_LOSS_REPORT_VIEW) || userService.isAuhtorized(userService.EB_BALANCE_SHEET_REPORT_VIEW) || userService.isAuhtorized(userService.EB_CLIENT_CASH_BALANCE_VIEW) || userService.isAuhtorized(userService.EB_FINANCIALS_VOUCHER_LIST_REPORT_VIEW) || userService.isAuhtorized(userService.EB_CLIENT_LIST_REPORT_VIEW)">
+          <a><img src="assets/images2/Equities/account-margin-detail.png" /> {{"Menu.Financials" | translate}}</a>
+          <ul>
+            <li *ngIf="userService.isAuhtorized(userService.EB_FINANCIALS_CHART_OF_ACCOUNT_VIEW)">
+              <a [routerLink]="['/back-office/financials/chart-of-account']"><img src="assets/img/financials/chart-of-account.png" />{{"Menu.Chart of Account" | translate}}</a>
+            </li>
+            <li *ngIf="userService.isAuhtorized(userService.EB_FINANCIALS_VOUCHER_VIEW)">
+              <a [routerLink]="['/back-office/financials/voucher-page']"><img src="assets/img/financials/voucher.png" />{{"Menu.Voucher" | translate}}</a>
+            </li>
+            <li *ngIf="userService.isAuhtorized(userService.EB_FINANCIALS_VOUCHER_CHEQUE_CLEARANCE)">
+              <a [routerLink]="['/back-office/financials/cheque-clearance-page']"><img src="assets/img/financials/cheque-clearence.png" />{{"Menu.Cheque Clearance" | translate}}</a>
+            </li>
+            <li *ngIf="userService.isAuhtorized(userService.EB_FINANCIALS_FISCAL_YEAR_VIEW)">
+              <a [routerLink]="['/back-office/financials/fiscal-year']"><img src="assets/img/financials/fscal-year.png" />{{"Menu.Fiscal Year" | translate}}</a>
+            </li>
+            <li *ngIf="userService.isAuhtorized(userService.EB_COMPUTE_AGING_VIEW)">
+              <a [routerLink]="['/back-office/financials/compute-aging-page']"><img src="assets/img/financials/compute-aging.png" />{{"Menu.Compute Client Aging" | translate}}</a>
+            </li>
+          </ul>
+        </li>
+        
+      
+        <li *ngIf="userService.isAuhtorized(userService.OM_REPORTS_EVENT_LOG_VIEW) || userService.isAuhtorized(userService.OM_REPORTS_EXECUTED_ORDERS_VIEW)
+        || userService.isAuhtorized(userService.OM_REPORTS_WORKING_ORDERS_VIEW) || userService.isAuhtorized(userService.OM_REPORTS_MARKET_SUMMARY_VIEW)
+        || userService.isAuhtorized(userService.OM_REPORTS_SECTOR_STATS_VIEW)
+        || userService.isAuhtorized(userService.OM_REPORTS_EXCHANGE_STATS_VIEW) || userService.isAuhtorized(userService.EB_CONTRACT_NOTE_REPORT_VIEW) || userService.isAuhtorized(userService.EB_ACCOUNT_HOLDING_SUMMARY_REPORT_VIEW)
+        || userService.isAuhtorized(userService.EB_ACCOUNT_ACTIVITY_SUMMARY_REPORT_VIEW) || userService.isAuhtorized(userService.EB_ACCOUNT_ACTIVITY_DETAIL_REPORT_VIEW)
+        || userService.isAuhtorized(userService.EB_CL_GN_LS_REPORT_VIEW) || userService.isAuhtorized(userService.EB_PE_LEVIES_REPORT_VIEW)
+        || userService.isAuhtorized(userService.EB_CL_LEVIES_DL_REPORT_VIEW) || userService.isAuhtorized(userService.EB_PART_COMMISSION_REPORT_VIEW) || userService.isAuhtorized(userService.EB_AGENT_COMMISSION_REPORT_VIEW)
+        || userService.isAuhtorized(userService.EB_PART_MONEY_OBL_REPORT_VIEW) || userService.isAuhtorized(userService.EB_PART_DEL_OBL_REPORT_VIEW) || userService.isAuhtorized(userService.EB_CL_DEL_OBL_REPORT_VIEW) || userService.isAuhtorized(userService.EB_CL_MONEY_OBL_REPORT_VIEW)
+        || userService.isAuhtorized(userService.EB_STOCK_RECEIPT_REPORT_VIEW) || userService.isAuhtorized(userService.EB_STOCK_ACTIVITY_REPORT_VIEW)
+        || userService.isAuhtorized(userService.EB_VAULT_DEPOSIT_WITHDRAW_VIEW) || userService.isAuhtorized(userService.EB_CHART_OF_ACCOUNT_REPORT_VIEW) || userService.isAuhtorized(userService.EB_GENERAL_LEDGER_REPORT_VIEW)
+        || userService.isAuhtorized(userService.EB_TRIAL_BALANCE_REPORT_VIEW) || userService.isAuhtorized(userService.EB_PROFIT_LOSS_REPORT_VIEW)
+        || userService.isAuhtorized(userService.EB_BALANCE_SHEET_REPORT_VIEW) || userService.isAuhtorized(userService.EB_CLIENT_CASH_BALANCE_VIEW)
+        || userService.isAuhtorized(userService.EB_FINANCIALS_VOUCHER_LIST_REPORT_VIEW) ||  userService.isAuhtorized(userService.EB_FINANCIALS_VOUCHER_LIST_REPORT_VIEW)
+        || userService.isAuhtorized(userService.EB_CLIENT_LIST_REPORT_VIEW)">
+          <a><img src="assets/images2/main/sro-list.png" /> {{"Menu.Reports" | translate}}</a>
+          <ul>
+            <li *ngIf="userService.isAuhtorized(userService.OM_REPORTS_BOND_EVENT_LOG_VIEW) || userService.isAuhtorized(userService.OM_REPORTS_EXECUTED_ORDERS_VIEW)
+            || userService.isAuhtorized(userService.OM_REPORTS_WORKING_ORDERS_VIEW)" >
+              <a><img src="assets/images2/Equities/account-activity.png" /> {{"Menu.Order Reports" | translate}} <span
+                  style="float: right;"><i class="fa fa-caret-right"></i></span></a>
+              <!------------------------------------------------------------------------------------------>
+              <ul class="tree-drop-ul">
+                <li  *ngIf="userService.isAuhtorized(userService.OM_REPORTS_WORKING_ORDERS_VIEW) || userService.isAuhtorized(userService.OM_REPORTS_BOND_WORKING_ORDERS_VIEW)">
+                  <a [routerLink]="['/oms-reports/working-orders']"><img src="assets/img/working-orders.png" /> {{"Menu.Working Orders" | translate}}</a>
+                </li>
+                <li *ngIf="userService.isAuhtorized(userService.OM_REPORTS_EXECUTED_ORDERS_VIEW) || userService.isAuhtorized(userService.OM_REPORTS_BOND_EXECUTED_ORDERS_VIEW)">
+                  <a [routerLink]="['/oms-reports/executed-orders']"><img src="assets/img/executed-orders.png" /> {{"Menu.Executed Orders" | translate}} </a>
+                </li>
+                <li  *ngIf="userService.isAuhtorized(userService.OM_REPORTS_EVENT_LOG_VIEW) || userService.isAuhtorized(userService.OM_REPORTS_BOND_EVENT_LOG_VIEW)" >
+                  <a [routerLink]="['/oms-reports/event-log']"><img src="assets/img/event-log.png" /> {{"Menu.Event Log" | translate}}</a>
+                </li>
+                <li  *ngIf="userService.isAuhtorized(userService.OM_REPORTS_SECURITY_DETAILS_VIEW) || userService.isAuhtorized(userService.OM_REPORTS_BOND_SECURITY_DETAILS_VIEW)" >
+                    <a [routerLink]="['/oms-reports/security-detail']"><img src="assets/img/security-detail.png" /> {{"Menu.Security Detail" | translate}}</a>
+                  </li>
+                  <li  *ngIf="userService.isAuhtorized(userService.OM_REPORTS_SECURITY_CHART_VIEW)" >
+                    <a [routerLink]="['/oms-reports/security-chart']"><img src="assets/img/security-chart.png" /> {{"Menu.Security Chart" | translate}}</a>
+                  </li>
+              </ul>
+              <!------------------------------------------------------------------------------------------>
+            </li>
+            <li *ngIf="userService.isAuhtorized(userService.OM_REPORTS_MARKET_SUMMARY_VIEW)
+            || userService.isAuhtorized(userService.OM_REPORTS_SECTOR_STATS_VIEW)
+            || userService.isAuhtorized(userService.OM_REPORTS_EXCHANGE_STATS_VIEW)">
+                <a><img src="assets/img/setup/brokerage-branch.png" /> {{"Menu.Market Reports" | translate}} <span
+                    style="float: right;"><i class="fa fa-caret-right"></i></span></a>
+                <!------------------------------------------------------------------------------------------>
+                <ul class="tree-drop-ul">
+                  <li *ngIf="userService.isAuhtorized(userService.OM_REPORTS_EXCHANGE_STATS_VIEW)">
+                    <a [routerLink]="['/oms-reports/exchange-stats']"><img src="assets/img/exchange-stats.png" /> {{"Menu.Exchange Statistics" | translate}}</a>
+                  </li>
+                  <li *ngIf="userService.isAuhtorized(userService.OM_REPORTS_SECTOR_STATS_VIEW)">
+                    <a><img src="assets/img/sector-stats.png" /> {{"Menu.Sector Statistics" | translate}} </a>
+                  </li>
+                  <li *ngIf="userService.isAuhtorized(userService.OM_REPORTS_MARKET_SUMMARY_VIEW)">
+                    <a [routerLink]="['/oms-reports/market-summary']"><img src="assets/img/market-summary.png" /> {{"Menu.Market Summary" | translate}}</a>
+                  </li>
+                  <li *ngIf="userService.isAuhtorized(userService.OM_REPORTS_MARKET_SUMMARY_VIEW)">
+                    <a [routerLink]="['/oms-reports/client-margin-details']"><img src="assets/img/client-margin-details.png" /> {{"Menu.Client Margin Details" | translate}}</a>
+                  </li>
+                  <li>
+                    <a (click)="marketState.show()"><img src="assets/img/market-State-small.png" /> {{"Menu.Market State" | translate}}</a>
+                  </li>
+                </ul>
+                <!------------------------------------------------------------------------------------------>
+              </li>
+            <li *ngIf="userService.isAuhtorized(userService.EB_CONTRACT_NOTE_REPORT_VIEW) || userService.isAuhtorized(userService.EB_ACCOUNT_HOLDING_SUMMARY_REPORT_VIEW)
+           || userService.isAuhtorized(userService.EB_ACCOUNT_ACTIVITY_SUMMARY_REPORT_VIEW) || userService.isAuhtorized(userService.EB_ACCOUNT_ACTIVITY_DETAIL_REPORT_VIEW)
+           || userService.isAuhtorized(userService.EB_CL_GN_LS_REPORT_VIEW)">
+              <a><img src="assets/images2/main/future_open_trade.png" /> {{"Menu.Trading Reports" | translate}} <span
+                  style="float: right;"><i class="fa fa-caret-right"></i></span></a>
+              <!------------------------------------------------------------------------------------------>
+              <ul class="tree-drop-ul">
+                <li *ngIf="userService.isAuhtorized(userService.EB_CONTRACT_NOTE_REPORT_VIEW)">
+                  <a [routerLink]="['/back-office/equities/Reports/trade-confirmation-report']"><img
+                      src="assets/images2/Equities/trade-confirmation.png" /> {{"Menu.Trade Confirmation" |
+                    translate}}</a>
+                </li>
+               
+                <li *ngIf="userService.isAuhtorized(userService.EB_ACCOUNT_HOLDING_SUMMARY_REPORT_VIEW)">
+                  <a [routerLink]="['/back-office/equities/Reports/account-holding-summary-report']"><img
+                      src="assets/images2/Equities/account-holding-summary.png" /> {{"Menu.Account Holding Summary" |
+                    translate}} </a>
+                </li>
+                <li>
+                  <a [routerLink]="['/back-office/equities/Reports/client-last-activity-rpt']"><img
+                      src="assets/images2/Equities/client_last_activity.png" /> {{"Confirmation Format" |
+                    translate}}</a>
+                </li>
+                <li>
+                  <a [routerLink]="['/back-office/equities/Reports/securitywise-client-activity-rpt']"><img
+                      src="assets/images2/Equities/sec-client-activity.png" /> {{ 'Security Wise Client Activity' |
+                    translate }}</a>
+                </li>
+                <li *ngIf="userService.isAuhtorized(userService.EB_ACCOUNT_ACTIVITY_SUMMARY_REPORT_VIEW) || userService.isAuhtorized(userService.EB_ACCOUNT_ACTIVITY_DETAIL_REPORT_VIEW)">
+                  <a [routerLink]="['/back-office/equities/Reports/account-activity-rpt']"><img
+                      src="assets/images2/Equities/account-activity.png" /> {{"Menu.Account Activity" | translate}}</a>
+                </li>
+                <li>
+                  <a [routerLink]="['/back-office/equities/Reports/account-margin-detail-rpt']"><img
+                      src="assets/images2/Equities/account-margin-detail.png" /> {{"Menu.Margin Detail" |
+                    translate}}</a>
+                </li>
+                <li *ngIf="userService.isAuhtorized(userService.EB_CL_GN_LS_REPORT_VIEW)">
+                  <a [routerLink]="['/back-office/equities/Reports/client-gain-loss-rpt']"><img
+                      src="assets/images2/Equities/clients-gain-loss.png" /> {{"Menu.Client Gain Loss" |
+                    translate}}</a>
+                </li>
+                <li >
+                  <a [routerLink]="['/back-office/equities/Reports/coupon-payment-detail-rpt']"><img
+                      src="assets/images2/Equities/clients-gain-loss.png" /> {{"Menu.Coupon Payment Detail" |
+                    translate}}</a>
+                </li>
+                <li >
+                  <a [routerLink]="['/back-office/equities/Reports/redemption-payment-rpt']"><img
+                      src="assets/images2/Equities/clients-gain-loss.png" /> {{"Menu.Redemption Payment" |
+                    translate}}</a>
+                </li>
+              </ul>
+              <!------------------------------------------------------------------------------------------>
+            </li>
+            <li *ngIf="userService.isAuhtorized(userService.EB_PE_LEVIES_REPORT_VIEW) || userService.isAuhtorized(userService.EB_CL_LEVIES_DL_REPORT_VIEW)">
+              <a><img src="assets/img/equities/client-levies-details.png" /> {{"Menu.Levies Reports" | translate}} <span
+                  style="float: right;"><i class="fa fa-caret-right"></i></span></a>
+              <!------------------------------------------------------------------------------------------>
+              <ul class="tree-drop-ul">
+                <li *ngIf="userService.isAuhtorized(userService.EB_CL_LEVIES_DL_REPORT_VIEW)">
+                  <a [routerLink]="['/back-office/equities/Reports/client-levies-rpt']"><img
+                      src="assets/images2/Equities/client-levies-details.png" /> {{"Menu.Client Levies Detail" |
+                    translate}}</a>
+                </li>
+                <li *ngIf="userService.isAuhtorized(userService.EB_PE_LEVIES_REPORT_VIEW)">
+                  <a [routerLink]="['/back-office/equities/Reports/participant-levies-rpt']"><img
+                      src="assets/images2/Equities/participant-exchange-levies.png" /> {{"Menu.Participant / Exchange Levies" | translate}} </a>
+                </li>
+              </ul>
+              <!------------------------------------------------------------------------------------------>
+            </li>
+            <li *ngIf="userService.isAuhtorized(userService.EB_PART_COMMISSION_REPORT_VIEW) || userService.isAuhtorized(userService.EB_AGENT_COMMISSION_REPORT_VIEW)">
+              <a> <img src="assets/img/market-watch.png" /> {{"Menu.Commission Reports" | translate}} <span
+                  style="float: right;"><i class="fa fa-caret-right"></i></span></a>
+              <!------------------------------------------------------------------------------------------>
+              <ul class="tree-drop-ul">
+                <li *ngIf="userService.isAuhtorized(userService.EB_PART_COMMISSION_REPORT_VIEW)">
+                  <a [routerLink]="['/back-office/equities/Reports/participant-commission-rpt']"><img
+                      src="assets/images2/Equities/participant-commission.png" /> {{"Menu.Participant Commission" |
+                    translate}}</a>
+                </li>
+                <li  *ngIf="userService.isAuhtorized(userService.EB_AGENT_COMMISSION_REPORT_VIEW)">
+                  <a [routerLink]="['/back-office/equities/Reports/agent-commission-rpt']"><img
+                      src="assets/images2/Equities/agent-commission.png" /> {{"Menu.Agent Commission" |
+                    translate}} </a>
+                </li>
+              </ul>
+              <!------------------------------------------------------------------------------------------>
+            </li>
+            <li *ngIf="userService.isAuhtorized(userService.EB_PART_MONEY_OBL_REPORT_VIEW) || userService.isAuhtorized(userService.EB_PART_DEL_OBL_REPORT_VIEW) || userService.isAuhtorized(userService.EB_CL_DEL_OBL_REPORT_VIEW) || userService.isAuhtorized(userService.EB_CL_MONEY_OBL_REPORT_VIEW)">
+              <a> <img src="assets/img/setup/commission-slab.png" /> {{"Menu.Obligation Reports" | translate}} <span
+                  style="float: right;"><i class="fa fa-caret-right"></i></span></a>
+              <!------------------------------------------------------------------------------------------>
+              <ul class="tree-drop-ul">
+                <li *ngIf="userService.isAuhtorized(userService.EB_CL_MONEY_OBL_REPORT_VIEW)">
+                  <a [routerLink]="['/back-office/equities/Reports/client-money-obligation-rpt']"><img
+                      src="assets/images2/Equities/delivery-money-obligation.png" /> {{"Menu.Client Money Obligation" |
+                    translate}}</a>
+                </li>
+                <li *ngIf="userService.isAuhtorized(userService.EB_CL_DEL_OBL_REPORT_VIEW)">
+                  <a [routerLink]="['/back-office/equities/Reports/client-delivery-obligation-rpt']"><img
+                      src="assets/images2/Equities/delivery-money-obligation.png" /> {{"Menu.Client Delivery Obligation"
+                    | translate}}</a>
+                </li>
+                <li *ngIf="userService.isAuhtorized(userService.EB_PART_DEL_OBL_REPORT_VIEW)">
+                  <a [routerLink]="['/back-office/equities/Reports/broker-delivery-obligation-rpt']"><img
+                      src="assets/images2/Equities/delivery-money-obligation.png" /> {{"Menu.Participant Delivery Obligation" | translate }}</a>
+                </li>
+
+              </ul>
+              <!------------------------------------------------------------------------------------------>
+            </li>
+            <li *ngIf="userService.isAuhtorized(userService.EB_STOCK_RECEIPT_REPORT_VIEW) || userService.isAuhtorized(userService.EB_STOCK_ACTIVITY_REPORT_VIEW)
+            || userService.isAuhtorized(userService.EB_VAULT_DEPOSIT_WITHDRAW_VIEW)">
+              <a><img src="assets/img/main/vault.png" /> {{"Menu.Vault Reports" | translate}} <span
+                  style="float: right;"><i class="fa fa-caret-right"></i></span></a>
+              <!------------------------------------------------------------------------------------------>
+              <ul class="tree-drop-ul">
+                <li *ngIf="userService.isAuhtorized(userService.EB_STOCK_RECEIPT_REPORT_VIEW)">
+                  <a [routerLink]="['/back-office/vault/stock-receipt-rpt']"><img
+                      src="assets/img/vault/stock-receipt.png" /> {{"Menu.Stock Receipt"
+                    | translate}}</a>
+                </li>
+                <li *ngIf="userService.isAuhtorized(userService.EB_STOCK_ACTIVITY_REPORT_VIEW)">
+                  <a [routerLink]="['/back-office/vault/stock-activity-rpt']"><img
+                      src="assets/img/vault/stock-activity.png" /> {{"Menu.Stock Activity" | translate}}</a>
+                </li>
+                <li *ngIf="userService.isAuhtorized(userService.EB_VAULT_DEPOSIT_WITHDRAW_VIEW)">
+                  <a [routerLink]="['/back-office/vault/stock-activity-pledge-release-rpt']"><img
+                      src="assets/img/vault/stock-activity-pledge.png" />{{"Menu.Stock Activity" | translate}}
+                    {{"Translation.Pledge/Release"
+                    | translate}}</a>
+                </li>
+                <li>
+                  <a [routerLink]="['/back-office/vault/share-holding-rpt']"><img
+                      src="assets/img/vault/share-holding.png" /> {{"Translation.Share Holding"
+                    | translate}}</a>
+                </li>
+                <li>
+                  <a [routerLink]="['/back-office/vault/client-pre-settlement-delivery-rpt']"><img
+                      src="assets/img/vault/ic_cps-delivery-report.png" /> {{"Translation.Client Pre-Settlement
+                    Delivery"
+                    | translate}}</a>
+                </li>
+                <!------------------------------------------------------------------------------------------>
+              </ul>
+            </li>
+            <li *ngIf="userService.isAuhtorized(userService.EB_CHART_OF_ACCOUNT_REPORT_VIEW) || userService.isAuhtorized(userService.EB_GENERAL_LEDGER_REPORT_VIEW)
+            || userService.isAuhtorized(userService.EB_TRIAL_BALANCE_REPORT_VIEW) || userService.isAuhtorized(userService.EB_PROFIT_LOSS_REPORT_VIEW)
+            || userService.isAuhtorized(userService.EB_BALANCE_SHEET_REPORT_VIEW) || userService.isAuhtorized(userService.EB_CLIENT_CASH_BALANCE_VIEW)
+            || userService.isAuhtorized(userService.EB_FINANCIALS_VOUCHER_LIST_REPORT_VIEW) ||  userService.isAuhtorized(userService.EB_FINANCIALS_VOUCHER_LIST_REPORT_VIEW)
+            || userService.isAuhtorized(userService.EB_CLIENT_LIST_REPORT_VIEW)">
+              <a><img src="assets/images2/Equities/account-margin-detail.png" /> {{"Menu.Financials Reports" | translate}} <span
+                  style="float: right;"><i class="fa fa-caret-right"></i></span></a>
+              <!------------------------------------------------------------------------------------------>
+              <ul class="tree-drop-ul">
+                <li *ngIf="userService.isAuhtorized(userService.EB_CHART_OF_ACCOUNT_REPORT_VIEW)">
+                  <a [routerLink]="['/back-office/financials/chart-of-account-rpt']"><img src="assets/img/financials/chart-of-account-2.png" />{{"Menu.Chart Of Accounts" |
+                    translate}}</a>
+                </li>
+                <li *ngIf="userService.isAuhtorized(userService.EB_GENERAL_LEDGER_REPORT_VIEW)">
+                  <a  [routerLink]="['/back-office/financials/general-ledger-rpt']"><img src="assets/img/financials/general-ledger.png" />{{"Menu.General Ledger" | translate}}</a>
+                </li>
+                <li *ngIf="userService.isAuhtorized(userService.EB_TRIAL_BALANCE_REPORT_VIEW)">
+                  <a [routerLink]="['/back-office/financials/trial-balance-rpt']"><img src="assets/img/financials/trial-balance.png" />{{"Menu.Trial Balance" | translate}}</a>
+
+                <li *ngIf="userService.isAuhtorized(userService.EB_PROFIT_LOSS_REPORT_VIEW)">
+                  <a [routerLink]="['/back-office/financials/profit-loss-statement-rpt']"><img src="assets/img/financials/profit-n-loss-statment.png" />{{"Menu.Profit/Loss Statement" |
+                    translate}}</a>
+                </li>
+                <li *ngIf="userService.isAuhtorized(userService.EB_BALANCE_SHEET_REPORT_VIEW)">
+                  <a [routerLink]="['/back-office/financials/balance-sheet-rpt']"><img src="assets/img/financials/baklance-sheet.png" />{{"Menu.Balance Sheet" | translate}}</a>
+                </li>
+                <li *ngIf="userService.isAuhtorized(userService.EB_CLIENT_LIST_REPORT_VIEW)">
+                  <a [routerLink]="['/back-office/financials/client-list-rpt']"><img src="assets/img/financials/Client-Listing-Report.png" />{{"Menu.Client List" | translate}}</a>
+                </li>
+               
+                <li *ngIf="userService.isAuhtorized(userService.EB_CGT_REPORT_VIEW)">
+                  <a [routerLink]=" ['/back-office/financials/capital-gain-tax-rpt'] "><img src="assets/img/financials/cgt-rpt.png" /> {{"Menu.Capital Gain Tax" | translate}} </a>
+                </li>
+                <li *ngIf="userService.isAuhtorized(userService.EB_CLIENT_CASH_BALANCE_VIEW)">
+                  <a [routerLink]=" ['/back-office/financials/clients-cash-balance-rpt'] "><img src="assets/img/financials/client-cash-balance.png" />{{"Menu.Clients Cash Balance" |
+                    translate}}</a>
+                </li>
+                <li *ngIf="userService.isAuhtorized(userService.EB_FINANCIALS_VOUCHER_LIST_REPORT_VIEW)">
+                  <a [routerLink]=" ['/back-office/financials/voucher-rpt'] "><img src="assets/img/financials/voucher-2.png" />{{"Menu.Voucher" | translate}}</a>
+                </li>
+                
+
+                <!------------------------------------------------------------------------------------------>
+              </ul>
+            </li>
+
+            <li *ngIf="loggedInUserType == userType.PARTICIPANT || loggedInUserType == userType.PARTICIPANT_ADMIN">
+              <a [routerLink]="['/auditlog']"><img src="assets/img/financials/Client-Listing-Report.png" />{{"Menu.Audit Log" | translate}}</a>
+            </li>
+          </ul>
+        </li>
+        <li
+          *ngIf="userService.isAuhtorized(userService.EB_MIGRATORS_CAP_GAIN_TAX_NEW) || userService.isAuhtorized(userService.EB_MIGRATORS_COA_NEW)">
+          <a><img src="assets/img/main/Migrator.png" /> {{"Menu.Migrators" | translate}}</a>
+          <ul>
+            <li *ngIf="userService.isAuhtorized(userService.EB_MIGRATORS_CL_HOLDING_NEW)">
+              <a [routerLink]="['/back-office/migrator/clients-uploader-page']"><img src="assets/img/migrator/clients.png" />{{"Menu.Clients" | translate}}</a>
+            </li>
+            <li *ngIf="userService.isAuhtorized(userService.EB_MIGRATORS_CLIENTS_SETUP_NEW)">
+              <a [routerLink]="['/back-office/migrator/clients-setup-uploader-page']"><img src="assets/img/migrator/clients_setup.png" />{{"Menu.Clients Setup" | translate}}</a>
+            </li>
+            <li *ngIf="userService.isAuhtorized(userService.EB_MIGRATORS_COA_NEW)">
+              <a [routerLink]=" ['/back-office/migrator/coa-uploader-page'] "><img src="assets/img/migrator/chart_of_account.png" />COA</a>
+            </li>
+            <li *ngIf="userService.isAuhtorized(userService.EB_MIGRATORS_TRANSACTIONS_NEW)">
+              <a [routerLink]=" ['/back-office/migrator/transactions-uploader-page'] "><img src="assets/img/migrator/transactions.png" />{{"Menu.Transactions" | translate}}</a>
+            </li>
+            <li *ngIf="userService.isAuhtorized(userService.EB_MIGRATORS_CLOSING_RATES_NEW)">
+              <a [routerLink]=" ['/back-office/migrator/closing-rates-uploader-page'] "><img src="assets/img/migrator/ClosingRates.png" />{{"Menu.Closing Rates" | translate}}</a>
+            </li>
+            <li *ngIf="userService.isAuhtorized(userService.EB_MIGRATORS_AGENT_NEW)">
+              <a [routerLink]=" ['/back-office/migrator/agent-uploader-page'] "><img src="assets/img/migrator/agent.png" />{{"Menu.Agent" | translate}}</a>
+            </li>
+            <li *ngIf="userService.isAuhtorized(userService.EB_MIGRATORS_COMMISSION_SALB_NEW)">
+              <a [routerLink]=" ['/back-office/migrator/commission-slab-uploader-page'] "><img src="assets/img/migrator/commission_slab.png" />{{"Menu.Commission Slab" | translate}}</a>
+            </li>
+            <li *ngIf="userService.isAuhtorized(userService.EB_MIGRATORS_FUTURE_OPEN_TRADE_VIEW)">
+              <a [routerLink]=" ['/back-office/migrator/future-open-trade-uploader-page'] "><img src="assets/img/migrator/future_open_trade.png" />{{"Menu.Future Open Trade" | translate}}</a>
+            </li>
+            <li *ngIf="userService.isAuhtorized(userService.EB_MIGRATORS_EXPORT_FILE_REPORT_VIEW)">
+              <a [routerLink]=" ['/back-office/migrator/export-file'] "><img src="assets/img/migrator/export_file.png" />{{"Menu.Export-File" | translate}}</a>
+            </li>
+            <li *ngIf="userService.isAuhtorized(userService.EB_MIGRATORS_CAP_GAIN_TAX_NEW)">
+              <a [routerLink]=" ['/back-office/migrator/capital-gain-tax-uploader-page'] "><img src="assets/img/migrator/cap_gain_tax.png" />{{"Menu.Capital Gain Tax" | translate}}</a>
+            </li>
+            <li *ngIf="userService.isAuhtorized(userService.EB_MIGRATORS_VAR_AND_SECURITY_HAIRCUT_NEW)">
+              <a [routerLink]=" ['/back-office/migrator/var-and-security-haircut'] "><img src="assets/img/migrator/var-security-haircut.png" />{{"Translation.Var & Security Haircut" | translate}}</a>
+            </li>
+            <li *ngIf="userService.isAuhtorized(userService.EB_MIGRATORS_VOUCHER_NEW)">
+              <a [routerLink]=" ['/back-office/migrator/voucher-uploader-page'] "><img src="assets/img/migrator/voucher.png" />{{"Menu.Voucher" | translate}}</a>
+            </li>
+            <li *ngIf="userService.isAuhtorized(userService.EB_MIGRATORS_VAULT_STOCK_DEPOSIT_WITHDRAWL_NEW)">
+              <a [routerLink]=" ['/back-office/migrator/vault-uploader-page'] "><img src="assets/img/migrator/vault.png" />{{"Menu.Vault" | translate}}</a>
+            </li>
+          </ul>
+        </li>
+        <li *ngIf="userService.isAuhtorized(userService.EB_RECONCILIATION_CDC_REPORT_VIEW) || userService.isAuhtorized(userService.EB_RECONCILIATION_CLIENTS_CASH_REPORT_VIEW) || userService.isAuhtorized(userService.EB_CLIENT_ASSETS_SEGREGATION_REPORT_VIEW)">
+          <a><img src="assets/img/main/Migrator.png" /> Reconcilation</a>
+          <ul>
+            <!-- <li *ngIf="userService.isAuhtorized(userService.RA_MIGRATORS_FINANCIAL_ANNOUNCEMENT_NEW)">
+              <a [routerLink]=" ['reconcilation/bank-reconcilation'] "><img src="assets/img/migrator/Bank-Reconciliation.png" />Bank </a>
+            </li> -->
+            <li *ngIf="userService.isAuhtorized(userService.EB_RECONCILIATION_CDC_REPORT_VIEW)">
+              <a [routerLink]=" ['/back-office/reconcilation/cdc-reconcilation'] "><img src="assets/img/migrator/CDC-Reconciliation.png" />CDC</a>
+            </li>
+            <li *ngIf="userService.isAuhtorized(userService.EB_RECONCILIATION_CLIENTS_CASH_REPORT_VIEW)">
+              <a [routerLink]=" ['/back-office/reconcilation/clients-cash'] "><img src="assets/img/migrator/clients-cash.png" />{{"Menu.Clients Cash" | translate}}</a>
+            </li>
+            <li *ngIf="userService.isAuhtorized(userService.EB_CLIENT_ASSETS_SEGREGATION_REPORT_VIEW)">
+              <a [routerLink]=" ['/back-office/reconcilation/cdc-client-assets-segregation'] "><img src="assets/img/migrator/clients-assets.png" />{{"Menu.Client Assets Segregation" | translate}}</a>
+            </li>
+          </ul>
+        </li>
+        <li *ngIf="userService.isAuhtorized(userService.EB_HOME) || publicMenu">
+          <a [routerLink]=" ['/portfolio/virtual-portfolio'] "><img src="assets/img/research/portfolio-return.png" /> {{"Menu.Portfolio" | translate}} </a>
+        </li>
+        <li *ngIf="userService.isAuhtorized(userService.EB_HOME) || publicMenu">
+          <a [routerLink]=" ['/portfolio/actual-portfolio'] "><img src="assets/img/research/portfolio-return.png" /> {{"Menu.Actual Portfolio" | translate}} </a>
+        </li>
+  
+        <li
+        *ngIf="userService.isAuhtorized(userService.EB_CONF_APPLICATION_SETUP_VIEW) || userService.isAuhtorized(userService.EB_CONF_VOUCHER_TYPE_VIEW)
+        || userService.isAuhtorized(userService.EB_PARTICIPANT_BRANCH_VIEW) || userService.isAuhtorized(userService.EB_CONF_CLIENTS_VIEW)
+        || userService.isAuhtorized(userService.EB_CONF_COMMISSION_SLAB_VIEW) || userService.isAuhtorized(userService.EB_CONF_LEVIES_VIEW)
+        || userService.isAuhtorized(userService.EB_CONF_AGENT_VIEW) || userService.isAuhtorized(userService.EB_CONF_BANKS_VIEW)
+        || userService.isAuhtorized(userService.EB_CONF_BANK_BRANCHES_VIEW) || userService.isAuhtorized(userService.EB_TERMINAL_BIND_VIEW)
+        || userService.isAuhtorized(userService.EB_ACC_OPENING_BALANCE_VIEW) || userService.isAuhtorized(userService.EB_SECURITY_HAIRCUT_VIEW)">
+        <a><img src="assets/img/main/setup.png" /> {{"Menu.Setup" | translate}}</a>
+        <ul>
+          <li *ngIf="userService.isAuhtorized(userService.EB_CONF_APPLICATION_SETUP_VIEW)">
+            <a [routerLink]="['/back-office/setup/application-setup']"><img
+                src="assets/img/setup/application_setup.png" /> {{"Menu.Application Setup" | translate}}</a>
+          </li>
+          <li *ngIf="userService.isAuhtorized(userService.EB_CONF_VOUCHER_TYPE_VIEW)">
+            <a [routerLink]="['/back-office/setup/voucher-type-page']"><img
+                src="assets/img/setup/voucher-types.png" /> {{"Menu.Voucher Type" | translate}}</a>
+          </li>
+          <li>
+            <a [routerLink]="['/back-office/setup/currency-rates']"><img
+                src="assets/img/setup/brokerage-branch.png" /> {{"Menu.Currency Rates" | translate}}</a>
+          </li>
+          <li *ngIf="userService.isAuhtorized(userService.EB_PARTICIPANT_BRANCH_VIEW)">
+            <a [routerLink]="['/back-office/setup/broker-branches-page']"><img
+                src="assets/img/setup/brokerage-branch.png" /> {{"Menu.Participant Branches" | translate}}</a>
+          </li>
+          <li *ngIf="userService.isAuhtorized(userService.EB_CONF_CLIENTS_VIEW)">
+            <a [routerLink]=" ['/back-office/setup/client-page'] "><img src="assets/img/setup/clients.png" />{{"Menu.Clients" |
+              translate}}</a>
+          </li>
+          <li *ngIf="loggedInUserType == userType.PARTICIPANT || loggedInUserType == userType.PARTICIPANT_ADMIN">
+            <a [routerLink]="['/online-account-registration' , { action : 'participant' }]"><img src="assets/img/financials/Client-Listing-Report.png" />{{"Menu.Investor Account Requests" | translate}}</a>
+          </li>
+          <li *ngIf="userService.isAuhtorized(userService.EB_CONF_COMMISSION_SLAB_VIEW)">
+            <a [routerLink]=" ['/back-office/setup/commission-slab-page'] "><img src="assets/img/setup/commission-slab.png" />{{"Menu.Commission Slab" | translate}}</a>
+          </li>
+          <li *ngIf="userService.isAuhtorized(userService.EB_CONF_LEVIES_VIEW)">
+            <a [routerLink]=" ['/back-office/setup/client-levies-page'] "><img src="assets/img/setup/levies.png" />{{"Menu.Levies" |
+              translate}}</a>
+          </li>
+          <li *ngIf="userService.isAuhtorized(userService.EB_CONF_BANKS_VIEW)">
+            <a [routerLink]=" ['/back-office/setup/tax-ranges-page'] "><img src="assets/images2/financials/liquid-capital-balance.png" />{{"Menu.Tax Ranges" |
+              translate}}</a>
+          </li>
+          <li *ngIf="userService.isAuhtorized(userService.EB_CONF_AGENT_VIEW)">
+            <a [routerLink]=" ['/back-office/setup/agent-page'] "><img src="assets/img/setup/agent.png" />{{"Menu.Agent" |
+              translate}}</a>
+          </li>
+          <li *ngIf="userService.isAuhtorized(userService.EB_CONF_BANKS_VIEW)">
+            <a [routerLink]=" ['/back-office/setup/bank-page'] "><img src="assets/img/setup/banks.png" />{{"Menu.Banks" |
+              translate}}</a>
+          </li>
+          <li *ngIf="userService.isAuhtorized(userService.EB_CONF_BANK_BRANCHES_VIEW)">
+            <a [routerLink]=" ['/back-office/setup/bank-branch-page'] "><img src="assets/img/setup/bank-branches.png" />{{"Menu.Bank Branches" | translate}}</a>
+          </li>
+          <li *ngIf="userService.isAuhtorized(userService.EB_TERMINAL_BIND_VIEW)">
+            <a [routerLink]=" ['/back-office/setup/terminal-binding-page'] "><img src="assets/img/setup/terminal-binding.png" />{{"Menu.Terminal Binding" | translate}}</a>
+          </li>
+          <li *ngIf="userService.isAuhtorized(userService.EB_ACC_OPENING_BALANCE_VIEW)">
+            <a [routerLink]=" ['/back-office/setup/account-opening-balance-page'] "><img src="assets/img/setup/account-opening-balance.png" />{{"Menu.Account Opening Balance" |
+              translate}}</a>
+          </li>
+          <li *ngIf="userService.isAuhtorized(userService.EB_SECURITY_HAIRCUT_VIEW)">
+            <a [routerLink]=" ['/back-office/setup/security-haircut-page'] "><img src="assets/img/setup/security-haircut.png" />{{"Menu.Security Haircut" | translate}}</a>
+          </li>
+          <li *ngIf="userService.isAuhtorized(userService.EB_SYMBOL_DAILY_INDICATOR_VIEW)">
+            <a [routerLink]=" ['/back-office/setup/security-daily-indicator-page'] "><img src="assets/img/setup/security-ohlc.png" />{{"Translation.Security" | translate}} OHLC</a>
+          </li>
+          <li *ngIf="userService.isAuhtorized(userService.EB_SYMBOL_DAILY_INDICATOR_VIEW)">
+            <a [routerLink]=" ['/back-office/setup/bond-payment-schedule-page'] "><img src="assets/img/setup/security-ohlc.png" />{{"Menu.Bond Payment Schedule" | translate}}</a>
+          </li>
+          <li *ngIf="userService.isAuhtorized(userService.EB_CONF_BROADCAST_SMS_VIEW)">
+            <a [routerLink]=" ['/back-office/setup/broadcast-sms-page'] "><img src="assets/img/setup/broadcast_sms.png" />{{"Menu.Broadcast" | translate}} SMS</a>
+          </li>
+          <li
+          *ngIf="userService.isAuhtorized(userService.EB_ACCESS_CONTROL_USER_VIEW) || userService.isAuhtorized(userService.EB_ACCESS_CONTROL_ROLE_VIEW) || userService.isAuhtorized(userService.EB_ACCESS_CONTROL_PRIVILEGE_VIEW)">
+          <a><img src="assets/img/main/access-control.png" /> {{"Menu.Access Control" | translate}}<span style="float: right;"><i class="fa fa-caret-right"></i></span></a>
+          <ul class="tree-drop-ul">
+            <li *ngIf="userService.isAuhtorized(userService.EB_ACCESS_CONTROL_USER_VIEW)">
+              <a [routerLink]=" ['access-control/user-page'] "><img
+                  src="assets/img/access_control/user_management.png" />{{"Menu.User Management" | translate}}</a>
+            </li>
+            <li *ngIf="userService.isAuhtorized(userService.EB_ACCESS_CONTROL_ROLE_VIEW)">
+              <a [routerLink]=" ['access-control/role-page'] "><img
+                  src="assets/img/access_control/role.png" />{{"Menu.Role" | translate}}</a>
+            </li>
+            <li *ngIf="userService.isAuhtorized(userService.EB_ACCESS_CONTROL_PRIVILEGE_VIEW)">
+              <a [routerLink]=" ['access-control/role-privs-page'] "><img
+                  src="assets/img/access_control/privilege.png" />{{"Menu.Privilege" | translate}}</a>
+            </li>
+          </ul>
+        </li>
+        </ul>
+      </li>
+        <li *ngIf="userService.isAuhtorized(userService.EB_HOME)">
+          <a [routerLink]=" ['/news_advertisements/news&advertisements'] "><img src="assets/images2/Equities/participant-exchange-levies.png" /> {{"Menu.News & Advertisements" | translate}}</a>
+        </li>
+        <li *ngIf="userService.isAuhtorized(userService.EB_HOME) || publicMenu">
+          <a><img src="assets/images2/main/clients-assets.png" /> {{"Menu.About Us" | translate}}</a>
+        </li>
+        <!-- <li *ngIf="userService.isAuhtorized(userService.EB_HOME)">
+          <a><img src="assets/images2/main/broadcast_sms.png" /> {{"Menu.Contact Us" | translate}}</a>
+        </li> -->
+      </ul>
+    </nav>
+  </div>
+
+
+
+
+  <div *ngIf="claims.user.userType === 'MARLIN ADMIN'">
+    <nav>
+      <ul class="main-navigation">
+        <li>
+          <a [routerLink]=" ['admin/dashboard-admin'] "><img src="assets/img/main/dashboard.png" /> {{"Menu.Home" | translate}}</a>
+        </li>
+        <li>
+          <a><img src="assets/img/main/admin.png" /> Admin Configuration</a>
+          <ul>
+            <li *ngIf="userService.isAuhtorized(userService.EB_COUNTRY_VIEW)">
+              <a [routerLink]=" ['admin/country-page'] "><img
+                  src="assets/img/admin_config/countries.png" />{{"Menu.Countries" | translate}}</a>
+            </li>
+            <li *ngIf="userService.isAuhtorized(userService.EB_CITY_VIEW)">
+              <a [routerLink]=" ['admin/city-page'] "><img src="assets/img/admin_config/cities.png" />{{"Menu.Cities" | translate}}</a>
+            </li>
+            <li *ngIf="userService.isAuhtorized(userService.EB_EXCHANGE_VIEW)">
+              <a [routerLink]=" ['admin/exchange-page'] "><img
+                  src="assets/img/admin_config/exchange.png" />{{"Menu.Exchanges" | translate}}</a>
+            </li>
+            <li *ngIf="userService.isAuhtorized(userService.EB_MARKET_VIEW)">
+              <a [routerLink]=" ['admin/market-page'] "><img src="assets/img/admin_config/market.png" />{{"Translation.Market" | translate}}</a>
+            </li>
+            <li *ngIf="userService.isAuhtorized(userService.EB_COMPANY_VIEW)">
+              <a [routerLink]=" ['admin/security-page'] "><img src="assets/img/admin_config/security.png" />{{"Translation.Security" | translate}}</a>
+            </li>
+            <li *ngIf="userService.isAuhtorized(userService.EB_FI_COMPANY_VIEW)">
+              <a [routerLink]=" ['admin/fixed-income-security-page'] "><img
+                  src="assets/img/admin_config/security.png" />Fixed Income Security</a>
+            </li>
+            <li *ngIf="userService.isAuhtorized(userService.EB_EXC_MKT_ASSOCIATION_VIEW)">
+              <a [routerLink]=" ['admin/exch-mark-association-page'] "><img
+                  src="assets/img/admin_config/exchange-market-association.png" />{{"Menu.Exchange Market Association" | translate}}</a>
+            </li>
+            <li *ngIf="userService.isAuhtorized(userService.EB_EX_MKT_SEC_VIEW)">
+              <a [routerLink]=" ['admin/exch-mark-security-page'] "><img
+                  src="assets/img/admin_config/exchange-market-security.png" />{{"Menu.Exchange Market Security" | translate}}</a>
+            </li>
+            <li *ngIf="userService.isAuhtorized(userService.EB_SECTOR_VIEW)">
+              <a [routerLink]=" ['admin/sector-page'] "><img src="assets/img/admin_config/sector.png" />{{"Menu.Sector" | translate}}</a>
+            </li>
+            <li *ngIf="userService.isAuhtorized(userService.EB_REGISTRAR_VIEW)">
+              <a [routerLink]=" ['admin/registrar-page'] "><img src="assets/img/admin_config/registrar.png" />{{"Menu.Registrar" | translate}}
+                / {{"Menu.Issuer" | translate}}</a>
+            </li>
+            <li *ngIf="userService.isAuhtorized(userService.EB_SETTLEMENT_TYPE_VIEW)">
+              <a [routerLink]=" ['admin/settlement-type-page'] "><img
+                  src="assets/img/admin_config/settlement-types.png" />Settlement Types</a>
+            </li>
+            <li *ngIf="userService.isAuhtorized(userService.EB_SETTLEMENT_CALENDAR_VIEW)">
+              <a [routerLink]=" ['admin/settlement-calandar-page'] "><img
+                  src="assets/img/admin_config/settlement-calendar.png" />Settlement Calendar</a>
+            </li>
+            <li *ngIf="userService.isAuhtorized(userService.EB_PARTICIPANT_VIEW)">
+              <a [routerLink]=" ['admin/participant-page'] "><img
+                  src="assets/img/admin_config/participant.png" />Participant</a>
+            </li>
+            <li *ngIf="userService.isAuhtorized(userService.EB_CLEARING_HOUSE_LEVIES_VIEW)">
+              <a [routerLink]=" ['admin/clear-house-levies-page'] "><img
+                  src="assets/img/admin_config/clearing-house-levies.png" />Clearing house Levies</a>
+            </li>
+            <li *ngIf="userService.isAuhtorized(userService.EB_HOLIDAY_VIEW)">
+              <a [routerLink]=" ['admin/holidays-page'] "><img src="assets/img/admin_config/holidays.png" />{{"Menu.Holidays" | translate}}</a>
+            </li>
+            <li *ngIf="userService.isAuhtorized(userService.EB_PARTICIPANT_RESET_VIEW)">
+              <a [routerLink]=" ['admin/reset-participant-page'] "><img src="assets/img/admin_config/reset-participant.png" />{{"Menu.Reset Participant" | translate}}</a>
+            </li>
+            <li class="menu_sep" *ngIf="userService.isAuhtorized(userService.EB_MON_MKT_AUC_VIEW)"><span>Money Market</span>
+              <hr />
+            </li>
+            <li *ngIf="userService.isAuhtorized(userService.EB_MON_MKT_AUC_VIEW)">
+              <a [routerLink]=" ['admin/auction-configuration-page'] "><img
+                  src="assets/img/admin_config/exchange-market-security.png" />Auction Configuration</a>
+            </li>
+          </ul>
+        </li>
+
+      </ul>
+    </nav>
+  </div>
+
+
+</header>

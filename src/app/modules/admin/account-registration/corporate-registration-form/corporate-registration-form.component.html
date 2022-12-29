@@ -1,0 +1,199 @@
+<div class="relative flex flex-col flex-auto min-w-0 overflow-hidden">
+
+    <!-- Header & Cards -->
+    <div class="relative pb-12 pt-8 sm:pb-24 overflow-hidden">
+        <!-- Header -->
+        <div class="flex flex-col items-center">
+            <!-- Recurring selector -->
+        </div>
+        <!-- Main -->
+        <div class="flex flex-col flex-auto items-center justify-center h-full">
+            <!-- @formatter:off -->
+            <div class="w-full md:max-w-screen-md sm:max-w-screen-sm">
+
+                <div class="form-parent">
+                    <mat-horizontal-stepper [linear]="isLinear" #stepper>
+
+                        <mat-step [stepControl]="companyInfoFormGroup">
+                            <form [formGroup]="companyInfoFormGroup">
+                                <app-company-info-form
+                                    [companyInfoFormGroup]="companyInfoFormGroup"></app-company-info-form>
+                            </form>
+                            <!-- Divider -->
+                            <div class="mt-4 mb-4 border-t"></div>
+                            <div class="flex items-center justify-end">
+                                <button mat-flat-button
+                                        (click)="saveDataOnNext('companyInfoFormGroup')" matStepperNext>
+                                    Next
+                                </button>
+                            </div>
+                        </mat-step>
+
+                        <mat-step [stepControl]="customerOrCompanyDetailFormGroup">
+
+                            <form [formGroup]="customerOrCompanyDetailFormGroup">
+                                <customer-or-company-detail-form
+                                    [businessPremisesCheckboxes]="businessPremisesCheckboxes"
+                                    [legalStatusCheckboxes]="legalStatusCheckboxes"
+                                    [customerOrCompanyDetailFormGroup]="customerOrCompanyDetailFormGroup">
+                                </customer-or-company-detail-form>
+                            </form>
+
+                            <!-- Divider -->
+                            <div class="mt-4 mb-4 border-t"></div>
+                            <div class="flex items-center justify-end">
+                                <button mat-flat-button
+                                        (click)="saveDataOnNext('customerOrCompanyDetailFormGroup')" matStepperNext>
+                                    Next
+                                </button>
+                            </div>
+                        </mat-step>
+
+                        <mat-step [stepControl]="authorizedEmployeeInfoFormGroup">
+                            <form [formGroup]="authorizedEmployeeInfoFormGroup">
+                                <app-authorized-employee-info
+                                    [authorizedEmployeeInfoFormGroup]="authorizedEmployeeInfoFormGroup">
+                                </app-authorized-employee-info>
+                            </form>
+
+                            <!-- Divider -->
+                            <div class="mt-4 mb-4 border-t"></div>
+                            <div class="flex items-center justify-end">
+                                <button mat-flat-button
+                                        (click)="saveDataOnNext('authorizedEmployeeInfoFormGroup')" matStepperNext>
+                                    Next
+                                </button>
+                            </div>
+                        </mat-step>
+
+                        <mat-step [stepControl]="stackholderDetailFormGroup">
+                            <form [formGroup]="stackholderDetailFormGroup">
+                                <app-stakeholder-details-form [businessPremisesCheckboxes]="businessPremisesCheckboxes"
+                                                              [stackholderDetailFormGroup]="stackholderDetailFormGroup">
+                                </app-stakeholder-details-form>
+                            </form>
+                            <!-- Divider -->
+                            <div class="mt-4 mb-4 border-t"></div>
+                            <div class="flex items-center justify-end">
+                                <button mat-flat-button
+                                        (click)="saveDataOnNext('stackholderDetailFormGroup')" matStepperNext>
+                                    Next
+                                </button>
+                            </div>
+                        </mat-step>
+
+                        <mat-step [stepControl]="bankReferenceDetailFormGroup">
+                            <form [formGroup]="bankReferenceDetailFormGroup">
+                                <app-bank-reference-details-form
+                                    [bankReferenceDetailFormGroup]="bankReferenceDetailFormGroup">
+                                </app-bank-reference-details-form>
+                            </form>
+                            <!-- Divider -->
+                            <div class="mt-4 mb-4 border-t"></div>
+                            <div class="flex items-center justify-end">
+                                <button mat-flat-button
+                                        (click)="saveDataOnNext('bankReferenceDetailFormGroup')" matStepperNext>
+                                    Next
+                                </button>
+                            </div>
+                        </mat-step>
+
+                        <mat-step [stepControl]="financialInfoFormGroup">
+                            <form [formGroup]="financialInfoFormGroup">
+                                <app-financial-info-form
+                                    [financialInfoFormGroup]="financialInfoFormGroup">
+                                </app-financial-info-form>
+                            </form>
+                            <!-- Divider -->
+                            <div class="mt-4 mb-4 border-t"></div>
+                            <div class="flex items-center justify-end">
+                                <button mat-flat-button
+                                        (click)="saveDataOnNext('financialInfoFormGroup')" matStepperNext>
+                                    Next
+                                </button>
+                            </div>
+                        </mat-step>
+                        <mat-step [stepControl]="collateralDetailFormGroup">
+                            <form [formGroup]="collateralDetailFormGroup">
+                                <app-collateral-detail-form
+                                    [collateralDetailFormGroup]="collateralDetailFormGroup">
+                                </app-collateral-detail-form>
+                            </form>
+                            <button class="nextBtn" mat-button matStepperNext
+                                    (click)="saveDataOnNext('collateralDetailFormGroup')">
+                                Next
+                            </button>
+
+                        </mat-step>
+                        <mat-step [stepControl]="marginDepositFormGroup">
+                            <form [formGroup]="marginDepositFormGroup">
+                                <app-margin-deposit-form
+                                    [marginDepositFormGroup]="marginDepositFormGroup">
+                                </app-margin-deposit-form>
+                            </form>
+                            <button class="nextBtn" mat-button matStepperNext
+                                    (click)="saveDataOnNext('marginDepositFormGroup')">Next
+                            </button>
+
+                        </mat-step>
+                        <mat-step [stepControl]="authorizedTraderFormGroup">
+                            <form [formGroup]="authorizedTraderFormGroup">
+                                <app-authorized-trader-form
+                                    [authorizedTraderFormGroup]="authorizedTraderFormGroup">
+                                </app-authorized-trader-form>
+                            </form>
+                            <button class="nextBtn" mat-button matStepperNext
+                                    (click)="saveDataOnNext('authorizedTraderFormGroup')">
+                                Next
+                            </button>
+
+                        </mat-step>
+                        <mat-step [stepControl]="declarationFormGroup">
+                            <form [formGroup]="declarationFormGroup">
+                                <app-declaration
+                                    [declarationFormGroup]="declarationFormGroup">
+                                </app-declaration>
+                            </form>
+                            <button class="nextBtn" mat-button matStepperNext
+                                    (click)="saveDataOnNext('declarationFormGroup')">Next
+                            </button>
+
+                        </mat-step>
+                        <mat-step>
+                            <app-instructions>
+                            </app-instructions>
+                            <button class="nextBtn" mat-button matStepperNext>Next</button>
+
+                        </mat-step>
+                        <mat-step>
+
+                            <ng-template matStepLabel>Done</ng-template>
+
+                            <p>You are now done.</p>
+
+
+                            <mat-list>
+
+                                <mat-list-item><strong>{{ "Form is filled successfully" }}</strong></mat-list-item>
+
+                            </mat-list>
+
+
+                            <div>
+
+                                <button mat-button matStepperPrevious>Back</button>
+
+                                <button mat-button (click)="stepper.reset()">Reset</button>
+
+                                <button mat-button (click)="submit(stepper)">Submit</button>
+
+                            </div>
+
+                        </mat-step>
+                    </mat-horizontal-stepper>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

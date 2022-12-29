@@ -1,0 +1,430 @@
+<div class="row">
+	<div class="col-md-10 offset-md-1">
+		<section class="widget" widget>
+			<header>
+				<h3>{{ 'Translation.Bond Security' | translate }}
+					<span class="fw-semi-bold">{{ 'Translation.Details' | translate }}</span>
+				</h3>
+				<!--<div class="action_group">
+            <button class="btn btn-danger" type="button"><span class="glyphicon glyphicon-print"></span></button>
+            <button class="btn btn-success" type="button"><i class="fa fa-file-excel-o" aria-hidden="true"></i></button>
+        </div>-->
+				<div class="other_btns">
+					<!--<button class="Iconfilter_btn"  (click)="print()" tooltip="Print" ><i class="fa fa-print" aria-hidden="true"></i></button>-->
+					<button data-toggle="collapse" data-target="#filter_box" class="filter_btn">
+						<i class="fa fa-filter" aria-hidden="true"></i></button>
+				</div>
+				<!-- <div class="widget-controls">
+					<a data-widgster="expand" title="{{ 'Translation.Expand' | translate }}">
+						<i class="fa fa-chevron-up"></i>
+					</a>
+					<a data-widgster="collapse" title="{{ 'Translation.Collapse' | translate }}" >
+						<i class="fa fa-chevron-down"></i>
+					</a>
+				</div> -->
+			</header>
+			<!--class="filter_Detailbox"-->
+			<div>
+				<div id="filter_box" class="collapse in">
+					<form role="form" [formGroup]="myForm" novalidate (ngSubmit)="onSubmit(myForm.value, myForm.valid)">
+						<div class="row mt-2">
+							<div class="col-sm-3">
+								<div class="form-group">
+									<label for="search-input">{{ 'Translation.Exchange' | translate }}
+										<span class="validation">*</span>
+									</label>
+									<div class="input-group">
+										<wj-combo-box id="exchangeId" formControlName="exchangeId" #cmbExchange [itemsSource]="exchanges" [(ngModel)]="exchangeId"
+										 (ngModelChange)="onExchangeChange($event)" displayMemberPath="exchangeCode" selectedValuePath="exchangeId"
+										 required [isEditable]="true">
+										</wj-combo-box>
+
+									</div>
+									<div *ngIf="myForm.controls['exchangeId'].hasError('pattern')" [hidden]="myForm.controls.exchangeId.valid || !isSubmitted"
+									 class="text-danger">{{ 'Translation.Exchange' | translate }} {{ 'Translation.is required' | translate }}.</div>
+								</div>
+							</div>
+							<div class="col-sm-3">
+								<div class="form-group">
+									<label for="search-input">{{ 'Translation.Market' | translate }}
+										<span class="validation">*</span>
+									</label>
+									<div class="input-group">
+										<wj-combo-box id="marketId" formControlName="marketId" #cmbMarket [isDisabled]="isMarketDisabled"
+										 [itemsSource]="markets" [(ngModel)]="marketId" displayMemberPath="marketCode" selectedValuePath="marketId"
+										 required [isEditable]="true">
+										</wj-combo-box>
+									</div>
+									<div *ngIf="myForm.controls['marketId'].hasError('pattern')" [hidden]="myForm.controls.marketId.valid || !isSubmitted"
+									 class="text-danger">{{ 'Translation.Market' | translate }} {{ 'Translation.is required' | translate }}.</div>
+								</div>
+							</div>
+							<div class="col-sm-3">
+								<div class="row">
+									<div class="col-sm-8">
+										<div class="form-group">
+											<label for="search-input">{{ 'Translation.Security' | translate }}
+												<span class="validation">*</span>
+											</label>
+											<div class="input-group">
+                                                <wj-combo-box id="securityCode" formControlName="securityCode" #cmbSymbol   [itemsSource]="symbols" [(ngModel)]="securityCode" (lostFocus)="onSymbolFocusOut()"
+                                                displayMemberPath="symbol" selectedValuePath="symbol"
+                                               [isEditable]="true"  required>
+                                             </wj-combo-box>
+											</div>
+											<div *ngIf="myForm.controls['securityCode'].hasError('required')" [hidden]="myForm.controls.securityCode.valid || !isSubmitted"
+											 class="text-danger">{{ 'Translation.Security' | translate }} {{ 'Translation.is required' | translate }}.</div>
+										</div>
+									</div>
+
+									<div class="col-sm-1">
+										<div class="form_search">
+											<button type="submit" class="btn btn-success btn-sm" title="{{ 'Translation.Search' | translate }}" data-toggle="collapse in" data-target="#filter_box"
+											 (click)="onSubmit(myForm.value, myForm.valid)">
+												<span class="fa fa-search"></span>
+											</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+			<!--class="widget-body"-->
+			<div class="border">
+				<!--class="row full_container"-->
+				<div class="row">
+					<div class="col-sm-2">
+						<div class="form-group">
+							<label for="search-input">{{ 'Translation.Security' | translate }}</label>
+							<div class="input-group">
+								<!--<input type="text" [(ngModel)]="symbolDetail.code"  class="form-control"   disabled="true">-->
+								<wj-input-mask id="securityCode" name="securityCode" [(ngModel)]="symbolDetail.code" [isDisabled]="true">
+								</wj-input-mask>
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-2">
+						<div class="form-group">
+							<label for="search-input">{{ 'Translation.Sector' | translate }}</label>
+							<div class="input-group">
+								<!--<input type="text" [(ngModel)]="symbolDetail.sector.sectorCode"  class="form-control"   disabled="true">-->
+								<wj-input-mask id="sectorCode" name="sectorCode" [(ngModel)]="symbolDetail.sectorCode" [isDisabled]="true">
+								</wj-input-mask>
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-2">
+						<div class="form-group">
+							<label for="search-input">{{ 'Translation.State' | translate }}</label>
+							<div class="input-group">
+								<!--<input type="text" [(ngModel)]="symbolDetail.state"  class="form-control"   disabled="true">-->
+								<wj-input-mask id="state" name="state" [(ngModel)]="symbolDetail.state" [isDisabled]="true"> </wj-input-mask>
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-2">
+						<div class="form-group">
+							<label for="search-input">{{ 'Translation.Last Trade' | translate }} <span *ngIf="isBondPricingMechanismPercentage">%</span></label>
+							<div class="input-group">
+								<!--<input type="text" [(ngModel)]="symbolStats.last_trade_price"  class="form-control" style="text-align: right" disabled="true">-->
+								<wj-input-number id="lastTrade" name="lastTrade" [(ngModel)]="symbolStats.last_trade_price" [format]="'n4'"
+								 [isDisabled]="true" placeholder=""> </wj-input-number>
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-2">
+						<div class="form-group">
+							<label for="search-input">{{ 'Translation.High' | translate }} <span *ngIf="isBondPricingMechanismPercentage">%</span></label>
+							<div class="input-group">
+								<!--<input type="text" [(ngModel)]="symbolStats.high"  class="form-control" style="text-align: right" disabled="true">-->
+								<wj-input-number id="high" name="high" [(ngModel)]="symbolStats.high" [format]="'n4'" [isDisabled]="true"
+								 placeholder="">
+								</wj-input-number>
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-2">
+						<div class="form-group">
+							<label for="search-input">{{ 'Translation.Low' | translate }} <span *ngIf="isBondPricingMechanismPercentage">%</span></label>
+							<div class="input-group">
+								<!--<input type="text" [(ngModel)]="symbolStats.low"  class="form-control" style="text-align: right" disabled="true">-->
+								<wj-input-number id="low" name="low" [(ngModel)]="symbolStats.low" [format]="'n4'" [isDisabled]="true"
+								 placeholder=""> </wj-input-number>
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-2">
+						<div class="form-group">
+							<label for="search-input">{{ 'Translation.Open' | translate }} <span *ngIf="isBondPricingMechanismPercentage">%</span></label>
+							<div class="input-group">
+								<!--<input type="text" [(ngModel)]="symbolStats.open"  class="form-control" style="text-align: right" disabled="true">-->
+								<wj-input-number id="open" name="open" [(ngModel)]="symbolStats.open" [format]="'n4'" [isDisabled]="true"
+								 placeholder="">
+								</wj-input-number>
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-2">
+						<div class="form-group">
+							<label for="search-input">{{ 'Translation.Change' | translate }}</label>
+							<div class="input-group">
+								<!--<input type="text" [(ngModel)]="symbolStats.net_change"  class="form-control" style="text-align: right" disabled="true">-->
+								<wj-input-number id="change" name="change" [(ngModel)]="symbolStats.net_change" [format]="'n4'" [isDisabled]="true"
+								 placeholder="">
+								</wj-input-number>
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-2">
+						<div class="form-group">
+							<label for="search-input">{{ 'Translation.Trades' | translate }}</label>
+							<div class="input-group">
+								<!--<input type="text" [(ngModel)]="symbolStats.total_no_of_trades"  class="form-control" style="text-align: right" disabled="true">-->
+								<wj-input-number id="trades" name="trades" [(ngModel)]="symbolStats.total_no_of_trades" [format]="'n0'"
+								 [isDisabled]="true" placeholder=""> </wj-input-number>
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-2">
+						<div class="form-group">
+							<label for="search-input">{{ 'Translation.Last Day' | translate }} <span *ngIf="isBondPricingMechanismPercentage">%</span></label>
+							<div class="input-group">
+								<!--<input type="text" [(ngModel)]="symbolStats.last_day_close_price"  class="form-control" style="text-align: right" disabled="true">-->
+								<wj-input-number id="ldcp" name="lcp" [(ngModel)]="symbolStats.last_day_close_price" [format]="'n4'"
+								 [isDisabled]="true" placeholder=""> </wj-input-number>
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-2">
+						<div class="form-group">
+							<label for="search-input">{{ 'Translation.Quantity' | translate }}</label>
+							<div class="input-group">
+								<!--<input type="text" [(ngModel)]="symbolStats.last_trade_size"  class="form-control" style="text-align: right" disabled="true">-->
+								<wj-input-number id="volume" name="symbol" [(ngModel)]="symbolStats.last_trade_size" [format]="'n0'"
+								 [isDisabled]="true" placeholder=""> </wj-input-number>
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-2">
+						<div class="form-group">
+							<label for="search-input">{{ 'Translation.Currency' | translate }}</label>
+							<div class="input-group">
+								<!--<input type="text" class="form-control"   disabled="true">-->
+								<wj-input-mask id="currency" name="currency" [(ngModel)]="symbolDetail.currencyCode" [isDisabled]="true">
+								</wj-input-mask>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- bid and offer -->
+				<div class="row">
+					<div class="col-sm-12 center-block">
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="stock_box_buy">
+									<div class="form-group">
+										<label for="search-input">{{ 'Translation.Bid' | translate }}</label>
+										<div class="input-group">
+											<wj-input-number id="buy_price" name="buy_price" [(ngModel)]="bestMarket.buy_price" [format]="'n4'"
+											 [isDisabled]="true" class="wijmo_style half_width" placeholder=""> </wj-input-number>
+											<wj-input-number id="buy_volume" name="buy_volume" [(ngModel)]="bestMarket.buy_volume" [format]="'n0'"
+											 [isDisabled]="true" class="wijmo_style half_width" placeholder=""> </wj-input-number>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="stock_box_sell">
+									<div class="form-group">
+										<label for="search-input">{{ 'Translation.Offer' | translate }}</label>
+										<div class="input-group">
+											<wj-input-number id="sell_price" name="sell_price" [(ngModel)]="bestMarket.sell_price" [format]="'n4'"
+											 [isDisabled]="true" class="wijmo_style half_width" placeholder=""> </wj-input-number>
+											<wj-input-number id="sell_volume" name="sell_volume" [(ngModel)]="bestMarket.sell_volume" [format]="'n0'"
+											 [isDisabled]="true" class="wijmo_style half_width" placeholder=""> </wj-input-number>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- bid and offer close -->
+				<!-- Row 5 best bid and offer -->
+				<!--class="grey_box"-->
+				<div>
+					<div class="form-group">
+					</div>
+					<div class="row">
+						<div class="col-sm-3">
+							<div class="form-group">
+								<label for="search-input">{{ 'Translation.High Order Limit' | translate }}</label>
+								<div class="input-group">
+									<!--<input type="text" [(ngModel)]="symbolDetail.upperCircuitBreakerLimit"  class="form-control" style="text-align: right" disabled="true">-->
+									<wj-input-number [(ngModel)]="symbolDetail.upperCircuitBreakerLimit" [format]="'n4'" class="form-control"
+									 [isDisabled]="true" placeholder="">
+									</wj-input-number>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-3">
+							<div class="form-group">
+								<label for="search-input">{{ 'Translation.Low Order Limit' | translate }} </label>
+								<div class="input-group">
+									<!--<input type="text" [(ngModel)]="symbolDetail.lowerCircuitBreakerLimit"  class="form-control" style="text-align: right" disabled="true">-->
+									<wj-input-number id="lowerCircuitBreakerLimit" name="lowerCircuitBreakerLimit" [format]="'n4'" class="form-control"
+									 [(ngModel)]="symbolDetail.lowerCircuitBreakerLimit" [isDisabled]="true" placeholder=""> </wj-input-number>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-3">
+							<div class="form-group">
+								<label for="search-input"> {{ 'Translation.Max. Order Quantity' | translate }} </label>
+								<div class="input-group">
+									<!--<input type="text" [(ngModel)]="symbolDetail.upperOrderVolumeLimit"  class="form-control" style="text-align: right" disabled="true">-->
+									<wj-input-number id="upperOrderVolumeLimit" name="upperOrderVolumeLimit" [format]="'n0'" [(ngModel)]="symbolDetail.upperOrderVolumeLimit"
+									 [isDisabled]="true" placeholder=""> </wj-input-number>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-3">
+							<div class="form-group">
+								<label for="search-input">{{ 'Translation.Min. Order Quantity' | translate }}</label>
+								<div class="input-group">
+									<!--<input type="text" [(ngModel)]="symbolDetail.lowerOrderVolumeLimit"  class="form-control" style="text-align: right" disabled="true">-->
+									<wj-input-number id="lowerOrderVolumeLimit" name="lowerOrderVolumeLimit" [format]="'n0'" [(ngModel)]="symbolDetail.lowerOrderVolumeLimit"
+									 [isDisabled]="true"> </wj-input-number>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-3">
+							<div class="form-group">
+								<label for="search-input">{{ 'Translation.Max. Order Value' | translate }}</label>
+								<div class="input-group">
+									<!--<input type="text" [(ngModel)]="symbolDetail.upperOrderValueLimit"  class="form-control" style="text-align: right" disabled="true">-->
+									<wj-input-number id="upperOrderValueLimit" name="upperOrderValueLimit" [format]="'n4'" [(ngModel)]="symbolDetail.upperOrderValueLimit"
+									 [isDisabled]="true" placeholder=""> </wj-input-number>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-3">
+							<div class="form-group">
+								<label for="search-input">{{ 'Translation.Min. Order Value' | translate }} </label>
+								<div class="input-group">
+									<!--<input type="text" [(ngModel)]="symbolDetail.lowerOrderValueLimit"  class="form-control" style="text-align: right" disabled="true">-->
+									<wj-input-number id="lowerOrderValueLimit" name="lowerOrderValueLimit" [format]="'n4'" [(ngModel)]="symbolDetail.lowerOrderValueLimit"
+									 [isDisabled]="true" [format]="'n4'" placeholder=""> </wj-input-number>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-3">
+							<div class="form-group">
+								<label for="search-input"> {{ 'Translation.Lot Size' | translate }} </label>
+								<div class="input-group">
+									<!--<input type="text" [(ngModel)]="symbolDetail.boardLot"  class="form-control" style="text-align: right" disabled="true">-->
+									<wj-input-number id="lotSize" name="lotSize" [(ngModel)]="symbolDetail.boardLot" [format]="'n0'" [isDisabled]="true"
+									 placeholder=" ">
+									</wj-input-number>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-3">
+							<div class="form-group">
+								<label for="search-input">{{ 'Translation.Tick Size' | translate }} </label>
+								<div class="input-group">
+									<!--<input type="text" [(ngModel)]="symbolDetail.tickSize"  class="form-control" style="text-align: right" disabled="true">-->
+									<wj-input-number id="boardLot" name="boardLot" [(ngModel)]="symbolDetail.tickSize" [isDisabled]="true"
+									 [format]="'n4'" placeholder="">
+									</wj-input-number>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- bond data code starts here -->
+				<div class="accordian_adjs">
+					<accordion [closeOthers]="true" class="mb-lg show" id="accordion2">
+						<accordion-group>
+							<div accordion-heading>
+								{{ 'Translation.Details' | translate }}
+								<i class="fa fa-angle-down pull-xs-right"></i>
+							</div>
+							<!--<div class="grey_box">-->
+							<div>
+								<div *ngIf="isBondMarket" class="row mt-2">
+									<div class="col-sm-3 fields_box">
+										<label for="search-input">{{ 'Translation.Category' | translate }}</label>
+										<wj-input-mask class="wijmo_style" #subCategory [isDisabled]="true"> </wj-input-mask>
+									</div>
+									<div class="col-sm-3 fields_box">
+										<label for="search-input">{{ 'Translation.Coupon Type' | translate }}</label>
+										<wj-input-mask class="wijmo_style" [(ngModel)]="securityMarketDetails.fisDetail.bondType.bondType"
+										 [isDisabled]="true"> </wj-input-mask>
+									</div>
+									<div class="col-sm-3 fields_box">
+										<label for="search-input">{{ 'Translation.Issue Date' | translate }} </label>
+										<wj-input-mask class="wijmo_style" [(ngModel)]="securityMarketDetails.issueDate" [isDisabled]="true">
+										</wj-input-mask>
+									</div>
+									<div class="col-sm-3 fields_box">
+										<label for="search-input">{{ 'Translation.Maturity Date' | translate }} </label>
+										<wj-input-mask class="wijmo_style" [(ngModel)]="securityMarketDetails.maturityDate" [isDisabled]="true">
+										</wj-input-mask>
+									</div>
+									<div class="col-sm-3 fields_box">
+										<label for="search-input">{{ 'Translation.Tenure To Maturity' | translate }} </label>
+										<wj-input-mask class="wijmo_style" #tenure [(ngModel)]="securityMarketDetails.tenure" [isDisabled]="true">
+										</wj-input-mask>
+									</div>
+									<div class="col-sm-3 fields_box">
+										<label for="search-input">{{ 'Translation.Last Coupon Date' | translate }} </label>
+										<wj-input-mask class="wijmo_style" [(ngModel)]="securityMarketDetails.lastCouponDate" [isDisabled]="true">
+										</wj-input-mask>
+									</div>
+									<div class="col-sm-3 fields_box">
+										<label for="search-input">{{ 'Translation.Next Coupon Date' | translate }} </label>
+										<wj-input-mask class="wijmo_style" [(ngModel)]="securityMarketDetails.nextCouponDate" [isDisabled]="true">
+										</wj-input-mask>
+									</div>
+									<div class="col-sm-3 fields_box">
+										<label for="search-input">{{ 'Translation.Accrued Interest' | translate }} </label>
+										<wj-input-mask class="wijmo_style" #accrudeProfit [(ngModel)]="securityMarketDetails.accrudeProfit" [isDisabled]="true">
+										</wj-input-mask>
+									</div>
+									<div class="col-sm-3 fields_box">
+										<label for="search-input">{{ 'Translation.Currency' | translate }} </label>
+										<wj-input-mask class="wijmo_style" [(ngModel)]="securityMarketDetails.countryBo.currencyCode" [isDisabled]="true">
+										</wj-input-mask>
+									</div>
+									<div class="col-sm-3 fields_box">
+										<label for="search-input">PAR {{ 'Translation.Value' | translate }} </label>
+										<wj-input-number class="wijmo_style" [(ngModel)]="securityMarketDetails.securityFaceValue" [isDisabled]="true">
+										</wj-input-number>
+									</div>
+									<div class="col-sm-3 fields_box">
+										<label for="search-input">{{ 'Translation.Coupon Rate' | translate }} </label>
+										<wj-input-number class="wijmo_style" [(ngModel)]="securityMarketDetails.fisDetail.couponRate" [isDisabled]="true">
+										</wj-input-number>
+									</div>
+								</div>
+							</div>
+						</accordion-group>
+					</accordion>
+				</div>
+				<!-- bond data ends here -->
+
+				<div class="col-sm-12 annuncment_text">
+					<div class="form-group">
+						<label for="search-input"> {{ 'Translation.Announcement' | translate }} </label>
+						<div class="input-group">
+							<textarea form="testformid" name="announcement" id="announcement" cols="100" wrap="soft" [(ngModel)]="symbolDetail.announcement.message"
+							 disabled="true"></textarea>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+	</div>
+</div>

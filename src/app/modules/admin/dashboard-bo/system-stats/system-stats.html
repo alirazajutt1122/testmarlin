@@ -1,0 +1,25 @@
+<div class="theme">
+    <div class="row header">
+        <span class="font-bold text-xl ml-2 mt-1 text-primary">{{'Translation.SYSTEM STATS' | translate }}</span>
+    </div>
+    <div class="row ml-6 mt-2">
+        <div class="col-sm-10">
+            <div class="text-left mt-6">
+                <span class="font-bold text-lg text-primary">{{'Translation.Logged in users' | translate}}</span>
+                <span class="font-bold text-lg block text-primary mt-4">{{'Translation.Total login attempts' | translate}}</span>
+                <span class="font-bold text-lg block text-primary mt-4">{{'Translation.Total logged out' | translate}}</span>
+                <span class="font-bold text-lg block text-primary mt-4">{{'Translation.Wrong password attempts' | translate}}</span>
+                <span class="font-bold text-lg block text-primary mt-4">{{'Translation.Total password reset' | translate}}</span>
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <div class="text-left mt-6">
+                <span class="font-bold text-lg text-green-600">{{statsData[0].loggedInUsers}}</span>
+                <span class="font-bold text-lg block  mt-4">{{statsData[0].loginAttempts}}</span>
+                <span class="font-bold text-lg block  mt-4 text-red-600">{{statsData[0].loggedOut}}</span>
+                <span class="font-bold text-lg block  mt-4 text-red-600">{{statsData[0].wrongPasswordAttempts}}</span>
+                <span class="font-bold text-lg block  mt-4">{{statsData[0].passwordReset}}</span>
+            </div>
+        </div>
+    </div>
+</div>

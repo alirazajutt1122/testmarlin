@@ -1,0 +1,120 @@
+
+    <section class="widget" widget="">
+      <header>
+        <h3>{{'Menu.General Ledger' | translate}}</h3>
+      </header>
+
+      <div class="widget-body">
+        <form class="form-horizontal form-label-left" method="post" data-parsley-priority-enabled="false" novalidate role="form"
+          name="myForm" [formGroup]="myForm" (ngSubmit)="printReport(myForm.value, myForm.valid)">
+        <!-- /////////// Loading animations ///////////// -->
+        <!-- <div class="loading-animations" *ngIf="showLoader">
+            <div class="request-loader">
+                  <progress></progress> 
+            </div>
+        </div> -->
+          <div class="row">
+            <div class="col-sm-3 fields_box">
+              <label for="status">{{'Translation.From Date' | translate }} <span class="validation">*</span></label>
+              <wj-input-date id="fromDate" formControlName="fromDate" class="wijmo_style" [(ngModel)]="params.START_DATE" [format]="dateFormat"  [showYearPicker]="false"
+                [mask]="dateMask" [isRequired]="true"> </wj-input-date>
+              <div *ngIf="!dateComparison" class="text-danger">>{{'Translation.From Date should be less or equal than To Date' | translate }}.</div>
+              <!--<div *ngIf="myForm.controls['fromDate'].hasError('required')" [hidden]="myForm.controls['fromDate'].valid || (myForm.controls['fromDate'].pristine && !isSubmitted)"
+                class="text-danger"> Date {{ 'Translation.is required' | translate }}.</div>-->
+            </div>
+
+            <div class="col-sm-3 fields_box">
+              <label for="status">{{'Translation.To Date' | translate}} <span class="validation">*</span></label>
+              <wj-input-date id="toDate" formControlName="toDate" class="wijmo_style" [(ngModel)]="params.END_DATE" [format]="dateFormat"  [showYearPicker]="false"
+                [mask]="dateMask" [isRequired]="true"> </wj-input-date>
+              <!--<div *ngIf="myForm.controls['toDate'].hasError('required')" [hidden]="myForm.controls['toDate'].valid || (myForm.controls['toDate'].pristine && !isSubmitted)"
+                class="text-danger"> Date {{ 'Translation.is required' | translate }}.</div>-->
+            </div>
+
+            <div class="col-sm-3 fields_box">
+              <label for="voucherType">{{ 'Translation.Voucher Type' | translate }}  <span class="validation">*</span></label>
+              <wj-combo-box tabindex="2" id="voucherType" class="wijmo_style" formControlName="voucherType" [isEditable]="true" [itemsSource]="voucherTypeList"
+                displayMemberPath="typeDesc" selectedValuePath="voucherTypeId" #voucherType [(ngModel)]="params.VOUCHER_TYPE_ID"
+                [isRequired]="true"></wj-combo-box>
+              <div *ngIf="myForm.controls['voucherType'].hasError('required') || myForm.controls['voucherType'].hasError('pattern')" [hidden]="myForm.controls['voucherType'].valid || (myForm.controls['voucherType'].pristine && !isSubmitted)"
+                class="text-danger">{{ 'Translation.Voucher Type' | translate }} {{ 'Translation.is required' | translate }}.</div>
+              <!--<wj-multi-select id="voucherType" [placeholder]="'Select'" class="wijmo_style" #voucherType formControlName="voucherType"
+                [isEditable]="true" [itemsSource]="voucherTypeList" displayMemberPath="typeDesc" selectedValuePath="voucherTypeId"
+                [(ngModel)]="params.voucherTypeId" [isRequired]="true"></wj-multi-select>-->
+              <!--<div *ngIf="myForm.controls['voucherType'].hasError('required')" [hidden]="myForm.controls['voucherType'].valid || (myForm.controls['voucherType'].pristine && !isSubmitted)"
+                class="text-danger"> Voucher Type {{ 'Translation.is required' | translate }}.</div>-->
+            </div>
+
+            <div class="col-sm-3 fields_box">
+              <label for="posted">{{ 'Translation.Posted' | translate }} <span class="validation">*</span></label>
+              <wj-combo-box tabindex="2" id="posted" class="wijmo_style" formControlName="posted" [isEditable]="true" [itemsSource]="postedList"
+                [isRequired]="true" displayMemberPath="name" selectedValuePath="code" #posted [(ngModel)]="params.POSTED"></wj-combo-box>
+              <div *ngIf="myForm.controls['posted'].hasError('required') || myForm.controls['posted'].hasError('pattern')" [hidden]="myForm.controls['posted'].valid || (myForm.controls['posted'].pristine && !isSubmitted)"
+                class="text-danger">{{ 'Translation.Posted' | translate }} {{ 'Translation.is required' | translate }}.</div>
+              <!--<div *ngIf="myForm.controls['posted'].hasError('required')" [hidden]="myForm.controls['posted'].valid || (myForm.controls['posted'].pristine && !isSubmitted)"
+                class="text-danger"> Posted {{ 'Translation.is required' | translate }}.</div>-->
+            </div>
+
+          </div>
+          <div class="row">
+            <!--<div class="col-sm-3 fields_box">
+              <label for="code"> Exchange <span class="validation">*</span></label>
+              <wj-combo-box autofocus="autofocus" tabindex="1" id="exchangeId" formControlName="exchangeId" class="wijmo_style" [isEditable]="true"
+                [itemsSource]="exchangeList" displayMemberPath="exchangeCode" selectedValuePath="exchangeId" [(ngModel)]="params.EXCHANGE_ID"
+                (ngModelChange)="onExchangeChange($event)" required [isRequired]="true"></wj-combo-box>
+              <div *ngIf="myForm.controls['exchangeId'].hasError('required') || myForm.controls['exchangeId'].hasError('pattern')" [hidden]="myForm.controls['exchangeId'].valid || (myForm.controls['exchangeId'].pristine && !isSubmitted)"
+                class="text-danger">Exchange {{ 'Translation.is required' | translate }}.</div>
+            </div>-->
+
+            <div class="col-sm-3 fields_box">
+              <label for="endDate">{{'Translation.From Account' | translate}} <span class="validation">*</span></label>
+              <wj-auto-complete tabindex="3" id="fromClientId" class="wijmo_style" formControlName="fromClientId" [isRequired]="true" [itemsSource]="fromChartOfAccountList"
+                displayMemberPath="displayName" selectedValuePath="code" [(ngModel)]="params.FROM_ACCOUNT" [isEditable]="true" [maxItems]="50"></wj-auto-complete>
+               <div *ngIf="!checkFromAccount" class="text-danger">{{'Translation.From Account' | translate}} {{ 'Translation.is required' | translate }} </div> 
+                <!--<div *ngIf="myForm.controls['fromClientId'].hasError('required')" [hidden]="myForm.controls['fromClientId'].valid || (myForm.controls['fromClientId'].pristine && !isSubmitted)"
+                class="text-danger">Client {{ 'Translation.is required' | translate }}.</div>-->
+            </div>
+
+            <div class="col-sm-3 fields_box">
+              <label for="endDate">{{'Translation.To Account' | translate }} <span class="validation">*</span></label>
+              <wj-auto-complete tabindex="4" id="toClientId" class="wijmo_style" formControlName="toClientId" [isRequired]="true" [itemsSource]="toChartOfAccountList"
+                displayMemberPath="displayName" selectedValuePath="code" [(ngModel)]="params.TO_ACCOUNT" [isEditable]="true" [maxItems]="50"></wj-auto-complete>
+               <div *ngIf="!checkToAccount" class="text-danger">To Account {{ 'Translation.is required' | translate }} </div> 
+                <!--<div *ngIf="myForm.controls['toClientId'].hasError('required')" [hidden]="myForm.controls['toClientId'].valid || (myForm.controls['toClientId'].pristine && !isSubmitted)"
+                class="text-danger">Client {{ 'Translation.is required' | translate }}.</div>-->
+            </div>
+            <div class="col-sm-3 fields_box">
+              <label for="status">  {{'Translation.Report Type' | translate }}
+                  <span class="validation">*</span>
+              </label>
+              <wj-combo-box tabindex="3" id="reportType" class="wijmo_style" formControlName="reportType"
+                  [isEditable]="true" [itemsSource]="reportTypeList"
+                  [isRequired]="true" #inputReportType displayMemberPath="label" selectedValuePath="value"
+                  [(ngModel)]="reportType"></wj-combo-box>
+              <div *ngIf="!isValidReport" class="text-danger">{{'Translation.Report Type' | translate }} {{ 'Translation.is required' | translate }}.</div>
+
+          </div>
+
+            <!--<div class="col-sm-3 fields_box">
+              <label for="startDate">Security</label>
+              <wj-combo-box tabindex="2" id="securityId" class="wijmo_style" formControlName="securityId" [isEditable]="true" [itemsSource]="securityList"
+                displayMemberPath="symbol" selectedValuePath="securityId" #inputSecurity [(ngModel)]="params.SECURITY_ID"></wj-combo-box>
+            </div>-->
+
+            <div class="col-sm-2 fields_box">
+              <label for="status"> &nbsp; </label>
+              <button type="submit" novalidate class="btn btn-success">{{'Translation.View Report' | translate}} </button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div *ngIf="pdf" class="flex justify-center m-4 mt-4">
+        <ngx-extended-pdf-viewer [base64Src]="pdfSrc" theme="dark" backgroundColor="#151922a8" [useBrowserLocale]="true"  [showOpenFileButton]="false" filenameForDownload="{{fileNameForDownload}}"
+            class="w-full" style="display: block;height: 775px;"></ngx-extended-pdf-viewer>
+      </div>
+
+      
+    </section>
+ 
+<dialog-cmp #dialogCmp (btnClick)="getNotification($event)"> </dialog-cmp>

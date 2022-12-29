@@ -1,0 +1,84 @@
+
+    <section class="widget" widget="">
+      <header>
+        <h3>{{'Translation.Client Migrator'| translate}}</h3>
+      </header>
+      <div class="widget-body">
+        <form class="form-horizontal form-label-left" method="post" data-parsley-priority-enabled="false" novalidate="novalidate"
+          role="form" [formGroup]="myForm">
+          <div class="row wizard_data">
+            <div class="col-sm-4 fields_box"> </div>
+            <div class="col-sm-4 fields_box">
+              <label for="search-input">{{'Translation.Exchange'| translate}}  <span class="validation">*</span></label>
+              <wj-combo-box id="exchangeId" tabindex="2" class="wijmo_style" formControlName="exchangeId" [itemsSource]="exchangeList"
+                displayMemberPath="exchangeName" selectedValuePath="exchangeId" [isRequired]="true" [isEditable]="true"
+                [(ngModel)]="exchangeSelected" (ngModelChange)="onExchangeChange($event)">
+              </wj-combo-box>
+              <div *ngIf="myForm.controls['exchangeId'].hasError('required')" [hidden]="myForm.controls.exchangeId.valid || (myForm.controls.exchangeId.pristine && !isSubmitted)"
+                class="text-danger">{{'Translation.Exchange'| translate}} {{'Translation.is required'| translate}}.</div>
+                <br/> <br/>
+                <div class="col-sm-12 fields_box">
+                    <label for="accountingStandards">{{'Translation.Loader Type'| translate}}</label>
+                    <div class="abc-radio" style="margin-top:5px;margin-right: 30px;">
+                      <input id="Holding" type="radio" name="clientLoaderType" (click)="onLoaderChangeEvent(true)" value="true" checked>
+                      <label for="Holding">{{'Translation.Holding'| translate}}</label>
+                    </div>
+                    <div class="abc-radio" style="margin-top:5px;">
+                      <input id="Balance" type="radio" name="clientLoaderType" (click)="onLoaderChangeEvent(false)" value="false">
+                      <label for="Balance">{{'Translation.Balance'| translate}}</label>
+                    </div>
+                  </div>
+            </div>
+            <div class="col-sm-4 fields_box"> </div>
+          </div>
+          <div class="row wizard_data">
+            <div class="col-sm-4 fields_box"> </div>
+            <div class="col-sm-4 fields_box">
+              <label for="fileUpload">{{'Translation.Document'| translate}} <span class="validation">*</span> ( *.csv )</label>
+              <!--<div class="fileinput fileinput-new" data-provides="fileinput">-->
+              <input type="file" style="color:#f3b170" (change)="fileChangeEvent(input)" #input id="fileUpload" name="fileUpload" formControlName="fileUpload"
+                accept="application/csv" [(ngModel)]="selectedFileName" required />
+              <div *ngIf="fileSizeExceed" class="text-danger">{{'Translation.File size exceed. Maximum allowed size is 50MB'| translate}}.</div>
+              <div *ngIf="IsFileAttached" class="text-danger">{{'Translation.Please attach a file before uploading'| translate}}.</div>
+              <!--</div>-->
+             
+            </div>
+
+            <div class="col-sm-4 fields_box"> </div>
+          </div>
+          <div class="row wizard_data">
+            <div class="col-sm-4 fields_box"> </div>
+            <div class="col-sm-4 fields_box">
+              <label for="loadedRecords">{{'Translation.Loaded Record'| translate}}(s): {{loaded_records}}</label>
+            </div>
+            <div class="col-sm-4 fields_box"></div>
+          </div>
+          <div class="row wizard_data">
+            <div class="col-sm-4 fields_box"> </div>
+            <div class="col-sm-4  fields_box">
+              <label for="errorRecords">{{'Translation.Error Record'| translate}}(s): {{error_records}}</label>
+            </div>
+            <div class="col-sm-4 fields_box"> </div>
+          </div>
+          <div class="row wizard_data">
+            <div class="col-sm-4 fields_box"> </div>
+            <div class="col-sm-4  fields_box">
+              <!--*ngIf="userService.isAuhtorized(userService.EB_MIGRATORS_CL_HOLDING_NEW)"-->
+              <button class="btn btn-success btn-rounded pull-right" (click)="btnUpload(myForm.value, myForm.valid)" type="submit"> {{'Translation.Upload'| translate}} </button>
+            </div>
+            <div class="col-sm-4 fields_box"> </div>
+          </div>
+          <div class="row wizard_data">
+            <div class="col-sm-4 fields_box"> </div>
+            <div class="col-sm-4 fields_box">
+              <b><label>{{'Translation.Note'| translate}}:</label> </b> <label>
+                {{'Translation.Note1'| translate}}.
+                </label>
+            </div>
+            <div class="col-sm-4 fields_box"> </div>
+          </div>
+        </form>
+      </div>
+    </section>
+
+<dialog-cmp #dialogCmp (btnClick)="getNotification($event)"> </dialog-cmp>

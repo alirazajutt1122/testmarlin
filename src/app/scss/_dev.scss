@@ -1,0 +1,53 @@
+/* Dev.. css */
+.grid {
+
+    //text-align: right;
+	width: 100%;
+    height: 65vh;
+    overflow-y: auto;
+    // border: 1px solid #2f4e50;
+    margin: 5px;
+}
+.bid_text{
+    //text-align:center;
+	color: #6fcbf7;
+
+}
+.ask_text{
+	color: #da5451;
+
+}
+.mb-xs{
+	padding  : 1px 5px;
+}
+/* override the glyphs used to show sorting and grouping */
+ .custom-flex-grid .wj-glyph-up {
+    //  background-image:url('../../resources/ascending.png');
+     background-repeat: no-repeat;
+     background-position: bottom right;
+     width: 1em; height: 1em;
+     border-top: 0px; border-bottom: 0px; border-left: 0px; border-right: 0px;
+     opacity: 1;
+ }
+ .custom-flex-grid .wj-glyph-down {
+    //  background-image:url('../../resources/descending.png');
+     background-repeat: no-repeat;
+     background-position: bottom right;
+     width: 1em; height: 1em;
+     border-top: 0px; border-bottom: 0px; border-left: 0px; border-right: 0px;
+     opacity: 1;
+ }
+ .custom-flex-grid .wj-glyph-right {
+    //  background-image:url('../../resources/collapsed.png');
+     background-repeat: no-repeat;
+     background-position: bottom right;
+     width: 1em; height: 1em;
+     border-top: 0px; border-bottom: 0px; border-left: 0px; border-right: 0px;
+ }
+ .custom-flex-grid .wj-glyph-down-right {
+    //  background-image:url('../../resources/expanded.png');
+     background-repeat: no-repeat;
+     background-position: bottom right;
+     width: 1em; height: 1em;
+     border-top: 0px; border-bottom: 0px; border-left: 0px; border-right: 0px;
+ }

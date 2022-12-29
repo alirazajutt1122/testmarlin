@@ -1,0 +1,167 @@
+<section class="widget" widget="">
+    <header>
+      <h2>{{ 'Menu.Currency Rates' | translate }}</h2>
+      <div class="other_btns">
+          <button data-toggle="collapse" data-target="#filter_box" class="filter_btn"><i class="fa fa-filter mr-2" aria-hidden="true"></i></button>
+          <button *ngIf="userService.isAuhtorized(userService.EB_CONF_VOUCHER_TYPE_NEW)" class="add_new_btn" id="btnNew"
+            data-toggle="modal" (click)="onNewAction()" data-target="#add_new" type="button" data-backdrop="static"
+            title="{{ 'Translation.Add' | translate }} "><i class="fa fa-plus" aria-hidden="true"></i> </button>
+      </div>
+    </header>
+  
+
+    <div id="filter_box" class="collapse in">
+      <div class="row mt-2">
+        <div class="col-sm-2 form-group">
+            <label for="filter-currency">{{ 'Translation.Currency' | translate }} </label>
+            <wj-combo-box id="filter-currency"  [itemsSource]="filterCurrencyList" [isEditable]="false" class="ml-4"  
+              displayMemberPath="currencyCode" selectedValuePath="currencyId" (ngModelChange)="onFilterAction($event)" [(ngModel)]="currencyFilter" #currencyFilterCmb>
+            </wj-combo-box>
+        </div>
+      </div>
+    </div>
+    <div class="table_container">
+  
+      <wj-flex-grid [itemsSource]="itemsList" [isReadOnly]="true" [selectionMode]="'Row'" [autoSizeMode]="'Headers'"
+        [headersVisibility]="'Column'" style="height: 550px;" #flex>
+
+        <wj-flex-grid-column [header]="'Translation.Date' | translate" [binding]="'dateTime'" [align]="'left'" [width]="'0.2*'"
+          [minWidth]="30"></wj-flex-grid-column>
+        <wj-flex-grid-column [header]="'Translation.Currency' | translate" [binding]="'currency.currencyCode'" [align]="'left'" [width]="'0.5*'"
+          [minWidth]="30"></wj-flex-grid-column>
+          <wj-flex-grid-column [header]="'Translation.Rate' | translate" [binding]="'rate'" [align]="'left'" [width]="'0.5*'" format="n4"
+          [minWidth]="30"></wj-flex-grid-column>
+          <wj-flex-grid-column [header]="'Translation.Coefficient' | translate" [binding]="'coefficient'" [align]="'left'" [width]="'0.5*'" format="n4"
+          [minWidth]="30"></wj-flex-grid-column>
+          <wj-flex-grid-column [header]="'Translation.Modified By' | translate" [binding]="'modifiedBy'" [align]="'left'" [width]="'0.5*'"
+          [minWidth]="30"></wj-flex-grid-column>
+      </wj-flex-grid>
+  
+    </div>
+    <div class="btn-group col-xs-12 align-right">
+      <!-- Paginator -->
+      <wj-collection-view-pager [cv]="flex?.collectionView"></wj-collection-view-pager>
+      <!-- page size -->
+      <wj-menu [(value)]="pageSize" [header]="'Common.Page Size' | translate">
+        <wj-menu-item [value]="0">{{ 'Common.No Paging' | translate }}</wj-menu-item>
+        <wj-menu-item [value]="5">5 {{ 'Common.items' | translate }}</wj-menu-item>
+        <wj-menu-item [value]="10">10 {{ 'Common.items' | translate }}</wj-menu-item>
+        <wj-menu-item [value]="20">20 {{ 'Common.items' | translate }}</wj-menu-item>
+        <wj-menu-item [value]="30">30 {{ 'Common.items' | translate }}</wj-menu-item>
+        <wj-menu-item [value]="50">50 {{ 'Common.items' | translate }}</wj-menu-item>
+        <wj-menu-item [value]="100">100 {{ 'Common.items' | translate }}</wj-menu-item>
+        </wj-menu>
+    </div>
+  </section>
+  
+  
+  
+  <!-- Add New  Modal -->
+  <div id="add_new" class="modal fade" role="dialog" data-keyboard="true">
+    <div class="modal-dialog">
+  
+      <!-- Modal content-->
+      <div class="modal-content">
+        <!--<div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" (click)="onCancelAction()">&times;</button>
+          <h4 class="modal-title">Voucher Types</h4>
+        </div>-->
+  
+        <form class="form-horizontal form-label-left" method="post" data-parsley-priority-enabled="false"
+          novalidate="novalidate" role="form" [formGroup]="myForm" (ngSubmit)="onSaveAction(myForm.value, myForm.valid)">
+          <div class="modal-body modal-no-border p-0">
+  
+            <div class="row setup_box_container">
+              <div class="col-md-12 col-sm-7 ">
+
+              <div class="row">
+                <div class="col-md-3 col-sm-5 modal_left p-2">
+                    <div class="wizard_Logo">
+                      <img src="assets/img/Dollar-Sign.png" class="formImg" />
+                      <h4>{{ 'Menu.Currency Rates' | translate }}</h4>
+                      <p>{{ 'Translation.Management of Currency Rates in bond module' | translate }}</p>
+                    </div>
+                   </div>
+  
+                  <!--style="margin: 40px 40px 0px 40px"-->
+  
+  
+  
+                  <div class="col-sm-9" [ngStyle]="{marginTop : '6rem'}">
+                        <div class="row">
+                          <div class="col-sm-6 fields_box">
+                              <label for="currency"> {{ 'Translation.Currency' | translate }} <span class="validation">*</span></label>
+                              <wj-combo-box id="currency" formControlName="currencyId" #currencyListCmb [itemsSource]="currencyList" [isEditable]="false"
+                              displayMemberPath="currencyCode" selectedValuePath="currencyId" (ngModelChange)="onCurrencyChange($event)" [(ngModel)]="currencyRate.currency.currencyId">
+                              </wj-combo-box>
+            
+                              <div *ngIf="myForm.controls['currencyId'].hasError('required')"
+                                [hidden]="myForm.controls.currencyId.valid || (myForm.controls.currencyId.pristine && !isSubmitted)"
+                                class="text-danger" > {{ 'Translation.Currency' | translate }} {{ 'Translation.is required' | translate }}.</div>
+                            </div>
+            
+                            <div class="col-sm-6 fields_box">
+                              <label for="dateTime"> {{ 'Translation.Date Time' | translate }}</label>
+                              <wj-input-date id="dateTime" formControlName="dateTime" class="wijmo_style"  [format]="dateFormat" [mask]="'0000-00-00'"
+                              [isRequired]="false"  [showYearPicker]="false" [(ngModel)]="currencyRate.dateTime" >
+                             </wj-input-date>
+          
+                            </div>
+                        </div>
+      
+                         <div class="row">
+                          <div class="col-sm-6 fields_box">
+                              <label for="rate"> {{ 'Translation.Rate' | translate }} <span class="validation">*</span></label>
+                              <wj-input-number id="rate" class="wijmo_style"  formControlName="rate"  [min]="0" format="n4"
+                                 maxlength="50"  required [isRequired]="true" [(ngModel)]="currencyRate.rate" #inputRate>
+                              </wj-input-number>
+                              <div *ngIf="myForm.controls['rate'].hasError('required')"
+                                [hidden]="myForm.controls.rate.valid || (myForm.controls.rate.pristine && !isSubmitted)"
+                                class="text-danger"> {{ 'Translation.Rate' | translate }} {{ 'Translation.is required' | translate }}.</div>
+                            </div>
+                            <div class="col-sm-6 fields_box">
+                              <label for="coefficient"> {{ 'Translation.Coefficient' | translate }} <span class="validation">*</span></label>
+                              <wj-input-number id="coefficient" class="wijmo_style"  formControlName="coefficient" [min]="0" format="n4"
+                                maxlength="50"  [(ngModel)]="currencyRate.coefficient" [isRequired]="true" #inputCoefficient>
+                              </wj-input-number>
+                      
+                            </div>
+                         </div>
+                  </div>
+              </div>
+
+               
+              </div>
+            </div>
+          </div>
+  
+          <div class="orange_footer_small">
+            <button id="btnSave" type="submit" class="save_btn"
+              *ngIf="userService.isAuhtorized(userService.EB_CONF_VOUCHER_TYPE_NEW)">{{ 'Common.Save' | translate }}</button>
+            <button type="button" data-dismiss="modal" class="cancel_btn" (click)="onCancelAction()">{{ 'Common.Cancel' | translate }}</button>
+          </div>
+        </form>
+  
+      </div>
+  
+    </div>
+  </div>
+  
+  <wj-popup class="modal-dialog green_dialog" #recordSaveDlg>
+    <div id="greenDialog" class="modal fade" role="dialog">
+      <div class="modal-dialog green_dialog">
+        <div class="modal-content">
+          <div class="modal-body">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h2 class="page-title"><span class="glyphicon glyphicon-ok"></span> {{ 'Common.Success' | translate }}</h2>
+            <p>{{ 'Translation.Record Saved successfully' | translate }}.</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'Common.Close' | translate }}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </wj-popup>
+  
+  <dialog-cmp #dialogCmp (btnClick)="getNotification($event)"> </dialog-cmp>

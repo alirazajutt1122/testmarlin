@@ -1,0 +1,84 @@
+<div class="theme">
+    <div class="row header">
+        <span class="font-bold text-xl ml-2 mt-1 text-primary">{{'Translation.CASH OBLIGATION' | translate }}</span>
+        <span class="ml-3 text-md" style="margin-top:9px ;">As on {{date}}</span>
+    </div>
+
+    <div class="mt-2 row w-full">
+        <table id="dashboardBo" class="w-full bg-transparent overflow-y-auto topTables" mat-table [dataSource]="data">
+
+            <ng-container matColumnDef="Market">
+                <th class="col-sm-4" mat-header-cell *matHeaderCellDef>
+                    {{'Translation.Market' | translate}}
+                </th>
+                <td [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}" mat-cell *matCellDef="let element">
+                    <span
+                        class="text-primary-500 pr-6 whitespace-nowrap text-lg xl:text-lg lg:text-md md:text-md sm:text-sm">
+                        {{element.market}}
+                    </span>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="Side">
+                <th class="col-sm-4" mat-header-cell *matHeaderCellDef>
+                    {{'Translation.Side' | translate}}
+                </th>
+                <td [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}" mat-cell *matCellDef="let element">
+                    <span class="mt-1 block pr-6 whitespace-nowrap text-lg xl:text-lg lg:text-md md:text-md sm:text-sm">
+                        {{element.buy}}
+                    </span>
+                    <span
+                        class="mt-3 mb-1 block pr-6 whitespace-nowrap text-lg xl:text-lg lg:text-md md:text-md sm:text-sm">
+                        {{element.sell}}
+                    </span>
+                </td>
+
+            </ng-container>
+
+            <ng-container matColumnDef="Value">
+                <th class="col-sm-4" mat-header-cell *matHeaderCellDef>
+                    {{'Translation.Value' | translate}}
+                </th>
+                <td [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}" mat-cell *matCellDef="let element">
+                    <span class="mt-1 block pr-6 whitespace-nowrap text-lg xl:text-lg lg:text-md md:text-md sm:text-sm">
+                        {{element.buyValue | number : '1.2-2'}}
+                    </span>
+                    <span
+                        class=" mt-3 mb-1 block pr-6 whitespace-nowrap text-lg xl:text-lg lg:text-md md:text-md sm:text-sm">
+                        {{element.sellValue | number : '1.2-2'}}
+
+                        <span
+                            class="-mt-1 text-primary-500 font-bold pr-6 whitespace-nowrap text-lg xl:text-lg lg:text-md md:text-md sm:text-sm">
+                            {{element?.value}}
+                        </span>
+
+                    </span>
+                </td>
+
+
+
+
+
+            </ng-container>
+
+            <ng-container matColumnDef="NetCash">
+                <th class="col-sm-4" mat-header-cell *matHeaderCellDef>
+                    {{'Translation.Net Cash' | translate}}
+                </th>
+                <td [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}" mat-cell *matCellDef="let element">
+                    <span class="pr-6 whitespace-nowrap text-lg xl:text-lg lg:text-md md:text-md sm:text-sm">
+                        {{element?.net | number : '1.2-2'}}
+                    </span>
+                    <span style="margin-left: -20px;"
+                        class=" pr-6 whitespace-nowrap font-bold text-lg xl:text-lg lg:text-md md:text-md sm:text-sm">
+                        {{element?.netObligation | number : '1.2-2'}}
+                    </span>
+                </td>
+            </ng-container>
+
+
+            <tr mat-header-row *matHeaderRowDef="tableColumns; sticky: true"></tr>
+            <tr class="order-row h-10" mat-row *matRowDef="let row; columns: tableColumns;"></tr>
+        </table>
+    </div>
+</div>

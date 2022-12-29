@@ -1,0 +1,203 @@
+<div class="w-full max-w-4xl" style="margin: auto;">
+    <!-- Form -->
+    <form [formGroup]="initialRegFormGroup"
+          (ngSubmit)="submit(initialRegFormGroup)">
+
+        <!-- Section -->
+        <div class="w-full">
+            <div class="text-xl">Profile</div>
+            <div class="text-secondary"></div>
+        </div>
+
+        <div class="grid sm:grid-cols-6 gap-6 w-full mt-8" style="height: 100%; overflow-y: hidden; padding-top: 10px;">
+
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Identification Type</mat-label>
+                    <mat-select [formControlName]="'identificationType'"
+                                (valueChange)="onIdentificationChange($event)">
+                        <mat-option *ngFor="let identity of identificationTypes"
+                                    [value]="identity.uinId"> {{ identity.uinDesc }}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Unique Identification Number</mat-label>
+                    <input
+                        [formControlName]="'uin'"
+                        matInput>
+                </mat-form-field>
+            </div>
+
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Identification Issue Date</mat-label>
+                    <input [formControlName]="'cnicIssueDate'"
+                           matInput
+                           [matDatepicker]="picker1">
+                    <mat-datepicker-toggle
+                        matSuffix
+                        [for]="picker1"></mat-datepicker-toggle>
+                    <mat-datepicker #picker1></mat-datepicker>
+                </mat-form-field>
+            </div>
+
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Residential Status</mat-label>
+                    <mat-select [formControlName]="'residentialStatus'">
+                        <mat-option [value]="'01'">Resident</mat-option>
+                        <mat-option [value]="'02'">Non-Resident</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Client Name</mat-label>
+                    <input
+                        [formControlName]="'clientName'"
+                        matInput>
+                </mat-form-field>
+            </div>
+
+            <!-- Email -->
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Email</mat-label>
+                    <input
+                        [formControlName]="'email'"
+                        matInput>
+                </mat-form-field>
+            </div>
+
+            <!-- Relation With Mobile Number -->
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Relation With Mobile Number</mat-label>
+                    <mat-select [formControlName]="'relationWithMobileNo'" (valueChange)="onRelationChange($event)">
+                        <mat-option *ngFor="let relation of relationTypes" [value]="relation.relativeId">
+                            {{ relation.relativeDesc }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+            <!-- Mobile Number -->
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Mobile Number</mat-label>
+                    <input
+                        [formControlName]="'mobileNumber'"
+                        matInput>
+                </mat-form-field>
+            </div>
+
+            <!-- IBAN Number -->
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>IBAN Number</mat-label>
+                    <input
+                        [formControlName]="'ibanNumber'"
+                        matInput>
+                </mat-form-field>
+            </div>
+
+            <!-- Relative CNIC Number -->
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Relative CNIC Number</mat-label>
+                    <input
+                        [formControlName]="'relativeCnic'"
+                        matInput>
+                </mat-form-field>
+            </div>
+
+            <!-- Relation With Mobile Number -->
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Participant</mat-label>
+                    <mat-select [formControlName]="'participantId'">
+                        <mat-option *ngFor="let identity of allActiveParticipants" [value]="identity.participantId">
+                            {{ identity.participantName }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+
+        </div>
+
+        <div class="grid sm:grid-cols-4 gap-6 w-full mt-8" style="height: 100%;">
+            <div class="sm:col-span-2">
+                <fuse-card class="flex flex-col max-w-full w-full filter-article">
+                    <img *ngIf="relationProofBase64" class="object-scale-down" [src]="relationProofBase64"/>
+                    <div class="m-8 mb-4">
+                        <div class="text-secondary text-md mt-1">Upload Proof of
+                            Relationship
+                        </div>
+                        <div class="mt-3 -mx-3">
+                            <button
+                                class="px-3"
+                                type="button"
+                                mat-button
+                                [color]="'primary'"
+                                (click)="relationshipProof.click()">
+                                Upload
+                            </button>
+                            <input hidden (change)="onRelationProofSelected($event.target)" #relationshipProof
+                                   type="file"
+                                   id="relationProofDummy" accept="image/*" name="relationProofDummy"
+                                   formControlName="relationProofDummy"/>
+                        </div>
+                    </div>
+                </fuse-card>
+            </div>
+            <div class="sm:col-span-2">
+
+                <fuse-card class="flex flex-col max-w-full w-full filter-article">
+                    <img class="object-scale-down" [src]="IBANProofBase64"/>
+
+                    <div class="m-8 mb-4">
+                        <div class="text-secondary text-md mt-1">Upload Proof of IBAN</div>
+                        <div class="mt-3 -mx-3">
+                            <button
+                                class="px-3"
+                                type="button"
+                                mat-button
+                                [color]="'primary'"
+                                (click)="ibanProof.click()">
+                                Upload
+                            </button>
+                            <input hidden (change)="onIBANProofSelected($event.target)" #ibanProof type="file" id="file"
+                                   accept="image/*"/>
+                        </div>
+                    </div>
+                </fuse-card>
+            </div>
+        </div>
+
+
+        <!-- Divider -->
+        <div class="mt-4 mb-4 border-t"></div>
+
+        <!-- Actions -->
+        <div class="flex items-center justify-end">
+            <button
+                routerLink="/dashboard"
+                mat-stroked-button
+                type="button">
+                Cancel
+            </button>
+            <button
+                class="ml-4"
+                mat-flat-button
+                type="submit"
+                [color]="'primary'">Save
+            </button>
+        </div>
+    </form>
+
+</div>

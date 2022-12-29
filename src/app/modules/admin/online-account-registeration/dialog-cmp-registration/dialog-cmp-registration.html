@@ -1,0 +1,83 @@
+<!--Success Dialog (modal-dialog)-->
+<wj-popup class="green_dialog" #successDialog>
+    <div class="modal-content">
+        <div class="modal-body">
+            <button type="button" class="close wj-hide" data-dismiss="modal" (click)="onClick('Success')">&times;</button>
+            <h2 style="text-align: left;" class="page-title"><span class="glyphicon glyphicon-ok"></span> Success</h2>
+            <p style="text-align: left;">{{statusMsg}}</p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default wj-hide" data-dismiss="modal" (click)="onClick('Success')">Ok</button>
+        </div>
+    </div>
+</wj-popup>
+
+<!--Error Dialog-->
+<wj-popup class="red_dialog" #errorDialog [ngClass] = cssClass>
+    <div class="modal-content">
+        <div class="modal-body">
+            <button type="button" class="close wj-hide" data-dismiss="modal" (click)="onClick('Error')">&times;</button>
+            <h2 style="text-align: left;" class="page-title"><span><i class="fa fa-times" aria-hidden="true"></i></span> Error </h2>
+            <p style="text-align: left;">{{statusMsg}}</p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default wj-hide" data-dismiss="modal" (click)="onClick('Error')">Ok</button>
+        </div>
+    </div>
+</wj-popup>
+
+<!--Warning Dialog-->
+<wj-popup class="orange_dialog" #warningDialog>
+    <div class="modal-content">
+        <div class="modal-body">
+            <button type="button" class="close wj-hide" data-dismiss="modal" (click)="onClick('Warning')">&times;</button>
+            <h2 style="text-align: left;" class="page-title"><i class="fa fa-warning"></i> Warning</h2>
+            <p style="text-align: left;">{{statusMsg}}</p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default wj-hide" data-dismiss="modal" (click)="onClick('Warning')">Ok</button>
+        </div>
+    </div>
+</wj-popup>
+
+<!--Notification Dialog-->
+<wj-popup class="blue_dialog" #notificationDialog>
+    <div class="modal-content">
+        <div class="modal-body">
+            <button type="button" class="close wj-hide" data-dismiss="modal" (click)="onClick('Notification')">&times;</button>
+            <h2 style="text-align: left;" class="page-title"><i class="fa fa-warning"></i> Notification</h2>
+            <p style="text-align: left;">{{statusMsg}}</p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default wj-hide" data-dismiss="modal" (click)="onClick('Notification')">Ok</button>
+        </div>
+    </div>
+</wj-popup>
+
+<!--Confirmation Dialog-->
+<wj-popup class="grey_Dialog" #confirmationDialog>
+    <div class="modal-content">
+        <div class="modal-body">
+            <button type="button" class="close wj-hide" data-dismiss="modal">&times;</button>
+            <h2 style="text-align: left;" class="page-title"><i class="fa fa-question-circle-o"></i> Confirmation</h2>
+            <p style="text-align: left;">{{statusMsg}}</p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default wj-hide" data-dismiss="modal" (click)="onClick('Yes')">Yes</button>
+            <button type="button" class="btn btn-default wj-hide" data-dismiss="modal" (click)="onClick('No')">No</button>
+        </div>
+    </div>
+</wj-popup>
+
+<wj-popup class="green_dialog" #successDialogLocal>
+    <div class="modal-content">
+        <div class="modal-body">
+            <button type="button" class="close wj-hide" (click)="onClick('LocalSuccess')" data-dismiss="modal">&times;</button>
+            <h2 style="text-align: left;" class="page-title"><span class="glyphicon glyphicon-ok"></span> Success</h2>
+            <p style="text-align: left;">{{statusMsg}}</p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default wj-hide" data-dismiss="modal" (click)="onClick('LocalSuccess')">Ok</button>
+        </div>
+    </div>
+</wj-popup>

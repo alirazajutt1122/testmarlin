@@ -1,0 +1,277 @@
+
+<section class="widget" widget="">
+    <header>
+        <h3> <span class="fw-semi-bold">Clearing House Levies</span></h3>
+        <div class="other_btns">
+            <button class="add_new_btn" data-toggle="modal" data-target="#add_new" role="button" data-backdrop="static" title="Add Levies"
+                 *ngIf="userService.isAuhtorized(userService.EB_CLEARING_HOUSE_LEVIES_NEW)" (click)="onNewAction()"><i class="fa fa-plus" aria-hidden="true"></i> </button>
+            <button data-toggle="collapse" data-target="#filter_box" class="filter_btn"><i class="fa fa-filter" aria-hidden="true"></i></button>
+        </div>
+    </header>
+
+    <div id="filter_box" class="collapse in">
+        <div class="row">
+            <div class="col-sm-3  fields_box">
+                <label for="search-input">Exchange Name <span class="validation">*</span></label>
+
+                <wj-combo-box id="exchangeName" class="wijmo_style" name="exchangeName" [itemsSource]="exchangeNameList" (ngModelChange)="onExchangeNameChangeEvent($event)"
+                    [(ngModel)]="selectedItem.chLeviesMaster.exchange.exchangeId" displayMemberPath="exchangeCode" selectedValuePath="exchangeId"
+                    [isRequired]="false" [isEditable]="true">
+                </wj-combo-box>
+            </div>
+            <div class="col-sm-1">
+                <div class="form_search">
+                    <button [class]="searchButtonClass" [title]="searchButtonTooltip" data-toggle="collapse in" data-target="#filter_box" (click)="onSearchAction()"
+                         role="button"><span class="fa fa-search"></span> </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="table_container">
+        <wj-flex-grid id="xyz" [itemsSource]="itemsList" [allowMerging]="'Cells'" [isReadOnly]="true" [selectionMode]="'Row'" [autoSizeMode]="'Headers'"
+            [headersVisibility]="'Column'" style="height: 320px;" #flex>
+
+            <wj-flex-grid-filter [filterColumns]="['levyCode','levyDesc','levyTypeDisplay_']"></wj-flex-grid-filter>
+            <wj-flex-grid-column [header]="'Exchange'" [allowMerging]="true" [align]="'left'" [binding]="'exchange.exchangeName'" [width]="'0.3*'"
+                [minWidth]="30">
+            </wj-flex-grid-column>
+
+            <wj-flex-grid-column [header]="'Code'" [align]="'left'" [binding]="'levyCode'" [width]="'0.3*'" [minWidth]="30">
+            </wj-flex-grid-column>
+            <wj-flex-grid-column [header]="'Description'" [binding]="'levyDesc'" [align]="'left'" [width]="'0.5*'" [minWidth]="30"></wj-flex-grid-column>
+            <wj-flex-grid-column [header]="'Levy Rate Type'" [align]="'left'" [binding]="'levyTypeDisplay_'" [width]="'0.25*'" [minWidth]="30"></wj-flex-grid-column>
+            <wj-flex-grid-column [header]="'Action'" [width]="'0.2*'" [align]="'center'" [minWidth]="30" *ngIf="userService.isAuhtorized(userService.EB_CLEARING_HOUSE_LEVIES_UPDATE)" >
+                <ng-template wjFlexGridCellTemplate [cellType]="'Cell'">
+                    <!--<button id="btnEdit" class="on_edit_button"
+                        role="button" (click)="onEditAction()" title="Edit"  data-target="#add_new" data-toggle="modal"
+                        data-backdrop="static"> <img src="assets/img/edit_orange.png"/> </button>-->
+                        <img src="assets/img/edit_orange.png" class="gridImg" title="Edit" (click)="onEditAction()" data-target="#add_new" data-toggle="modal" data-backdrop="static"/>
+                </ng-template>
+            </wj-flex-grid-column>
+        </wj-flex-grid>
+    </div>
+
+    <div class="row"></div>
+    <div class="btn-group col-xs-12 align-right">
+        <!-- Paginator -->
+        <wj-collection-view-pager [cv]="flex?.collectionView"></wj-collection-view-pager>
+        <!-- page size -->
+        <wj-menu [(value)]="pageSize" [header]= "'Common.Page Size' | translate">
+            <wj-menu-item [value]="0">{{ 'Common.No Paging' | translate }}</wj-menu-item>
+            <wj-menu-item [value]="5">5 {{ 'Common.items' | translate }}</wj-menu-item>
+            <wj-menu-item [value]="10">10 {{ 'Common.items' | translate }}</wj-menu-item>
+            <wj-menu-item [value]="20">20 {{ 'Common.items' | translate }}</wj-menu-item>
+            <wj-menu-item [value]="30">30 {{ 'Common.items' | translate }}</wj-menu-item>
+            <wj-menu-item [value]="50">50 {{ 'Common.items' | translate }}</wj-menu-item>
+            <wj-menu-item [value]="100">100 {{ 'Common.items' | translate }}</wj-menu-item>
+        </wj-menu>
+    </div>
+</section>
+
+<!-- Add New Bank Modal -->
+<div id="add_new" class="modal fade" role="dialog" data-keyboard="true">
+    <div class="modal-dialog modal-lg">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <form class="form-horizontal form-label-left" method="post" data-parsley-priority-enabled="false" novalidate="novalidate"
+                role="form" [formGroup]="myForm" (ngSubmit)="onSaveAction(myForm.value, myForm.valid)">
+                <div class="modal-body modal-no-border">
+                    <div class="row setup_box_container">
+                        <div class="col-md-3 col-sm-5 modal_left">
+                            <div class="wizard_Logo">
+                                <img src="assets/img/Clearing-House-Levies.png" class="formImg"/>
+                                <h4>Clearing House<br/>Levies</h4>
+                                <p>Management of clearing house levies & configurations</p>
+                            </div>
+                        </div>
+                        <div class="col-md-9 col-sm-7 modal_center">
+                            <div class="row" style="margin: 40px 40px 0px 40px">
+
+                                <div class="col-sm-6 fields_box">
+                                    <label for="exchangeCode">Levy Code <span class="validation">*</span></label>
+                                    <wj-input-mask #exchangeCode id="exchangeCode" class="wijmo_style" formControlName="exchangeCode" [isDisabled]="isParentDisabled"
+                                        maxlength="5" [(ngModel)]="selectedItem.chLeviesMaster.levyCode" myForm [isRequired]="true">
+                                    </wj-input-mask>
+                                    <div *ngIf="myForm.controls['exchangeCode'].hasError('required')" [hidden]="myForm.controls.exchangeCode.valid || (myForm.controls.exchangeCode.pristine && !isSubmitted)"
+                                        class="text-danger">Levy Code is required.</div>
+                                    <div *ngIf="myForm.controls['exchangeCode'].hasError('pattern')" class="text-danger">Invalid Levy Code.</div>
+                                </div>
+                                <div class="col-sm-6 fields_box">
+                                    <label for="levyDescription">Description <span class="validation">*</span></label>
+                                    <wj-input-mask id="levyDescription" class="wijmo_style" formControlName="levyDescription" [isDisabled]="isParentDisabled"
+                                        maxlength="50" [(ngModel)]="selectedItem.chLeviesMaster.levyDesc" myForm [isRequired]="true">
+                                    </wj-input-mask>
+                                    <div *ngIf="myForm.controls['levyDescription'].hasError('required')" [hidden]="myForm.controls.levyDescription.valid || (myForm.controls.levyDescription.pristine && !isSubmitted)"
+                                        class="text-danger">Description is required.</div>
+                                </div>
+
+                                <div class="col-sm-6 fields_box">
+                                    <label for="exchangeName">Exchange <span class="validation">*</span></label>
+                                    <wj-combo-box id="exchangeName" class="wijmo_style" formControlName="exchangeName" [isDisabled]="isParentDisabled" [itemsSource]="exchangeNameList"
+                                        [(ngModel)]="selectedItem.chLeviesMaster.exchange.exchangeId" displayMemberPath="exchangeCode"
+                                        selectedValuePath="exchangeId" [isRequired]="false" [isEditable]="true">
+                                    </wj-combo-box>
+                                    <div *ngIf="myForm.controls['exchangeName'].hasError('required')" [hidden]="myForm.controls.exchangeName.valid || (myForm.controls.exchangeName.pristine && !isSubmitted)"
+                                        class="text-danger">Exchange is required.</div>
+                                </div>
+
+                                <div class="col-sm-6 fields_box">
+                                    <label for="search-input">Levy Type  <span class="validation">*</span></label>
+                                    <div *ngIf="!isParentDisabled">
+                                        <div class="abc-radio" style="margin-top:5px;">
+                                            <input id="percentageT" type="radio" (click)="onLevyTypeChangeEvent(true)" name="percentage" value="true" [checked]="selectedItem.chLeviesMaster.levyType == 'P'">
+                                            <label for="percentageT">Percentage</label>
+                                        </div>
+                                        <div class="abc-radio" style="margin-top:5px;">
+                                            <input id="percentageF" type="radio" (click)="onLevyTypeChangeEvent(false)" name="percentage" value="true" [checked]="selectedItem.chLeviesMaster.levyType == 'F'">
+                                            <label for="percentageF">Fixed</label>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="isParentDisabled">
+                                        <div class="abc-radio" style="margin-top:5px;">
+                                            <input id="percentageT" type="radio" (click)="onLevyTypeChangeEvent(true)" name="percentage" value="true" [checked]="selectedItem.chLeviesMaster.levyType == 'P'"
+                                                disabled>
+                                            <label for="percentageT">Percentage</label>
+                                        </div>
+                                        <div class="abc-radio" style="margin-top:5px;">
+                                            <input id="percentageF" type="radio" (click)="onLevyTypeChangeEvent(false)" name="percentage" value="true" [checked]="selectedItem.chLeviesMaster.levyType == 'F'"
+                                                disabled>
+                                            <label for="percentageF">Fixed</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="row" style="margin: 20px 40px 0px 40px">
+                                <h3><span class="fw-semi-bold">Details</span></h3>
+                                <div class="col-sm-12"></div>
+                                <div class="col-sm-6 fields_box">
+                                    <label for="settlementType">Settlement Type <span class="validation">*</span></label>
+                                    <wj-combo-box id="settlementType" class="wijmo_style" formControlName="settlementType" [itemsSource]="settlementTypeList"
+                                        [(ngModel)]="selectedDetailItem.settlementType.settlementTypeId" (ngModelChange)="onSettlementTypeChangeEvent($event)"
+                                        displayMemberPath="settlementType" selectedValuePath="settlementTypeId" [isRequired]="true"
+                                        [isEditable]="true">
+                                    </wj-combo-box>
+
+                                    <div *ngIf="myForm.controls['settlementType'].hasError('required')" [hidden]="myForm.controls.settlementType.pristine && !isSubmitted"
+                                        class="text-danger">Settlement Type is required.</div>
+                                </div>
+
+                                <div class="col-sm-6 fields_box">
+                                    <label for="effectiveDate">Effective From <span class="validation">*</span></label>
+                                    <wj-input-date id="effectiveDate" class="wijmo_style" formControlName="effectiveDate" min="{{today}}" [(ngModel)]="selectedDetailItem.effectiveDate"
+                                        [format]="'yyyy-MM-dd'"></wj-input-date>
+                                    <div *ngIf="myForm.controls['effectiveDate'].hasError('required')" [hidden]="myForm.controls.effectiveDate.valid || (myForm.controls.effectiveDate.pristine && !isSubmitted)"
+                                        class="text-danger">Effective From is required.</div>
+                                </div>
+                                <div class="col-sm-6 fields_box">
+                                    <label for="minAmount">Minimum Amount <span class="validation">*</span></label>
+                                    <wj-input-number (ngModelChange)="onLowerRangeChange($event)" id="minAmount" [max]="999999.99999999" [min]="0.00000000" class="wijmo_style"
+                                        formControlName="minAmount" format="n8" [(ngModel)]="selectedDetailItem.minAmount" 
+                                        myForm> </wj-input-number>
+                                    <div *ngIf="myForm.controls['minAmount'].hasError('required')" [hidden]="myForm.controls.minAmount.valid || (myForm.controls.minAmount.pristine && !isSubmitted)"
+                                        class="text-danger">Minimum Amount is required.</div>
+                                    <div *ngIf="minimumAmountError" [hidden]="myForm.controls.minAmount.pristine" class="text-danger">Minimum Amount is out of Range.</div>
+                                    <div *ngIf="minimumGreaterThanMaximumError" [hidden]="myForm.controls.minAmount.pristine" class="text-danger">Minimum Amount must be less than Maximum Amount.</div>
+                                </div>
+
+                                <div class="col-sm-6 fields_box">
+                                    <label for="maxAmount">Maximum Amount <span class="validation">*</span></label>
+                                    <wj-input-number id="maxAmount" class="wijmo_style" formControlName="maxAmount" [max]="999999.99999999" [min]="0.00000001"
+                                        format="n8" (ngModelChange)="onUpperRangeChange($event)" [(ngModel)]="selectedDetailItem.maxAmount"
+                                        myForm required [isRequired]="true"> </wj-input-number>
+                                    <div *ngIf="myForm.controls['maxAmount'].hasError('required')" [hidden]="myForm.controls.maxAmount.valid || (myForm.controls.maxAmount.pristine && !isSubmitted)"
+                                        class="text-danger">Maximum Amount is required.</div>
+                                    <div *ngIf="maximumAmountError" [hidden]="myForm.controls.maxAmount.pristine" class="text-danger">Maximum Amount is out of Range.</div>
+                                    <div *ngIf="maxAmountError" [hidden]="myForm.controls.maxAmount.pristine" class="text-danger">Maximum Amount must be greater than Minimum Amount.</div>
+                                </div>
+
+                                <div class="col-sm-6 fields_box">
+                                    <label for="levyRate">{{levyRateLabelModalDisplay}}<span class="validation">*</span></label>
+                                    <wj-input-number id="levyRate" class="wijmo_style" formControlName="levyRate" [max]="999999.99999999" [min]="0.00000000" format="n8"
+                                        (ngModelChange)="onLevyRateChange($event)" [(ngModel)]="selectedDetailItem.levyRate"
+                                        myForm required [isRequired]="true" #levyRate> </wj-input-number>
+                                    <div *ngIf="myForm.controls['levyRate'].hasError('required')" [hidden]="myForm.controls.levyRate.valid || (myForm.controls.levyRate.pristine && !isSubmitted)"
+                                        class="text-danger">Levy Rate is required.</div>
+                                    <div *ngIf="LevyRateError" class="text-danger">Levy Rate is out of Range.</div>
+                                </div>
+                                <div class="col-sm-6 fields_box">
+                                    <label for="appliesTo">Applies To <span class="validation">*</span></label>
+                                    <wj-combo-box id="appliesTo" class="wijmo_style" formControlName="appliesTo" [itemsSource]="appliesToList" (ngModelChange)="onAppliesToChangeEvent($event)"
+                                        [(ngModel)]="selectedDetailItem.tradingSide" displayMemberPath="value" selectedValuePath="abbreviation"
+                                        [isRequired]="true" [isEditable]="true">
+                                    </wj-combo-box>
+                                    <div *ngIf="myForm.controls['appliesTo'].hasError('required')" [hidden]="myForm.controls.appliesTo.valid || (myForm.controls.appliesTo.pristine && !isSubmitted)"
+                                        class="text-danger">Applies To is required.</div>
+
+                                </div>
+                                <div class="col-sm-6 fields_box">
+                                    <div class="abc-checkbox abc-checkbox-primary pull-bottom">
+                                        <input id="active" type="checkbox" [(ngModel)]='selectedDetailItem.active' formControlName="active">
+                                        <label for="active"> Active </label>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 fields_box">
+                                    <button type="submit" [class]="'add_btn pull-right'" (click)="onAddNewRow()">Add</button>
+                                </div>
+
+                            </div>
+                            <div class="table_container">
+
+                                <wj-flex-grid style="height: 200px;" id="abc" [itemsSource]="slabDetailList" [isReadOnly]="true" [selectionMode]="'Row'"
+                                    [autoSizeMode]="'Headers'" [headersVisibility]="'Column'" #flexDetail>
+                                    <wj-flex-grid-column [header]="'Settlement Type'" [binding]="'settlementType.settlementType'" [align]="'left'" [allowSorting]="false"
+                                        [isRequired]="false" [width]="'0.275*'" [minWidth]="30"></wj-flex-grid-column>
+
+                                    <wj-flex-grid-column [header]="'Effective From'" [align]="'left'" [format]="'yyyy-MM-dd'" [allowSorting]="false" [isRequired]="false"
+                                        [binding]="'effectiveDate'" [width]="'0.25*'" [minWidth]="30"></wj-flex-grid-column>
+
+                                    <wj-flex-grid-column [header]="'Minimum Amount'" [align]="'right'" [format]="'n8'" [allowSorting]="false" [isRequired]="false"
+                                        [binding]="'minAmount'" [width]="'0.35*'" [minWidth]="30"></wj-flex-grid-column>
+                                    <wj-flex-grid-column [header]="'Maximum Amount'" [align]="'right'" [format]="'n8'" [allowSorting]="false" [isRequired]="false"
+                                        [binding]="'maxAmount'" [width]="'0.35*'" [minWidth]="30"></wj-flex-grid-column>
+
+
+                                    <wj-flex-grid-column [header]="levyRateLabelModalDisplay" [align]="'right'" [format]="'n8'" [allowSorting]="false" [isRequired]="false"
+                                        [binding]="'levyRate'" [width]="'0.38*'" [minWidth]="30"></wj-flex-grid-column>
+                                    <wj-flex-grid-column [header]="'Applies To'" [align]="'left'" [allowSorting]="false" [isRequired]="false"
+                                        [binding]="'tradingSideDisplay_'" [width]="'0.2*'" [minWidth]="30"></wj-flex-grid-column>
+
+                                    <wj-flex-grid-column [header]="'Active'" [align]="'center'"  [allowSorting]="false" [isRequired]="false" [binding]="'active'"
+                                        [width]="'0.12*'" [minWidth]="30"></wj-flex-grid-column>
+
+                                    <wj-flex-grid-column [header]="'Action'" [width]="'0.2*'" [allowSorting]="false" [isRequired]="false" [allowMerging]="true"
+                                        [align]="'center'" [minWidth]="30">
+                                        <ng-template wjFlexGridCellTemplate let-item="item" [cellType]="'Cell'">
+
+                                            <div *ngIf="item.validFrom && item.newElement">
+                                                <button id="btnEdit" class="on_edit_button" role="button" (click)="onEditDetailAction()" title="Edit" > <img src="assets/img/edit_orange.png"/> </button>
+                                                <button id="btnDetailRemove" class="on_edit_button" role="button" (click)="onEditDetailDelete()" title="Delete" > <img src="assets/img/cross_orange.png"/> </button>
+                                            </div>
+                                            <div *ngIf="item.validFrom && !item.newElement">
+                                                <button id="btnEdit" class="on_edit_button" role="button" (click)="onEditDetailAction()" title="Edit" > <img src="assets/img/edit_orange.png"/> </button>
+                                            </div>
+                                        </ng-template>
+                                    </wj-flex-grid-column>
+                                </wj-flex-grid>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="orange_footer">
+                    <button id="btnSave" type="submit" class="save_btn" (click)="FinalSave()" *ngIf="addingNew && userService.isAuhtorized(userService.EB_CLEARING_HOUSE_LEVIES_NEW)">Save</button>
+                    <button id="btnEdit" type="submit" class="save_btn" (click)="FinalUpdate()" *ngIf="!addingNew && userService.isAuhtorized(userService.EB_CLEARING_HOUSE_LEVIES_UPDATE)">Update</button>
+                    <button type="button" class="cancel_btn" data-dismiss="modal" (click)="onCancelAction()">Cancel</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<dialog-cmp #dialogCmp (btnClick)="getNotification($event)"> </dialog-cmp>

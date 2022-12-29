@@ -1,0 +1,49 @@
+<div>
+    <div class="col-md-12">
+      <div class="pull-right">
+        <div *ngIf="showPeriodSelector" class="btn-group btn-group-xs">
+          <button type="button" class="btn btn-default" (click)="refresh(1)">1d</button>
+          <button type="button" class="btn btn-default" (click)="refresh(5)">5d</button>
+          <button type="button" class="btn btn-default" (click)="refresh(30)">1m</button>
+          <button type="button" class="btn btn-default" (click)="refresh(90)">3m</button>
+          <button type="button" class="btn btn-default" (click)="refresh(180)">6m</button>
+          <button type="button" class="btn btn-default" (click)="refresh(365)">1y</button>
+        </div>
+        <wj-menu *ngIf="showChartType" [(value)]="chartType" header="Chart Type" (itemClicked)="itemClicked()">
+          <wj-menu-item value="Area">Area</wj-menu-item>
+          <wj-menu-item value="LineSymbols">LineSymbols</wj-menu-item>
+          <wj-menu-item value="Line">Line</wj-menu-item>
+          <wj-menu-item value="Scatter">Scatter</wj-menu-item>
+          <wj-menu-item value="Spline">Spline</wj-menu-item>
+          <wj-menu-item value="SplineSymbols">SplineSymbols</wj-menu-item>
+          <wj-menu-item value="SplineArea">SplineArea</wj-menu-item>
+          <wj-menu-item *ngIf="showCSOHLC" value="Candlestick">Candlestick</wj-menu-item>
+          <wj-menu-item *ngIf="showCSOHLC" value="HighLowOpenClose">HighLowOpenClose</wj-menu-item>
+        </wj-menu>
+      </div>
+    </div>
+    <br />
+    <wj-flex-chart #stChart [itemsSource]="indices" (rendered)="stChartRendered()" style="display: block; background: transparent; margin: 0; padding: 0; border-bottom: 0;"
+      [style.height.px]="chartHeight" [chartType]="chartType" [stacking]="stacking" [rotated]="rotated" [symbolSize]="4" [bindingX]="'ye'"
+      selectionMode="None">
+      <wj-flex-chart-axis [wjProperty]="'axisX'" [labels]="true" [axisLine]="true"></wj-flex-chart-axis>
+      <wj-flex-chart-axis [wjProperty]="'axisY'" format="n4" [axisLine]="true" position="Left"></wj-flex-chart-axis>
+      <wj-flex-chart-series [binding]="'dps'" [name]="'Annual Dividend'"> </wj-flex-chart-series>
+      <wj-flex-chart-series [binding]="'eps'" [name]="'Earning per Share'"> </wj-flex-chart-series>
+      <wj-flex-chart-annotation-layer #al>
+        <wj-flex-chart-annotation-text name="waterMarker" attachment="Relative" [point]="{x: 0.5, y: 1.0}" text="NO DATA" [isVisible]="!hasData"
+          [style]="{fill: '#B45F04', 'fill-opacity': 0.1, 'stroke': 'rgba(124,240,10,0.2)', 'font-size': '100px'}">
+        </wj-flex-chart-annotation-text>
+      </wj-flex-chart-annotation-layer>
+    </wj-flex-chart>
+    <br />
+    <wj-flex-chart #rsChart *ngIf="showRangeSelector" style="display:block;background: transparent;height: 100px;" plotMargin="NaN NaN NaN NaN"
+      binding="close" chartType="Line" (rendered)="rsChartRendered()" bindingX="entryDatetime">
+      <wj-flex-chart-axis wjProperty="axisX" [min]="minDate" [max]="maxDate" [labels]="indices && indices.length > 0 ? true: false"></wj-flex-chart-axis>
+      <wj-flex-chart-axis wjProperty="axisY" [labels]="false" [majorGrid]="false"></wj-flex-chart-axis>
+      <wj-flex-chart-series *ngIf="indices && indices.length > 0" [itemsSource]="indices" [style]="{ stroke: '#FFA500' }">
+      </wj-flex-chart-series>
+      <wj-flex-chart-range-selector #rangeSelector [seamless]="true" (rangeChanged)="rangeChanged()">
+      </wj-flex-chart-range-selector>
+    </wj-flex-chart>
+  </div>

@@ -1,0 +1,73 @@
+<div class="theme">
+    <div class="row header">
+        <span class="font-bold text-xl ml-2 mt-1 text-primary">{{'Translation.TOP SELLERS' | translate }}</span>
+    </div>
+    <div class="row mt-1 ml-1">
+        <div class="col-sm-3 ">
+            <wj-combo-box id="dataLimit" class="wijmo_style" [(ngModel)]="dataLimitVal" [itemsSource]="dataLimit"
+                displayMemberPath="value" selectedValuePath="id" (ngModelChange)="dataLimitChanges($event)">
+            </wj-combo-box>
+        </div>
+        <div class="col-sm-3">
+            <wj-combo-box id="dataLimit" class="wijmo_style" [itemsSource]="dataSort" [(ngModel)]="dataSortType"
+                displayMemberPath="value" selectedValuePath="id" (ngModelChange)="sortData($event)">
+            </wj-combo-box>
+        </div>
+
+    </div>
+    <div class="row">
+
+        <table id="dashboardBo" class="w-full bg-transparent overflow-y-auto topTables" mat-table [dataSource]="data">
+
+            <ng-container matColumnDef="Code">
+                <th class="col-sm-4" mat-header-cell *matHeaderCellDef>
+                    {{'Translation.Code' | translate}}
+                </th>
+                <td [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}" mat-cell *matCellDef="let element">
+                    <span class="pr-6 whitespace-nowrap text-lg xl:text-lg lg:text-md md:text-md sm:text-sm">
+                        {{element.clientCode}}
+                    </span>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="Name">
+                <th class="col-sm-4" mat-header-cell *matHeaderCellDef>
+                    {{'Translation.Name' | translate}}
+                </th>
+                <td [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}" mat-cell *matCellDef="let element">
+                    <span
+                        class="text-primary-500 pr-6 whitespace-nowrap text-lg xl:text-lg lg:text-md md:text-md sm:text-sm">
+                        {{element.clientName}}
+                    </span>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="Value">
+                <th class="col-sm-4" mat-header-cell *matHeaderCellDef>
+                    {{'Translation.Value' | translate}}
+                </th>
+                <td [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}" mat-cell *matCellDef="let element">
+                    <span class="pr-6 whitespace-nowrap text-lg xl:text-lg lg:text-md md:text-md sm:text-sm">
+                        {{element.totalValue | number : '1.2-2'}}
+                    </span>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="Volume">
+                <th class="col-sm-4" mat-header-cell *matHeaderCellDef>
+                    {{'Translation.Volume' | translate}}
+                </th>
+                <td [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}" mat-cell *matCellDef="let element">
+                    <span class="pr-6 whitespace-nowrap text-lg xl:text-lg lg:text-md md:text-md sm:text-sm">
+                        {{element.totalVolume}}
+                    </span>
+                </td>
+            </ng-container>
+
+
+            <tr mat-header-row *matHeaderRowDef="tableColumns; sticky: true"></tr>
+            <tr class="order-row h-10" mat-row *matRowDef="let row; columns: tableColumns;"></tr>
+        </table>
+
+    </div>
+</div>

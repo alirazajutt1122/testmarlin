@@ -1,0 +1,416 @@
+<div class="row" style="width: 100%;">
+    <div class="col-lg-12 col-md-offset-0 col-xs-12 widget-container">
+
+      <section class="widget" widget>
+
+        <div class="dashboard_data_grid mw-grid">
+            <h1>{{ 'Menu.Market Watch' | translate }}</h1>
+            <div class="dashboard_tabs">
+                <div class="clearfix">
+                    <ul class="nav nav-tabs pull-xs-left" id="myTab" role="tablist">
+                        <li class="nav-item">
+                            <a *ngIf="authService.isAuhtorized(authService.OM_EQUITY_MARKET_WATCH_VIEW)" class="nav-link active" id="Equity-tab" data-toggle="tab" href="#Equity" (click)="equityClicked()" role="tab" aria-controls="basic"
+                                aria-expanded="true">{{ 'Menu.Equities' | translate }}</a>
+                        </li>
+                        <li class="nav-item">
+                            <a *ngIf="authService.isAuhtorized(authService.OM_BOND_MARKET_WATCH_VIEW)" class="nav-link" id="Bond-tab" data-toggle="tab" href="#Bond" (click)="bondClicked()" role="tab" aria-controls="Bond"
+                                aria-expanded="false">{{ 'Menu.Bonds' | translate }}</a>
+                        </li>
+                        <div class="grid_icon_box" style="top: 17px; padding-right: 10px;">
+                            <a title="{{ 'Translation.Add Security' | translate }}" (click)="onAddSymbolToWatch()">
+                                <i class="fa fa-plus" aria-hidden="true"></i>
+                            </a>
+                            <a title="{{ 'Translation.Remove Security' | translate }}" (click)="onRemoveSymbolToWatch()">
+                                <i class="fa fa-trash-o" aria-hidden="true"></i>
+                            </a>
+                        </div>
+                    </ul>
+                </div>
+                <div class="tab-content" id="myTabContent">
+                    <div role="tabpanel" class="tab-pane active in clearfix dashboard_data_grid" id="Equity" aria-labelledby="basic-tab" aria-expanded="true">
+                        <div class="table_container">
+                            <wj-flex-grid class="grid" [itemsSource]="dataMWEquity" [headersVisibility]="'Column'" [selectionMode]="'Row'" [allowSorting]="false"
+                                (itemsSourceChanged)="itemsSourceChangedHandler('Equity')" (cellEditEnded)="cellEditEndedHandlerEquity($event)"
+                                (selectionChanged)="selectionChangedMWEquity($event)" [itemFormatter]="itemFormatter"
+                                style="height: 700px" #flexGridMWEquity>
+                                <!--<wj-flex-grid-filter [filterColumns]="['market', 'symbol','trade', 'custodian', 'client', 'order', 'buy_sell', 'price', 'volume', 'order_d']"></wj-flex-grid-filter>-->
+                                <wj-flex-grid-column [header]="'Translation.Exchange' | translate" [binding]="'exchangeCode'" [align]="'left'" [dataMapEditor]="true" [width]="'*'"
+                                    [minWidth]="70" [allowDragging]="false">
+                                </wj-flex-grid-column>
+                                <wj-flex-grid-column [header]="'Translation.Market' | translate" [binding]="'marketCode'" [align]="'left'" [dataMapEditor]="true" [width]="'*'" [minWidth]="70"
+                                    [allowDragging]="false">
+                                </wj-flex-grid-column>
+                                <wj-flex-grid-column [header]="'Translation.Security' | translate" [binding]="'symbol'" [align]="'left'" [width]="'*'" [minWidth]="70" [allowDragging]="false">
+                                    <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-item="item">
+                                        <div class="symbol_text">
+                                            {{item.symbol}}
+                                        </div>
+                                    </ng-template>
+                                </wj-flex-grid-column>
+                                <wj-flex-grid-column [header]="'Translation.Bid Size' | translate" class="bid_text" [align]="'right'" [binding]="'buy_volume'" [format]="'n0'" [width]="'*'"
+                                    [minWidth]="60" [isReadOnly]="true" [allowDragging]="false">
+                                    <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-item="item">
+                                        <span class="blue_text_grid">
+                                            {{item.buy_volume}}
+                                        </span>
+                                    </ng-template>
+                                </wj-flex-grid-column>
+                                <wj-flex-grid-column [header]="'Translation.Bid' | translate" class="bid_text" [binding]="'buy_price'" [align]="'left'" [format]="'n0'" [width]="'*'"
+                                    [minWidth]="60" [allowDragging]="false" [isReadOnly]="true">
+                                    <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-item="item">
+                                        <span class="blue_text_grid">
+                                            <!--{{item.buy_price | currency:'USD':true:'1.2-2' }}-->
+                                            {{item.buy_price}}
+                                        </span>
+                                    </ng-template>
+                                </wj-flex-grid-column>
+                                <wj-flex-grid-column [header]="'Translation.Ask' | translate" [binding]="'sell_price'" [align]="'right'" [format]="'n0'" [width]="'*'" [minWidth]="60"
+                                    [allowDragging]="false" [isReadOnly]="true">
+                                    <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-item="item">
+                                        <span class="pink_text_grid">
+                                            {{item.sell_price }}
+                                        </span>
+                                    </ng-template>
+                                </wj-flex-grid-column>
+                                <wj-flex-grid-column [header]="'Translation.Ask Size' | translate" [binding]="'sell_volume'" [align]="'right'" [format]="'n0'" [width]="'*'" [minWidth]="60"
+                                    [allowDragging]="false" [isReadOnly]="true">
+                                    <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-item="item">
+                                        <span class="pink_text_grid">
+                                            {{item.sell_volume}}
+                                        </span>
+                                    </ng-template>
+                                </wj-flex-grid-column>
+                                <wj-flex-grid-column [header]="'LDCP'" [binding]="'last_day_close_price'" [align]="'right'" [width]="'*'" [minWidth]="60"
+                                    [isReadOnly]="true">
+                                    <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-item="item">
+                                        <div class="numeric-value">
+                                            {{item.last_day_close_price}}
+                                        </div>
+                                    </ng-template>
+                                </wj-flex-grid-column>
+                                <wj-flex-grid-column [header]="'Translation.Last' | translate" [binding]="'last_trade_price'" [align]="'right'" [width]="'*'" [minWidth]="60" [isReadOnly]="true">
+                                    <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-item="item">
+                                        <div class="numeric-value">
+                                            {{item.last_trade_price}}
+                                        </div>
+                                    </ng-template>
+                                </wj-flex-grid-column>
+                                <wj-flex-grid-column [header]="'Translation.Last Qty' | translate" [binding]="'last_trade_size'" [align]="'right'" [width]="'*'" [minWidth]="60"
+                                    [isReadOnly]="true">
+                                    <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-item="item">
+                                        <div class="numeric-value">
+                                            {{item.last_trade_size}}
+                                        </div>
+                                    </ng-template>
+                                </wj-flex-grid-column>
+                                <wj-flex-grid-column [header]="'Translation.Turnover' | translate" [binding]="'turn_over'" [align]="'right'" [width]="'*'" [minWidth]="60" [isReadOnly]="true">
+                                    <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-item="item">
+                                        <div class="numeric-value">
+                                            {{item.turn_over}}
+                                        </div>
+                                    </ng-template>
+                                </wj-flex-grid-column>
+                                <wj-flex-grid-column [header]="'Translation.Trades' | translate" [binding]="'total_no_of_trades'" [align]="'right'" [width]="'*'" [minWidth]="60"
+                                    [isReadOnly]="true">
+                                    <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-item="item">
+                                        <div class="numeric-value">
+                                            {{item.total_no_of_trades}}
+                                        </div>
+                                    </ng-template>
+                                </wj-flex-grid-column>
+                                <wj-flex-grid-column [header]="'Translation.Open' | translate" [binding]="'open'" [width]="'*'" [align]="'right'" [minWidth]="60" [isReadOnly]="true">
+                                    <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-item="item">
+                                        <div class="numeric-value">
+                                            {{item.open}}
+                                        </div>
+                                    </ng-template>
+                                </wj-flex-grid-column>
+                                <wj-flex-grid-column [header]="'Translation.Change' | translate" [binding]="'net_change'" [align]="'right'" [minWidth]="60" [width]="'*'" [minWidth]="60"
+                                    [isReadOnly]="true">
+                                    <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-item="item">
+                                        <div class="numeric-value" [style.color]="item.net_change > 0 ? 'green'  : 'red'">
+                                            <span *ngIf="item.net_change > 0">
+                                                <span style="float:right;width:10px">&#x25b2;</span>
+                                            </span>
+                                            <span *ngIf="item.net_change < 0">
+                                                <span style="float:right;width:10px">&#x25bc;</span>
+                                            </span>
+                                            {{item.net_change}}
+                                        </div>
+                                    </ng-template>
+                                </wj-flex-grid-column>
+                                <wj-flex-grid-column [header]="'Translation.% Change' | translate" [binding]="'net_change_percentage'" [align]="'right'" [width]="'*'" [minWidth]="80"
+                                    [isReadOnly]="true">
+                                    <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-item="item">
+                                        <div class="numeric-value" [style.color]="item.net_change_percentage > 0 ? 'green'  : 'red'">
+                                            <span *ngIf="item.net_change_percentage > 0">
+                                                <span style="float:right;width:10px">&#x25b2;</span>
+                                            </span>
+                                            <span *ngIf="item.net_change_percentage < 0">
+                                                <span style="float:right;width:10px">&#x25bc;</span>
+                                            </span>
+                                            {{item.net_change_percentage}}
+                                        </div>
+                                    </ng-template>
+                                </wj-flex-grid-column>
+                                <wj-flex-grid-column [header]="'Translation.Average' | translate" [binding]="'average_price'" [align]="'right'" [width]="'*'" [minWidth]="60" [isReadOnly]="true">
+                                    <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-item="item">
+                                        <div class="numeric-value">
+                                            {{item.average_price}}
+                                        </div>
+                                    </ng-template>
+                                </wj-flex-grid-column>
+                                <wj-flex-grid-column [header]="'Translation.High' | translate" [binding]="'high'" [width]="'*'" [align]="'right'" [minWidth]="60" [isReadOnly]="true">
+                                    <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-item="item">
+                                        <div class="numeric-value">
+                                            {{item.high}}
+                                        </div>
+                                    </ng-template>
+                                </wj-flex-grid-column>
+                                <wj-flex-grid-column [header]="'Translation.Low' | translate" [binding]="'low'" [width]="'*'" [align]="'right'" [minWidth]="60" [isReadOnly]="true">
+                                    <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-item="item">
+                                        <div class="numeric-value">
+                                            {{item.low}}
+                                        </div>
+                                    </ng-template>
+                                </wj-flex-grid-column>
+                                <wj-flex-grid-column [header]="'Translation.Currency' | translate" align="left" [binding]="'currency'" [align]="'right'" [width]="'*'" [minWidth]="60"
+                                    [isReadOnly]="true">
+                                    <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-item="item">
+                                        {{item.currency}}
+                                    </ng-template>
+                                </wj-flex-grid-column>
+                            </wj-flex-grid>
+                        </div>
+                    </div>
+                    <div class="tab-pane clearfix dashboard_data_grid" id="Bond" role="tabpanel" aria-labelledby="assumtion-tab" aria-expanded="false">
+                        <div class="table_container">
+                            <wj-flex-grid class="grid" [itemsSource]="dataMWBond" [headersVisibility]="'Column'" [selectionMode]="'Row'" [allowSorting]="false"
+                                (itemsSourceChanged)="itemsSourceChangedHandler('Bond')" (cellEditEnded)="cellEditEndedHandlerBond($event)"
+                                (selectionChanged)="selectionChangedMWBond($event)" [itemFormatter]="itemFormatterBond"
+                                style="height: 700px;" #flexGridMWBond>
+                                <!--<wj-flex-grid-filter [filterColumns]="['market', 'symbol','trade', 'custodian', 'client', 'order', 'buy_sell', 'price', 'volume', 'order_d']"></wj-flex-grid-filter>-->
+                                <wj-flex-grid-column [header]="'Translation.Exchange' | translate" [binding]="'exchangeCode'" [align]="'left'" [dataMapEditor]="true" [width]="'*'"
+                                    [minWidth]="70" [allowDragging]="false">
+                                </wj-flex-grid-column>
+                                <wj-flex-grid-column [header]="'Translation.Market' | translate" [binding]="'marketCode'" [align]="'left'" [dataMapEditor]="true" [width]="'*'" [minWidth]="70"
+                                    [allowDragging]="false">
+                                </wj-flex-grid-column>
+                                <wj-flex-grid-column [header]="'Translation.Security' | translate" [binding]="'symbol'" [align]="'left'" [width]="'*'" [minWidth]="70" [allowDragging]="false">
+                                    <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-item="item">
+                                        <div class="symbol_text">
+                                            {{item.symbol}}
+                                        </div>
+                                    </ng-template>
+                                </wj-flex-grid-column>
+                                <!-- <wj-flex-grid-column [header]="'Coupon Rate'" [binding]="'couponRate'" [align]="'right'" [format]="'n4'" [width]="'*'" [minWidth]="60"
+                                    [isReadOnly]="true" [allowDragging]="false">
+                                </wj-flex-grid-column>
+                                <wj-flex-grid-column [header]="'Next Coupon Date'" [binding]="'next_coupon_date'" [align]="'left'" [format]="dateFormat"
+                                    [width]="'*'" [minWidth]="80" [isReadOnly]="true" [allowDragging]="false">
+                                    <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-item="item">
+                                        {{item.nextCouponDate}}
+                                    </ng-template>
+                                </wj-flex-grid-column>
+                                <wj-flex-grid-column [header]="'Maturity Date'" [binding]="'maturity_date'" [align]="'left'" [format]="dateFormat" [width]="'*'"
+                                    [minWidth]="80" [isReadOnly]="true" [allowDragging]="false">
+                                    <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-item="item">
+                                        {{item.maturityDate}}
+                                    </ng-template>
+                                </wj-flex-grid-column> -->
+                                <wj-flex-grid-column [header]="'Translation.Bid Size' | translate" class="bid_text" [align]="'right'" [binding]="'buy_volume'" [format]="'n0'" [width]="'*'"
+                                    [minWidth]="60" [isReadOnly]="true" [allowDragging]="false">
+                                    <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-item="item">
+                                        <span class="blue_text_grid">
+                                            {{item.buy_volume}}
+                                        </span>
+                                    </ng-template>
+                                </wj-flex-grid-column>
+                                <wj-flex-grid-column [header]="'Translation.Bid' | translate" class="bid_text" [binding]="'buy_price'" [align]="'left'" [format]="'n0'" [width]="'*'"
+                                    [minWidth]="60" [allowDragging]="false" [isReadOnly]="true">
+                                    <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-item="item">
+                                        <span class="blue_text_grid">
+                                            {{item.buy_price}}
+                                        </span>
+                                    </ng-template>
+                                </wj-flex-grid-column>
+                                <wj-flex-grid-column [header]="'Translation.Bid Yield' | translate" class="bid_text" [binding]="'buy_yield'" [align]="'right'" [format]="'n0'" [width]="'*'"
+                                    [minWidth]="60" [allowDragging]="false" [isReadOnly]="true">
+                                    <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-item="item">
+                                        <div class="bid_text">
+                                            {{item.buy_yield}}
+                                        </div>
+                                    </ng-template>
+                                </wj-flex-grid-column>
+                                <wj-flex-grid-column [header]="'Translation.Ask' | translate" [binding]="'sell_price'" [align]="'right'" [format]="'n0'" [width]="'*'" [minWidth]="60"
+                                    [allowDragging]="false" [isReadOnly]="true">
+                                    <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-item="item">
+                                        <span class="pink_text_grid">
+                                            {{item.sell_price }}
+                                        </span>
+                                    </ng-template>
+                                </wj-flex-grid-column>
+                                <wj-flex-grid-column [header]="'Translation.Ask Yield' | translate" [binding]="'sell_yield'" [align]="'right'" [format]="'n0'" [width]="'*'" [minWidth]="60"
+                                    [allowDragging]="false" [isReadOnly]="true">
+                                    <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-item="item">
+                                        <div class="ask_text">
+                                            {{item.sell_yield }}
+                                        </div>
+                                    </ng-template>
+                                </wj-flex-grid-column>
+                                <wj-flex-grid-column [header]="'Translation.Ask Size' | translate" [binding]="'sell_volume'" [align]="'right'" [format]="'n0'" [width]="'*'" [minWidth]="60"
+                                    [allowDragging]="false" [isReadOnly]="true">
+                                    <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-item="item">
+                                        <span class="pink_text_grid">
+                                            {{item.sell_volume}}
+                                        </span>
+                                    </ng-template>
+                                </wj-flex-grid-column>
+                                <wj-flex-grid-column [header]="'LDCP'" [binding]="'last_day_close_price'" [align]="'right'" [width]="'*'" [minWidth]="60"
+                                    [isReadOnly]="true">
+                                    <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-item="item">
+                                        <div class="numeric-value">
+                                            {{item.last_day_close_price}}
+                                        </div>
+                                    </ng-template>
+                                </wj-flex-grid-column>
+                                <wj-flex-grid-column [header]="'Translation.Last' | translate" [binding]="'last_trade_price'" [align]="'right'" [width]="'*'" [minWidth]="60" [isReadOnly]="true">
+                                    <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-item="item">
+                                        <div class="numeric-value">
+                                            {{item.last_trade_price}}
+                                        </div>
+                                    </ng-template>
+                                </wj-flex-grid-column>
+                                <wj-flex-grid-column [header]="'Translation.Last Qty' | translate" [binding]="'last_trade_size'" [align]="'right'" [width]="'*'" [minWidth]="60"
+                                    [isReadOnly]="true">
+                                    <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-item="item">
+                                        <div class="numeric-value">
+                                            {{item.last_trade_size}}
+                                        </div>
+                                    </ng-template>
+                                </wj-flex-grid-column>
+                                <wj-flex-grid-column [header]="'Translation.Turnover' | translate" [binding]="'turn_over'" [align]="'right'" [width]="'*'" [minWidth]="60" [isReadOnly]="true">
+                                    <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-item="item">
+                                        <div class="numeric-value">
+                                            {{item.turn_over}}
+                                        </div>
+                                    </ng-template>
+                                </wj-flex-grid-column>
+                                <wj-flex-grid-column [header]="'Translation.Trades' | translate" [binding]="'total_no_of_trades'" [align]="'right'" [width]="'*'" [minWidth]="60"
+                                    [isReadOnly]="true">
+                                    <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-item="item">
+                                        <div class="numeric-value">
+                                            {{item.total_no_of_trades}}
+                                        </div>
+                                    </ng-template>
+                                </wj-flex-grid-column>
+                                <wj-flex-grid-column [header]="'Translation.Open' | translate" [binding]="'open'" [width]="'*'" [align]="'right'" [minWidth]="60" [isReadOnly]="true">
+                                    <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-item="item">
+                                        <div class="numeric-value">
+                                            {{item.open}}
+                                        </div>
+                                    </ng-template>
+                                </wj-flex-grid-column>
+                                <wj-flex-grid-column [header]="'Translation.Change' | translate" [binding]="'net_change'" [align]="'right'" [minWidth]="60" [width]="'*'" [minWidth]="60"
+                                    [isReadOnly]="true">
+                                    <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-item="item">
+                                        <div class="numeric-value" [style.color]="item.net_change > 0 ? 'green'  : 'red'">
+                                            <span *ngIf="item.net_change > 0">
+                                                <span style="float:right;width:10px">&#x25b2;</span>
+                                            </span>
+                                            <span *ngIf="item.net_change < 0">
+                                                <span style="float:right;width:10px">&#x25bc;</span>
+                                            </span>
+                                            {{item.net_change}}
+                                        </div>
+                                    </ng-template>
+                                </wj-flex-grid-column>
+                                <wj-flex-grid-column [header]="'Translation.% Change' | translate" [binding]="'net_change_percentage'" [align]="'right'" [width]="'*'" [minWidth]="80"
+                                    [isReadOnly]="true">
+                                    <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-item="item">
+                                        <div class="numeric-value" [style.color]="item.net_change_percentage > 0 ? 'green'  : 'red'">
+                                            <span *ngIf="item.net_change_percentage > 0">
+                                                <span style="float:right;width:10px">&#x25b2;</span>
+                                            </span>
+                                            <span *ngIf="item.net_change_percentage < 0">
+                                                <span style="float:right;width:10px">&#x25bc;</span>
+                                            </span>
+                                            {{item.net_change_percentage}}
+                                        </div>
+                                    </ng-template>
+                                </wj-flex-grid-column>
+                                <wj-flex-grid-column [header]="'Translation.Average' | translate" [binding]="'average_price'" [align]="'right'" [width]="'*'" [minWidth]="60" [isReadOnly]="true">
+                                    <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-item="item">
+                                        <div class="numeric-value">
+                                            {{item.average_price}}
+                                        </div>
+                                    </ng-template>
+                                </wj-flex-grid-column>
+                                <wj-flex-grid-column [header]="'Translation.High' | translate" [binding]="'high'" [width]="'*'" [align]="'right'" [minWidth]="60" [isReadOnly]="true">
+                                    <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-item="item">
+                                        <div class="numeric-value">
+                                            {{item.high}}
+                                        </div>
+                                    </ng-template>
+                                </wj-flex-grid-column>
+                                <wj-flex-grid-column [header]="'Translation.Low' | translate" [binding]="'low'" [width]="'*'" [align]="'right'" [minWidth]="60" [isReadOnly]="true">
+                                    <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-item="item">
+                                        <div class="numeric-value">
+                                            {{item.low}}
+                                        </div>
+                                    </ng-template>
+                                </wj-flex-grid-column>
+                                <wj-flex-grid-column [header]="'Translation.Currency' | translate" align="left" [binding]="'currency'" [align]="'right'" [width]="'*'" [minWidth]="60"
+                                    [isReadOnly]="true">
+                                    <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-item="item">
+                                        {{item.currency}}
+                                    </ng-template>
+                                </wj-flex-grid-column>
+                            </wj-flex-grid>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </section>
+
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+<div id="add_new_symbol" class="modal fade" role="dialog" data-keyboard="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">{{'Translation.Add' | translate}} {{'Translation.Security' | translate}} </h4>
+            </div>
+            <form class="form-horizontal form-label-left parsleyjs" method="post" data-parsley-priority-enabled="false" novalidate="novalidate">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12 fields_box">
+                            <label for="search-input">{{'Translation.Security' | translate}}
+                                <span class="validation"> * </span>
+                            </label>
+                            <wj-auto-complete id="symbol" name="symbol" [isEditable]="true" #symbolCombo [itemsSource]="symbolExangeMarketList" displayMemberPath="displayName_"
+                                [(ngModel)]="symbolMarketExchange" selectedValuePath="value" [isRequired]="true">
+                            </wj-auto-complete>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" id="btnAdd" class="btn btn-success mx-1" (click)="onAddSymbolAction()">{{'Translation.Add' | translate}}</button>
+                    <button type="button" data-dismiss="modal" class="btn btn-default mx-1" (click)="onCancelSymbolAction()">{{'Common.Cancel' | translate}}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

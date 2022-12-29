@@ -1,0 +1,347 @@
+
+<section class="widget" [ngClass]="{'no-padding' : isDashBoard}">
+    <header>
+        <h3> <span class="fw-semi-bold">{{ 'Menu.Voucher' | translate }}</span></h3>
+        <div *ngIf="!isDashBoard" class="other_btns">
+            <button *ngIf="userService.isAuhtorized(userService.EB_FINANCIALS_VOUCHER_NEW)" class="add_new_btn" data-toggle="modal" data-target="#add_new_voucher"
+                role="button" data-backdrop="static" title="{{ 'Translation.Add' | translate }}" (click)="onNewAction()"><i class="fa fa-plus" aria-hidden="true"></i> </button>
+            <button data-toggle="collapse" data-target="#filter_box" class="filter_btn"><i class="fa fa-filter mr-2" aria-hidden="true"></i></button>
+
+            <div class="dropdown action_box">
+
+                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true"
+                    aria-expanded="true">{{ 'Common.Action' | translate }}<span class="caret"></span></button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                    <li>
+                        <a href="javascript:void(0);" *ngIf="vouStatus=='New' && userService.isAuhtorized(userService.EB_FINANCIALS_VOUCHER_POST)"
+                            (click)="onPostAction('POSTED')">{{ 'Common.Post' | translate }}</a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0);" *ngIf="vouStatus=='Post' && userService.isAuhtorized(userService.EB_FINANCIALS_VOUCHER_REVERSE)"
+                            (click)="onPostAction('REVERSED')">{{ 'Common.Reverse' | translate }}</a>
+                    </li>
+                </ul>
+            </div>
+
+
+        </div>
+
+        <div *ngIf="isDashBoard" class="grid_icon_box">
+            <a href="#" *ngIf="userService.isAuhtorized(userService.EB_FINANCIALS_VOUCHER_NEW)" data-backdrop="static" title="{{ 'Translation.Add' | translate }}"
+                data-toggle="modal" (click)="onNewAction()" data-target="#add_new_voucher"><i class="fa fa-plus" aria-hidden="true"></i></a>
+
+            <div class="dropdown action_box">
+
+                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true"
+                    aria-expanded="true">{{ 'Common.Action' | translate }}<span class="caret"></span></button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                    <li>
+                        <a href="javascript:void(0);" *ngIf="vouStatus=='New' && userService.isAuhtorized(userService.EB_FINANCIALS_VOUCHER_POST)"
+                            (click)="onPostAction('POSTED')">{{ 'Common.Post' | translate }}</a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0);" *ngIf="vouStatus=='Post' && userService.isAuhtorized(userService.EB_FINANCIALS_VOUCHER_REVERSE)"
+                            (click)="onPostAction('REVERSED')">{{ 'Common.Reverse' | translate }}</a>
+                    </li>
+                </ul>
+            </div>
+
+
+        </div>
+    </header>
+
+    <div *ngIf="!isDashBoard" id="filter_box" class="collapse in">
+        <div class="row mt-2">
+            <div class="col-sm-5 fields_box">
+                <label for="search-input">{{ 'Translation.Voucher Type' | translate }}</label>
+                <wj-combo-box #voucherTypeId tabindex="1" class="wijmo_style" [itemsSource]="voucherTypeList" displayMemberPath="typeDesc"
+                    selectedValuePath="voucherTypeId" [isEditable]="true">
+                </wj-combo-box>
+            </div>
+            <div class="col-sm-5 fields_box">
+                <label for="search-input">{{ 'Common.Status' | translate }} <span class="validation">*</span></label>
+                <wj-combo-box tabindex="2" class="wijmo_style" [isEditable]="true" [itemsSource]="voucherStatusList" displayMemberPath="name"
+                    #voucherStatus selectedValuePath="code"></wj-combo-box>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-5 fields_box">
+                <label for="search-input">{{ 'Translation.From Date' | translate }} <span class="validation">*</span></label>
+                <wj-input-date tabindex="3" #fromDate class="wijmo_style" [format]="'yyyy-MM-dd'" required [showYearPicker]="false">
+                </wj-input-date>
+            </div>
+            <div class="col-sm-5 fields_box">
+                <label for="search-input">{{ 'Translation.To Date' | translate }} <span class="validation">*</span></label>
+                <wj-input-date tabindex="4" #toDate class="wijmo_style" [format]="'yyyy-MM-dd'" required [showYearPicker]="false">
+                </wj-input-date>
+            </div>
+            <div class="col-sm-2">
+                <div class="form_search part-btn">
+                    <button *ngIf="userService.isAuhtorized(userService.EB_FINANCIALS_VOUCHER_VIEW)" class="add_new_btn"  (click)="onSearchvoucher(voucherTypeId.selectedValue,voucherStatus.selectedValue,fromDate.value,toDate.value)"
+                        title="{{ 'Translation.Search' | translate }}" data-toggle="collapse in" data-target="#filter_box"><span class="fa fa-search"></span> </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="!isDashBoard" class="table_container">
+        <wj-flex-grid id="xyz" [itemsSource]="itemsList" [allowMerging]="'Cells'" [isReadOnly]="true" [selectionMode]="'Row'" [autoSizeMode]="'Headers'"
+            [headersVisibility]="'Column'" style="height: 320px;" #flex>
+            <wj-flex-grid-filter [filterColumns]="['vouNo','voucherType.typeDesc','vouDate','vouNaration']"></wj-flex-grid-filter>
+            <wj-flex-grid-column [header]="'Translation.Voucher Number' | translate" [align]="'left'" [binding]="'vouNo'" [minWidth]="30" [width]="'0.5*'"></wj-flex-grid-column>
+            <wj-flex-grid-column [header]="'Translation.Voucher Type' | translate" [align]="'left'" [binding]="'voucherType.typeDesc'" [minWidth]="30" [width]="'0.5*'"></wj-flex-grid-column>
+            <wj-flex-grid-column [header]="'Translation.Voucher Date' | translate" [align]="'left'" [binding]="'vouDate'" [minWidth]="30" [width]="'0.5*'"></wj-flex-grid-column>
+            <wj-flex-grid-column [header]="'Translation.Voucher Narration' | translate" [align]="'left'" [binding]="'vouNaration'" [minWidth]="30" [width]="'*'"></wj-flex-grid-column>
+            <wj-flex-grid-column [header]="'Common.Action' | translate" [width]="'0.2*'" [align]="'center'" [minWidth]="30" *ngIf="vouStatus=='New' && (userService.isAuhtorized(userService.EB_FINANCIALS_VOUCHER_UPDATE) || userService.isAuhtorized(userService.EB_FINANCIALS_VOUCHER_DELETE))">
+                <ng-template wjFlexGridCellTemplate [cellType]="'Cell'">                  
+                    <img src="assets/img/edit_orange.png" class="gridImg" title="{{ 'Translation.Edit' | translate }}" (click)="onEditAction()" data-target="#add_new_voucher" data-toggle="modal"
+                        data-backdrop="static" />
+                        <img *ngIf="userService.isAuhtorized(userService.EB_FINANCIALS_VOUCHER_DELETE)" class="gridImg" src="assets/img/cross_orange.png" title="{{ 'Translation.Delete' | translate }}" (click)="onDeleteAction()"
+                         />
+                </ng-template>
+            </wj-flex-grid-column>
+        </wj-flex-grid>
+
+    </div>
+
+    <div *ngIf="isDashBoard">
+        <wj-flex-grid id="xyz" class="dashboard_data_grid" [itemsSource]="itemsList" [allowMerging]="'Cells'" [isReadOnly]="true"
+            [selectionMode]="'Row'" [autoSizeMode]="'Headers'" [headersVisibility]="'Column'" style="height: 180px;" #flex>
+            <wj-flex-grid-column [header]="'Translation.Voucher Number' | translate" [align]="'left'" [binding]="'vouNo'" [minWidth]="30" [width]="'0.5*'"></wj-flex-grid-column>
+            <wj-flex-grid-column [header]="'Translation.Voucher Type' | translate" [align]="'left'" [binding]="'voucherType.typeDesc'" [minWidth]="30" [width]="'0.5*'"></wj-flex-grid-column>
+            <wj-flex-grid-column [header]="'Translation.Voucher Date' | translate" [align]="'left'" [binding]="'vouDate'" [minWidth]="30" [width]="'0.5*'"></wj-flex-grid-column>
+            <wj-flex-grid-column [header]="'Translation.Voucher Narration' | translate" [align]="'left'" [binding]="'vouNaration'" [minWidth]="30" [width]="'*'"></wj-flex-grid-column>
+            <wj-flex-grid-column [header]="'Common.Action' | translate" [width]="'0.2*'" [align]="'center'" [minWidth]="30" *ngIf="vouStatus=='New' && userService.isAuhtorized(userService.EB_FINANCIALS_VOUCHER_UPDATE)">
+                <ng-template wjFlexGridCellTemplate [cellType]="'Cell'">                   
+                    <img src="assets/img/edit_orange.png" *ngIf="userService.isAuhtorized(userService.EB_FINANCIALS_VOUCHER_UPDATE)" title="{{ 'Translation.Edit' | translate }}" (click)="onEditAction()" data-target="#add_new_voucher" data-toggle="modal"
+                        data-backdrop="static" />                        
+                </ng-template>
+            </wj-flex-grid-column>
+        </wj-flex-grid>
+
+    </div>
+
+    <div *ngIf="!isDashBoard" class="row"></div>
+    <div *ngIf="!isDashBoard" class="btn-group col-xs-12 align-right">
+        <wj-collection-view-pager [cv]="flex?.collectionView"></wj-collection-view-pager>
+        <wj-menu [(value)]="pageSize" [header]= "'Common.Page Size' | translate">
+            <wj-menu-item [value]="0">{{ 'Common.No Paging' | translate }}</wj-menu-item>
+            <wj-menu-item [value]="5">5 {{ 'Common.items' | translate }}</wj-menu-item>
+            <wj-menu-item [value]="10">10 {{ 'Common.items' | translate }}</wj-menu-item>
+            <wj-menu-item [value]="20">20 {{ 'Common.items' | translate }}</wj-menu-item>
+            <wj-menu-item [value]="30">30 {{ 'Common.items' | translate }}</wj-menu-item>
+            <wj-menu-item [value]="50">50 {{ 'Common.items' | translate }}</wj-menu-item>
+            <wj-menu-item [value]="100">100 {{ 'Common.items' | translate }}</wj-menu-item>
+        </wj-menu>
+    </div>
+</section>
+
+<div id="add_new_voucher" class="modal fade" role="dialog" data-keyboard="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <form class="form-horizontal form-label-left" method="post" data-parsley-priority-enabled="false" novalidate="novalidate"
+                role="form" [formGroup]="myForm">
+                <div class="modal-body modal-no-border">
+
+                    <div class="row setup_box_container">
+                        <div class="col-md-3 col-sm-5 modal_left">
+                            <div class="wizard_Logo">
+                                <img src="assets/img/Voucher.png" class="formImg" />
+                                <h4>{{ 'Menu.Voucher' | translate }}</h4>
+                                <p>{{ 'Translation.Voucher posting against transactions in financial module' | translate }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-9 col-sm-7 modal_center">
+                            <div class="row" style="margin: 40px 40px 0px 40px">
+
+                                <div class="col-sm-3 fields_box">
+                                    <label for="voucherType">{{ 'Translation.Voucher Type' | translate }} <span class="validation">*</span></label>
+                                    <wj-combo-box id="voucherType" #voucherTypeCombo tabindex="1" autofocus="autofocus" class="wijmo_style" formControlName="voucherType"
+                                        [isDisabled]="isEditing" [itemsSource]="voucherTypeList" (ngModelChange)="onVoucherTypeChangeEvent(voucherTypeCombo.text)"
+                                        [(ngModel)]="selectedItem.voucherMaster.voucherType.voucherTypeId" displayMemberPath="typeDesc"
+                                        selectedValuePath="voucherTypeId" [isRequired]="true" [isEditable]="true">
+                                    </wj-combo-box>
+                                    <div *ngIf="myForm.controls['voucherType'].hasError('required')" [hidden]="myForm.controls.voucherType.valid || (myForm.controls.voucherType.pristine && !isSubmitted)"
+                                        class="text-danger">{{ 'Translation.Voucher Type' | translate }} {{ 'Translation.is required' | translate }}.</div>
+                                </div>
+                                <div class="col-sm-3 fields_box">
+                                    <label for="vouDate">{{ 'Common.Date' | translate }} <span class="validation">*</span></label>
+                                    <wj-input-date id="vouDate" #vouDate tabindex="3" class="wijmo_style" [isDisabled]="isEditing" formControlName="vouDate" [showYearPicker]="false"
+                                        max="{{today}}" [(ngModel)]="selectedItem.voucherMaster.vouDate" (ngModelChange)="onDateChangeEvent($event)" 
+                                        [format]="'yyyy-MM-dd'"></wj-input-date>
+                                    <div *ngIf="myForm.controls['vouDate'].hasError('required')" [hidden]="myForm.controls.vouDate.valid || (myForm.controls.vouDate.pristine && !isSubmitted)"
+                                        class="text-danger">{{ 'Common.Date' | translate }} {{ 'Translation.is required' | translate }}.</div>
+                                </div>                               
+                                <div class="col-sm-3 fields_box">
+                                    <label for="type">{{ 'Translation.Payment Type' | translate }} <span class="validation">*</span></label>
+                                    <wj-combo-box tabindex="7" id="paymentType" formControlName="paymentType" class="wijmo_style" [isEditable]="true" [isRequired]="true" [itemsSource]="paymentTypeList"
+                                        displayMemberPath="name" selectedValuePath="code" [(ngModel)]="selectedItem.voucherMaster.paymentType"></wj-combo-box>
+                                    <div *ngIf="myForm.controls['paymentType'].hasError('required')" [hidden]="myForm.controls.paymentType.valid || (myForm.controls.paymentType.pristine && !isSubmitted)"
+                                        class="text-danger">{{ 'Translation.Payment Type' | translate }} {{ 'Translation.is required' | translate }}.</div>
+                                </div>
+                                <div class="col-sm-3 fields_box">
+                                    <br/>
+                                    <div class="abc-checkbox abc-checkbox-primary pull-bottom">
+                                        <input id="chequeCleared" tabindex="2" *ngIf="!disabledCheckbox" type="checkbox" [(ngModel)]='selectedItem.voucherMaster.chequeCleared'
+                                            formControlName="chequeCleared">
+                                        <label for="chequeCleared"> {{ 'Translation.Cheque Cleared' | translate }} </label>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12 fields_box">
+                                    <label for="vouNaration">{{ 'Translation.Narration' | translate }}  <span class="validation">*</span></label>
+                                    <wj-input-mask id="vouNaration" tabindex="4" class="wijmo_style" formControlName="vouNaration" maxlength="100" [(ngModel)]="selectedItem.voucherMaster.vouNaration"
+                                        myForm [isRequired]="true">
+                                    </wj-input-mask>
+                                    <div *ngIf="myForm.controls['vouNaration'].hasError('required')" [hidden]="myForm.controls.vouNaration.valid || (myForm.controls.vouNaration.pristine && !isSubmitted)"
+                                        class="text-danger">{{ 'Translation.Narration' | translate }} {{ 'Translation.is required' | translate }}.</div>
+                                </div>
+                            </div>
+
+
+                            <div class="row" style="margin: 40px 40px 0px 40px">
+                                <h3 class="global-heading">{{ 'Translation.Details' | translate }}</h3>
+                                <div class="col-sm-12"></div>
+
+                                <div class="col-sm-6 fields_box">
+                                    <label for="clientId">{{ 'Translation.Account Code' | translate }} <span class="validation">*</span></label>
+                                    
+                                    <wj-auto-complete tabindex="5" id="clientId" class="wijmo_style" formControlName="clientId" [isRequired]="true" [itemsSource]="chartOfAccountList"
+                                    displayMemberPath="displayName" selectedValuePath="code" [(ngModel)]="selectedDetailItem.chartOfAccount.glCode" [isEditable]="true" [maxItems]="50"></wj-auto-complete>
+
+                                    <!-- <wj-input-mask id="glCode" #mglCode tabindex="5" (lostFocus)="onExactSearchCOA(mglCode.value,null,'exact-match')" class="wijmo_style"
+                                        formControlName="glCode" maxlength="50" [(ngModel)]="selectedDetailItem.chartOfAccount.glCode"
+                                        myForm [isRequired]="true">
+                                    </wj-input-mask> -->
+                                    <div *ngIf="myForm.controls['clientId'].hasError('required')" [hidden]="myForm.controls.clientId.valid || (myForm.controls.clientId.pristine && !isSubmitted)"
+                                        class="text-danger">{{ 'Translation.Account Code' | translate }} {{ 'Translation.is required' | translate }}.</div>
+                                    <div *ngIf="myForm.controls['clientId'].hasError('pattern')" class="text-danger">{{ 'Translation.Invalid' | translate }} {{ 'Translation.Account Code' | translate }}.</div>
+                                    <!-- <button id="btnPopup" style="float:left;" type="button" (click)="onSearch()" class="btn btn-primary btn-xs mb-xs"><i class="fa fa-calendar"> Search</i></button> -->
+                                </div>
+                                <div class="col-sm-6 fields_box">
+                                    <label for="type">{{ 'Translation.Transaction Type' | translate }} <span class="validation">*</span></label>
+                                    <wj-combo-box tabindex="6" id="type" formControlName="type" class="wijmo_style" [isEditable]="true" [isRequired]="true" [itemsSource]="transactionTypeList"
+                                        displayMemberPath="name" selectedValuePath="code" [(ngModel)]="selectedDetailItem.transactionType"></wj-combo-box>
+                                    <div *ngIf="myForm.controls['type'].hasError('required')" [hidden]="myForm.controls.type.valid || (myForm.controls.type.pristine && !isSubmitted)"
+                                        class="text-danger">{{ 'Translation.Transaction Type' | translate }} {{ 'Translation.is required' | translate }}.</div>
+                                </div>
+
+                                <!-- <div class="col-sm-6 fields_box">
+                                    <label for="glDesc">Account Description</label>
+                                    <wj-input-mask id="glDesc" class="wijmo_style" formControlName="glDesc" [(ngModel)]="selectedDetailItem.chartOfAccount.glDesc"
+                                        myForm [isDisabled]="true">
+                                    </wj-input-mask>
+                                </div> -->
+
+                                <div class="col-sm-12 fields_box">
+                                    <label for="naration">{{ 'Translation.Description' | translate }} </label>
+                                    <wj-input-mask id="naration" tabindex="6" class="wijmo_style" formControlName="naration" maxlength="100" [(ngModel)]="selectedDetailItem.naration"
+                                        myForm>
+                                    </wj-input-mask>
+                                </div>
+
+                                
+
+                                <div class="col-sm-6 fields_box">
+                                    <label for="debitCredit">{{ 'Translation.Amount' | translate }} <span class="validation">*</span></label>
+                                    <wj-input-number id="debitCredit" tabindex="7" class="wijmo_style" [max]="9999999999.9999" [min]="0.0001" formControlName="debitCredit"
+                                        format="n4" [(ngModel)]="selectedDetailItem.debitCredit" myForm required [isRequired]="true">
+                                    </wj-input-number>
+                                    <div *ngIf="myForm.controls['debitCredit'].hasError('required')" [hidden]="myForm.controls.debitCredit.valid || (myForm.controls.debitCredit.pristine && !isSubmitted)"
+                                        class="text-danger">{{ 'Translation.Amount' | translate }} {{ 'Translation.is required' | translate }}.</div>
+                                </div>
+
+                                <div class="col-sm-6 fields_box">
+                                    <label for="appliesTo">{{ 'Translation.Instrument Number' | translate }} </label>
+                                    <wj-input-mask id="instrumentNo" tabindex="8" class="wijmo_style" (lostFocus)="tabFocusChanged1()" formControlName="instrumentNo"
+                                        maxlength="20" [(ngModel)]="selectedDetailItem.instrumentNo" myForm>
+                                    </wj-input-mask>
+                                    <div *ngIf="myForm.controls['instrumentNo'].hasError('pattern')" class="text-danger">{{ 'Translation.Invalid' | translate }} {{ 'Translation.Instrument Number' | translate }}.</div>
+                                </div>
+
+                                <div class="col-sm-12 fields_box">
+                                    <button type="button" [disabled]="isBtnDisabled" #addbutton (blur)="tabFocusChanged()"  [class]="'add_btn pull-right'"
+                                        (click)=" onAddNewRow()">{{ 'Translation.Add' | translate }}</button>
+                                </div>
+
+                            </div>
+
+
+                            <div class="table_container">
+                                <wj-flex-grid style="height: 300px;" id="abc" [itemsSource]="voucherDetailList" [isReadOnly]="true" [selectionMode]="'Row'"
+                                    [autoSizeMode]="'Headers'" #flexDetail (initialized)="initGrid(flexDetail)">
+
+                                    <wj-flex-grid-column [header]="'Sr #'" [binding]="'serielNo'" [align]="'left'" [allowSorting]="false" [isRequired]="false"
+                                        [width]="'0.15*'" [minWidth]="30"></wj-flex-grid-column>
+
+                                    <wj-flex-grid-column [header]="'Translation.Account Code' | translate" [align]="'left'" [allowSorting]="false" [isRequired]="false" [binding]="'chartOfAccount.glCode'"
+                                        [width]="'0.2*'" [minWidth]="30"></wj-flex-grid-column>                                   
+
+                                    <wj-flex-grid-column [header]="'Translation.Debit' | translate" [align]="'right'" [format]="'n4'" [allowSorting]="false" [isRequired]="false" [binding]="'debit'"
+                                        [width]="'0.40*'" [minWidth]="30" [aggregate]="'Sum'"></wj-flex-grid-column>
+
+                                    <wj-flex-grid-column [header]="'Translation.Credit' | translate" [align]="'right'" [format]="'n4'" [allowSorting]="false" [isRequired]="false" [binding]="'credit'"
+                                        [width]="'0.40*'" [minWidth]="30" [aggregate]="'Sum'"></wj-flex-grid-column>
+
+                                    <wj-flex-grid-column [header]="'Translation.Instrument No' | translate" [align]="'left'" [allowSorting]="false" [isRequired]="false" [binding]="'instrumentNo'"
+                                        [width]="'0.35*'" [minWidth]="30"></wj-flex-grid-column>
+
+                                    <wj-flex-grid-column [header]="'Translation.Description' | translate" [align]="'left'" [allowSorting]="false" [isRequired]="false" [binding]="'naration'"
+                                        [width]="'0.40*'" [minWidth]="30"></wj-flex-grid-column>
+
+                                    <wj-flex-grid-column [header]="'Common.Action' | translate" [width]="'0.2*'" [allowSorting]="false" [isRequired]="false" [allowMerging]="true"
+                                        [align]="'center'" [minWidth]="30" *ngIf="userService.isAuhtorized(userService.EB_FINANCIALS_VOUCHER_UPDATE)">
+                                        <ng-template wjFlexGridCellTemplate let-item="item" [cellType]="'Cell'">
+                                            <button *ngIf="userService.isAuhtorized(userService.EB_FINANCIALS_VOUCHER_UPDATE)" id="btnEdit" class="on_edit_button" role="button"
+                                                (click)="onEditDetailAction()" title="{{ 'Translation.Edit' | translate }}"> <img src="assets/img/edit_orange.png"/> </button>
+
+                                            <button *ngIf="userService.isAuhtorized(userService.EB_FINANCIALS_VOUCHER_UPDATE)" id="btnDetailRemove" class="on_edit_button"
+                                                role="button" (click)="onEditDetailDelete()" title="{{ 'Translation.Delete' | translate }}"> <img src="assets/img/cross_orange.png"/> </button>
+
+                                        </ng-template>
+                                    </wj-flex-grid-column>
+                                </wj-flex-grid>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="orange_footer">
+                    <button id="btnSave" #saveBtn type="button"  (click)="onSaveAction(myForm.value, myForm.valid)" class="save_btn"
+                        *ngIf="!isEditing && userService.isAuhtorized(userService.EB_FINANCIALS_VOUCHER_NEW)">{{ 'Common.Save' | translate }}</button>
+                    <button id="btnEdit" #updateBtn type="button"  (click)="onSaveAction(myForm.value, myForm.valid)" class="save_btn"
+                        *ngIf="isEditing && userService.isAuhtorized(userService.EB_FINANCIALS_VOUCHER_UPDATE)">{{ 'Common.Update' | translate }}</button>
+                    <button type="button" class="cancel_btn" data-dismiss="modal" (click)="onCancelAction()">{{ 'Common.Cancel' | translate }}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- <wj-popup owner="#btnPopup" [modal]="true" #glCodePopup style="width:460px;background:#333333;padding:5px;">
+    <div class="row client-filter">
+        <div class="col-sm-4">
+            <label class="control-label" for="glCode">Account Code</label>
+            <wj-input-mask #glCode tabindex="1" class="wijmo_style" maxlength="50" [isRequired]="false">
+            </wj-input-mask>
+        </div>
+        <div class="col-sm-6">
+            <label class="control-label" for="glDesc">Account Description</label>
+            <wj-input-mask #glDesc tabindex="2" class="wijmo_style" maxlength="50" [isRequired]="false">
+            </wj-input-mask>
+        </div>
+        <div class="col-sm-2">
+            <button type="button"  class="add_btn" (click)=" onSearchCOA(glCode.value,glDesc.value,null)"><i class="fa fa-filter"></i></button>
+        </div>
+    </div>
+    <div>
+        <wj-flex-grid [itemsSource]="chartOfAccountList" [isReadOnly]="true" [selectionMode]="'Row'" [autoSizeMode]="'Headers'" [headersVisibility]="'Column'"
+            #coaGrid class="grid" style="height:350px;">
+            <wj-flex-grid-column [header]="'Account Code'" [binding]="'glCode'" [align]="'left'" [minWidth]="75" [width]="150"></wj-flex-grid-column>
+            <wj-flex-grid-column [header]="'Account Description'" [binding]="'glDesc'" [align]="'left'" [minWidth]="150" [width]="300"></wj-flex-grid-column>
+        </wj-flex-grid>
+        <div class="modal-footer">
+            <button class="add_btn" *ngIf="recExist" (click)="updateControls()">OK</button>
+            <button class="cancel_btn_small wj-hide-cancel" (click)="clearControls()">Cancel</button>
+        </div>
+    </div>
+</wj-popup> -->
+<dialog-cmp #dialogCmp (btnClick)="getNotification($event)"> </dialog-cmp>

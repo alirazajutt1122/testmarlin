@@ -1,0 +1,102 @@
+<div class="w-full max-w-4xl">
+    <div [formGroup]="authorizedEmployeeInfoFormGroup">
+        <div class="w-full">
+            <div class="text-xl">Customer / Company Details</div>
+            <div class="text-secondary">Customer/Company Details of Corporate</div>
+        </div>
+        <div class="grid w-full mt-8">
+            <label for="input-file-id" class="md-button md-raised md-primary">Board Resolution
+                (Attach/Upload)</label>
+            <input class="ng-hide" id="input-file-id" multiple type="file"/>
+        </div>
+
+        <div class="grid sm:grid-cols-6 gap-6 w-full mt-8">
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Name</mat-label>
+                    <input matInput name="nameEmployeeOne" formControlName="nameEmployeeOne" required>
+                </mat-form-field>
+            </div>
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Designation /Position</mat-label>
+                    <input matInput name="positionEmployeeOne" formControlName="positionEmployeeOne" required>
+                </mat-form-field>
+            </div>
+
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Email Add</mat-label>
+                    <input matInput name="emailAddEmployeeOne" formControlName="emailAddEmployeeOne" required>
+                </mat-form-field>
+            </div>
+
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Phone #</mat-label>
+                    <input matInput name="phoneNumEmployeeOne" formControlName="phoneNumEmployeeOne" required>
+                </mat-form-field>
+            </div>
+
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Fax #</mat-label>
+                    <input matInput name="faxNumEmployeeOne" formControlName="faxNumEmployeeOne" required>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <div class="w-full">
+            <div class="text-xl mt-4">Second Contact Person</div>
+        </div>
+
+        <div class="grid sm:grid-cols-6 gap-6 w-full mt-8">
+
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Name</mat-label>
+                    <input matInput name="nameEmployeeTwo" formControlName="nameEmployeeTwo" required>
+                </mat-form-field>
+            </div>
+
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Designation /Position</mat-label>
+                    <input matInput name="positionEmployeeTwo" formControlName="positionEmployeeTwo" required>
+                </mat-form-field>
+            </div>
+
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Email Add</mat-label>
+                    <input matInput name="emailAddEmployeeTwo" formControlName="emailAddEmployeeTwo" required>
+                </mat-form-field>
+            </div>
+
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Cell #</mat-label>
+                    <input matInput name="phoneNumEmployeeTwo" formControlName="phoneNumEmployeeTwo" required>
+                </mat-form-field>
+            </div>
+
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Address</mat-label>
+                    <input matInput name="addressEmployeeTwo" formControlName="addressEmployeeTwo" required>
+                </mat-form-field>
+            </div>
+
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Public</mat-label>
+                    <mat-select name="businessType" formControlName="businessType">
+                        <mat-option *ngFor="let business of typeOfBusiness" [value]="business.type">
+                            {{business.type}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+    </div>
+</div>

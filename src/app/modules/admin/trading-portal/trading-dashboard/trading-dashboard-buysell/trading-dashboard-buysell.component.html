@@ -1,0 +1,59 @@
+<div class="BSWindow overflow-hidden">
+
+    <div class="flex">
+
+        <div class="ml-2 text-lg font-bold text-center mt-2 border-t-4"
+            style="width: 30%;height: 40px;padding: 0.5pc;background-color: #24252861;"
+            [ngStyle]="{'border-top-color': buyWindow ? buyColor : sellColor,'color': buyWindow ? buyColor : sellColor }">
+            {{title}}
+        </div>
+
+        <div style="width: 70%;background-color: #0f172a;" class="text-right">
+            <button mat-icon-button (click)="onCloseDialog()" class="mr-2 mt-1">
+                <mat-icon class="hover:text-white" [svgIcon]="'heroicons_outline:x'"></mat-icon>
+            </button>
+        </div>
+
+    </div>
+    <div class="m-2" style="background-color: #24252861;">
+        <form [formGroup]="buysellForm" class="items-start space-y-6 w-full" (ngSubmit)="submit()" class="pt-3"
+            style="margin-top: -8px ">
+
+            <div class="sm:col-span-1 ml-4 mt-8">
+                <mat-label class="mr-8">Price</mat-label>
+                <mat-form-field class="fuse-mat-no-subscript input">
+                    <input id="price" [formControlName]="'price'" required matInput placeholder="Price"
+                        (input)="amountCalculation()">
+                </mat-form-field>
+                <mat-error class="error" *ngIf="buysellForm.get('price').invalid && buysellForm.get('price').touched">
+                    {{getErrorMessage('price')}}</mat-error>
+            </div>
+
+            <div class="sm:col-span-1 ml-4 mt-8">
+                <mat-label class="mr-4">Volume</mat-label>
+                <mat-form-field class="fuse-mat-no-subscript input">
+                    <input id="quantity" [formControlName]="'quantity'" matInput placeholder="Volume"
+                        (input)="amountCalculation()">
+                </mat-form-field>
+                <mat-error class="error"
+                    *ngIf="buysellForm.get('quantity').invalid && buysellForm.get('quantity').touched">
+                    {{getErrorMessage('quantity')}}</mat-error>
+            </div>
+
+            <div class="sm:col-span-1 ml-4 mt-8">
+                <mat-label class="mr-4">Amount</mat-label>
+                <mat-form-field class="fuse-mat-no-subscript input">
+                    <input [formControlName]="'amount'" matInput placeholder="Amount" [value]="amount" readonly>
+                </mat-form-field>
+            </div>
+
+            <div class="sm:col-span-1 mt-8 text-center">
+                <button
+                    [ngStyle]="{'background-color': buyWindow ? buyColor : sellColor}"
+                    type="button"  (click)="openDialog()"
+                    class="btnstyle transformHoverBuySell font-bold text-md text-white">{{buttonTitle}}
+                    {{buysellData.symbolCode}}</button>
+            </div>
+        </form>
+    </div>
+</div>

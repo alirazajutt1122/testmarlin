@@ -1,0 +1,153 @@
+
+<change-order-all #changeOrderAll [modalId]="'change-order-all-wo'"></change-order-all>
+<cancel-order-all #cancelOrderAll [modalId]="'cancel-order-all-wo'"></cancel-order-all>
+
+
+
+
+
+
+<section class="widgetDashboard " widget>
+    <div class="flex justify-end">
+        <span *ngIf="authServiceOMS.isAuhtorized(authServiceOMS.OM_EQUITY_ORDER_CHANGE) || authServiceOMS.isAuhtorized(authServiceOMS.OM_BOND_ORDER_CHANGE)" class="mr-2 -mt-6 mb-2 fa fa-pencil hover:text-primary-500" style="cursor: pointer;" type="button" (click)="loadChangeOrder()" ></span>
+        <span *ngIf="authServiceOMS.isAuhtorized(authServiceOMS.OM_EQUITY_ORDER_CANCEL) || authServiceOMS.isAuhtorized(authServiceOMS.OM_BOND_ORDER_CANCEL)" class="mr-2 -mt-6 mb-2 fa fa-trash-o hover:text-primary-500" style="cursor: pointer;" type="button" (click)="loadCancelOrder()" ></span>
+        <span class="mr-2 -mt-6 mb-2 fa fa-refresh hover:text-primary-500" style="cursor: pointer;" type="button" (click)="getWorkingOrders('', true)" ></span>
+    </div>
+    
+    <wj-flex-grid id="theGridTallRows" class="gridDashboard" style="height:20px !important ;" [isReadOnly]="true" [itemsSource]="data"
+        [selectionMode]="'Row'" [autoSizeMode]="'Headers'"  [headersVisibility]="'Column'"
+        #flexGrid style="grid-auto-flow : column;">
+
+
+        <wj-flex-grid-filter [filterColumns]="filterColumns"></wj-flex-grid-filter>
+        <wj-flex-grid-column [header]="'Translation.Exchange' | translate" [binding]="'exchange'" [width]="'0.5*'" [minWidth]="85" 
+            [align]="'left'">
+            <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-item="item">
+                <span [class.blue_text_grid]="item.side === 'buy'" [class.pink_text_grid]="item.side === 'sell'">
+                    {{item.exchange}} </span>
+            </ng-template>
+        </wj-flex-grid-column>
+        <wj-flex-grid-column [header]="'Translation.Market' | translate" [binding]="'market'" [width]="'0.5*'" [minWidth]="90" 
+            [align]="'left'">
+            <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-item="item">
+                <span [class.blue_text_grid]="item.side === 'buy'" [class.pink_text_grid]="item.side === 'sell'">
+                    {{item.market}} </span>
+            </ng-template>
+        </wj-flex-grid-column>
+        <wj-flex-grid-column [header]="'Translation.Security' | translate" [binding]="'symbol'" [width]="'0.5*'" [minWidth]="90" 
+             [align]="'left'">
+            <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-item="item">
+                <span [class.blue_text_grid]="item.side === 'buy'" [class.pink_text_grid]="item.side === 'sell'">
+                    {{item.symbol}} </span>
+            </ng-template>
+        </wj-flex-grid-column>
+        <wj-flex-grid-column [header]="'Translation.Order No' | translate" [binding]="'order_no'" [width]="'0.5*'" [minWidth]="90" 
+             [align]="'left'" [isReadOnly]="false">
+            <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-item="item">
+                <span [class.blue_text_grid]="item.side === 'buy'" [class.pink_text_grid]="item.side === 'sell'">
+                    {{item.order_no}} </span>
+            </ng-template>
+        </wj-flex-grid-column>
+        <wj-flex-grid-column [header]="'Translation.Date Time' | translate" [binding]="'state_time'" [width]="'0.5*'" [minWidth]="110" 
+            type="datetime" [align]="'left'" >
+            <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-item="item">
+                <span [class.blue_text_grid]="item.side === 'buy'"
+                    [class.pink_text_grid]="item.side === 'sell'">{{item.state_time }}</span>
+            </ng-template>
+        </wj-flex-grid-column>
+        <wj-flex-grid-column [header]="'Translation.Order Type' | translate" [binding]="'type_'" [width]="'0.5*'" [minWidth]="90" 
+            [align]="'left'">
+            <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-item="item">
+                <span [class.blue_text_grid]="item.side === 'buy'"
+                    [class.pink_text_grid]="item.side === 'sell'">{{item.type_}}</span>
+            </ng-template>
+        </wj-flex-grid-column>
+        <wj-flex-grid-column [header]="'Translation.Order Qualifier' | translate" [binding]="'qualifier'" [width]="'0.5*'" [minWidth]="90" 
+             [align]="'left'">
+            <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-item="item">
+                <span [class.blue_text_grid]="item.side === 'buy'"
+                    [class.pink_text_grid]="item.side === 'sell'">{{item.qualifier}}</span>
+            </ng-template>
+        </wj-flex-grid-column>
+        <wj-flex-grid-column [header]="'Translation.Price' | translate" [binding]="'price'" [width]="'0.5*'" [minWidth]="90" 
+            [format]="'n4'" [align]="'right'">
+            <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-item="item">
+                <span [class.blue_text_grid]="item.side === 'buy'" [class.pink_text_grid]="item.side === 'sell'">
+                    {{item.price}} </span>
+            </ng-template>
+        </wj-flex-grid-column>
+        <wj-flex-grid-column [header]="'Translation.Quantity' | translate" [binding]="'volume'" [width]="'0.5*'" [minWidth]="90" 
+            [format]="'n0'" [align]="'right'">
+            <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-item="item">
+                <span [class.blue_text_grid]="item.side === 'buy'"
+                    [class.pink_text_grid]="item.side === 'sell'">{{item.volume}}</span>
+            </ng-template>
+        </wj-flex-grid-column>
+        <wj-flex-grid-column [header]="'Translation.Disc. Quantity' | translate" [binding]="'discQuantity'" [width]="'0.5*'" [minWidth]="90" 
+             [format]="'n0'" [align]="'right'">
+            <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-item="item">
+                <span [class.blue_text_grid]="item.side === 'buy'"
+                    [class.pink_text_grid]="item.side === 'sell'">{{item.discQuantity}}</span>
+            </ng-template>
+        </wj-flex-grid-column>
+        <wj-flex-grid-column [header]="'Translation.Client' | translate" [binding]="'account'" [width]="'0.5*'" [minWidth]="90" 
+             [align]="'left'">
+            <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-item="item">
+                <span [class.blue_text_grid]="item.side === 'buy'" [class.pink_text_grid]="item.side === 'sell'">
+                    {{item.account}} </span>
+            </ng-template>
+        </wj-flex-grid-column>
+        <wj-flex-grid-column [header]="'Translation.Trader' | translate" [binding]="'username'" [width]="'0.5*'" [minWidth]="90" 
+             [align]="'left'">
+            <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-item="item">
+                <span [class.blue_text_grid]="item.side === 'buy'" [class.pink_text_grid]="item.side === 'sell'">
+                    {{item.username}} </span>
+            </ng-template>
+        </wj-flex-grid-column>
+        <wj-flex-grid-column [header]="'Translation.Custodian' | translate" [binding]="'custodian'" [width]="'0.5*'" [minWidth]="90" 
+             [align]="'left'">
+            <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-item="item">
+                <span [class.blue_text_grid]="item.side === 'buy'" [class.pink_text_grid]="item.side === 'sell'">
+                    {{item.custodian}} </span>
+            </ng-template>
+        </wj-flex-grid-column>
+        <wj-flex-grid-column [header]="'Translation.Trigger Price' | translate" [binding]="'triggerPrice'" [width]="'0.5*'" [minWidth]="90" 
+             [align]="'right'" [format]="'n4'">
+            <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-item="item">
+                <span [class.blue_text_grid]="item.side === 'buy'"
+                    [class.pink_text_grid]="item.side === 'sell'">{{item.triggerPrice}}</span>
+            </ng-template>
+        </wj-flex-grid-column>
+        <wj-flex-grid-column [header]="'TIF'" [binding]="'tifOption'"  [align]="'left'" [width]="'0.5*'" [minWidth]="90" >
+            <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-item="item">
+                <span [class.blue_text_grid]="item.side === 'buy'" [class.pink_text_grid]="item.side === 'sell'">
+                    {{item.tifOption}} </span>
+            </ng-template>
+        </wj-flex-grid-column>
+        <wj-flex-grid-column [header]="'Translation.Good Till Date' | translate" [binding]="'gtd'" [width]="'0.5*'" [minWidth]="90" 
+             [align]="'left'" format="MM/dd/yyyy">
+            <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-item="item">
+                <span [class.blue_text_grid]="item.side === 'buy'" [class.pink_text_grid]="item.side === 'sell'">
+                    {{item.gtd | date: 'MM/dd/yyyy'}} </span>
+            </ng-template>
+        </wj-flex-grid-column>
+    </wj-flex-grid>
+
+    <!-- <div class="row">
+        <div class="btn-group col-xs-12 align-right">
+          
+            <wj-collection-view-pager [cv]="flexGrid?.collectionView"></wj-collection-view-pager>
+            
+            <wj-menu [(value)]="pageSize" [header]="'Common.Page Size' | translate">
+                <wj-menu-item [value]="0">{{ 'Common.No Paging' | translate }}</wj-menu-item>
+                <wj-menu-item [value]="5">5 {{ 'Common.items' | translate }}</wj-menu-item>
+                <wj-menu-item [value]="10">10 {{ 'Common.items' | translate }}</wj-menu-item>
+                <wj-menu-item [value]="20">20 {{ 'Common.items' | translate }}</wj-menu-item>
+                <wj-menu-item [value]="30">30 {{ 'Common.items' | translate }}</wj-menu-item>
+                <wj-menu-item [value]="50">50 {{ 'Common.items' | translate }}</wj-menu-item>
+                <wj-menu-item [value]="100">100 {{ 'Common.items' | translate }}</wj-menu-item>
+            </wj-menu>
+        </div>
+    </div> -->
+</section>
+

@@ -1,0 +1,286 @@
+<div class="w-full max-w-4xl">
+    <div [formGroup]="stackholderDetailFormGroup">
+        <div class="w-full">
+            <div class="text-xl">Promotors/Partner/Principal Stakeholder</div>
+            <div class="text-secondary">DETAIL OF KEY PROMOTERS/PARTNER/PRINCIPAL STAKEHOLDERS</div>
+        </div>
+
+        <div class="grid sm:grid-cols-6 gap-6 w-full mt-8">
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Name no. 1</mat-label>
+                    <input matInput name="nameNo1" formControlName="nameNo1">
+                </mat-form-field>
+            </div>
+            <div class="sm:col-span-2">
+                <mat-label class="mb-2 font-medium leading-4">Nationality no. 1</mat-label>
+                <mat-radio-group class="flex flex-row" name="nationalityNo1" formControlName="nationalityNo1"
+                                 aria-label="Nationality no. 1">
+                    <mat-radio-button [color]="'primary'" class="ml-2 justify-between" value="1">Origin Country
+                    </mat-radio-button>
+                    <mat-radio-button [color]="'primary'" class="ml-2 justify-between" value="2">Other
+                    </mat-radio-button>
+                </mat-radio-group>
+            </div>
+
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Date of Birth</mat-label>
+                    <input matInput [matDatepicker]="picker1" name="dobNo1" formControlName="dobNo1">
+                    <mat-datepicker-toggle matSuffix [for]="picker1">
+                        <!-- <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon> -->
+                    </mat-datepicker-toggle>
+                    <mat-datepicker #picker1></mat-datepicker>
+                </mat-form-field>
+            </div>
+
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Tele no.</mat-label>
+                    <input matInput name="telephoneNo1" formControlName="telephoneNo1">
+                </mat-form-field>
+            </div>
+
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Years in business</mat-label>
+                    <input matInput name="yearsInBusinessNo1" formControlName="yearsInBusinessNo1">
+                </mat-form-field>
+            </div>
+
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>CNIC no. 1</mat-label>
+                    <input matInput name="CNICNo1" formControlName="CNICNo1">
+                </mat-form-field>
+            </div>
+
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Passport no. 1</mat-label>
+                    <input matInput name="passportNo1" formControlName="passportNo1">
+                </mat-form-field>
+            </div>
+
+            <div class="sm:col-span-2">
+                <mat-label class="mb-2 font-medium leading-4">Gender</mat-label>
+                <mat-radio-group class="flex flex-row" name="genderNo1" formControlName="genderNo1"
+                                 aria-label="Nationality no. 1">
+                    <mat-radio-button [color]="'primary'" class="ml-2 justify-between" value="1">Male</mat-radio-button>
+                    <mat-radio-button [color]="'primary'" class="ml-2 justify-between" value="2">Female
+                    </mat-radio-button>
+                </mat-radio-group>
+            </div>
+
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Cell No.</mat-label>
+                    <input matInput name="cellNo1" formControlName="cellNo1">
+                </mat-form-field>
+            </div>
+
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Residential Address</mat-label>
+                    <input matInput name="residentialAddressNo1" formControlName="residentialAddressNo1">
+                </mat-form-field>
+            </div>
+
+            <div class="sm:col-span-2">
+                <div formArrayName="businessPremisesNo1">
+                    <mat-label>Business Premises</mat-label>
+                    <br/>
+                    <ng-container class="flex-row" *ngFor="let premise of businessPremisesCheckboxes; let i = index">
+                        <mat-checkbox [color]="'primary'" class="ml-1"
+                                      [formControlName]="i">{{premise.name}}</mat-checkbox>
+                    </ng-container>
+                </div>
+            </div>
+
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Name no . 2</mat-label>
+                    <input matInput name="nameNo2" formControlName="nameNo2">
+                </mat-form-field>
+            </div>
+
+            <div class="sm:col-span-2">
+                <mat-label class="mb-2 font-medium leading-4">Nationality no. 2</mat-label>
+                <mat-radio-group class="flex flex-row" name="nationalityNo2" formControlName="nationalityNo2"
+                                 aria-label="Nationality no. 2">
+                    <mat-radio-button [color]="'primary'" class="ml-2 justify-between" value="1">Origin Country
+                    </mat-radio-button>
+                    <mat-radio-button [color]="'primary'" class="ml-2 justify-between" value="2">Other
+                    </mat-radio-button>
+                </mat-radio-group>
+            </div>
+
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Date of Birth</mat-label>
+                    <input matInput [matDatepicker]="picker2" name="dobNo2" formControlName="dobNo2">
+                    <mat-datepicker-toggle matSuffix [for]="picker2">
+                        <!-- <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon> -->
+                    </mat-datepicker-toggle>
+                    <mat-datepicker #picker2></mat-datepicker>
+                </mat-form-field>
+            </div>
+
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Tele no.</mat-label>
+                    <input matInput name="telephoneNo2" formControlName="telephoneNo2">
+                </mat-form-field>
+            </div>
+
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Years in business</mat-label>
+                    <input matInput name="yearsInBusinessNo2" formControlName="yearsInBusinessNo2">
+                </mat-form-field>
+            </div>
+
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>CNIC no. 2</mat-label>
+                    <input matInput name="CNICNo2" formControlName="CNICNo2">
+                </mat-form-field>
+            </div>
+
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Passport no. 1</mat-label>
+                    <input matInput name="passportNo2" formControlName="passportNo2">
+                </mat-form-field>
+            </div>
+
+            <div class="sm:col-span-2">
+                <mat-label class="mb-2 font-medium leading-4">Gender</mat-label>
+                <mat-radio-group class="flex flex-row" name="genderNo2" formControlName="genderNo2"
+                                 aria-label="Nationality no. 2">
+                    <mat-radio-button [color]="'primary'" class="ml-2 justify-between" value="1">Male</mat-radio-button>
+                    <mat-radio-button [color]="'primary'" class="ml-2 justify-between" value="2">Female
+                    </mat-radio-button>
+                </mat-radio-group>
+            </div>
+
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Cell No.</mat-label>
+                    <input matInput name="cellNo2" formControlName="cellNo2">
+                </mat-form-field>
+            </div>
+
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Residential Address</mat-label>
+                    <input matInput name="residentialAddressNo2" formControlName="residentialAddressNo2">
+                </mat-form-field>
+            </div>
+
+            <div class="sm:col-span-2">
+                <div formArrayName="businessPremisesNo2">
+                    <mat-label>Premises</mat-label>
+                    <br/>
+                    <ng-container class="flex-row" *ngFor="let premise of businessPremisesCheckboxes; let i = index">
+                        <mat-checkbox [color]="'primary'" class="ml-1"
+                                      [formControlName]="i">{{premise.name}}</mat-checkbox>
+                    </ng-container>
+                </div>
+            </div>
+
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Name no. 3</mat-label>
+                    <input matInput name="nameNo3" formControlName="nameNo3">
+                </mat-form-field>
+            </div>
+
+            <div class="sm:col-span-2">
+                <mat-label class="mb-2 font-medium leading-4">Nationality no. 3</mat-label>
+                <mat-radio-group class="flex flex-row" name="nationalityNo3" formControlName="nationalityNo3"
+                                 aria-label="Nationality no. 3">
+                    <mat-radio-button [color]="'primary'" class="ml-2 justify-between" value="1">Origin Country
+                    </mat-radio-button>
+                    <mat-radio-button [color]="'primary'" class="ml-2 justify-between" value="2">Other
+                    </mat-radio-button>
+                </mat-radio-group>
+            </div>
+
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Date of Birth</mat-label>
+                    <input matInput [matDatepicker]="picker3" name="dobNo3" formControlName="dobNo3">
+                    <mat-datepicker-toggle matSuffix [for]="picker3">
+                        <!-- <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon> -->
+                    </mat-datepicker-toggle>
+                    <mat-datepicker #picker3></mat-datepicker>
+                </mat-form-field>
+            </div>
+
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Tele no.</mat-label>
+                    <input matInput name="telephoneNo3" formControlName="telephoneNo3">
+                </mat-form-field>
+            </div>
+
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Years in business</mat-label>
+                    <input matInput name="yearsInBusinessNo3" formControlName="yearsInBusinessNo3">
+                </mat-form-field>
+            </div>
+
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>CNIC no. 2</mat-label>
+                    <input matInput name="CNICNo3" formControlName="CNICNo3">
+                </mat-form-field>
+            </div>
+
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Passport no. 3</mat-label>
+                    <input matInput name="passportNo3" formControlName="passportNo3">
+                </mat-form-field>
+            </div>
+
+
+            <div class="sm:col-span-2">
+                <mat-label class="mb-2 font-medium leading-4">Gender</mat-label>
+                <mat-radio-group class="flex flex-row" name="genderNo3" formControlName="genderNo3"
+                                 aria-label="Nationality no. 3">
+                    <mat-radio-button [color]="'primary'" class="ml-2 justify-between" value="1">Male</mat-radio-button>
+                    <mat-radio-button [color]="'primary'" class="ml-2 justify-between" value="2">Female
+                    </mat-radio-button>
+                </mat-radio-group>
+            </div>
+
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Cell No.</mat-label>
+                    <input matInput name="cellNo3" formControlName="cellNo3">
+                </mat-form-field>
+            </div>
+
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Residential Address</mat-label>
+                    <input matInput name="residentialAddressNo3" formControlName="residentialAddressNo3">
+                </mat-form-field>
+            </div>
+
+            <div class="sm:col-span-2">
+                <div formArrayName="businessPremisesNo3">
+                    <mat-label>Business Premises</mat-label>
+                    <br/>
+                    <ng-container class="flex-row" *ngFor="let premise of businessPremisesCheckboxes; let i = index">
+                        <mat-checkbox [color]="'primary'" class="ml-1"
+                                      [formControlName]="i">{{premise.name}}</mat-checkbox>
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

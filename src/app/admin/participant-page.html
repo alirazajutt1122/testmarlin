@@ -1,0 +1,545 @@
+
+<section class="widget" widget="">
+    <header>
+        <h3><span class="fw-semi-bold">{{'Translation.Participant Management' | translate}}</span></h3>
+        <div class="other_btns">
+            <button class="add_new_btn" data-toggle="modal" data-target="#add_new" role="button" data-backdrop="static" title="{{'Translation.Add' | translate}}"
+                *ngIf="userService.isAuhtorized(userService.EB_PARTICIPANT_VIEW)" (click)="onNewAction()"><i class="fa fa-plus" aria-hidden="true"></i>  </button>
+            <button data-toggle="collapse" data-target="#filter_box" class="filter_btn"><i class="fa fa-filter mr-2" aria-hidden="true"></i></button>
+        </div>
+    </header>
+
+    <div id="filter_box" class="collapse in">
+        <div class="row mt-2">
+            <div class="col-sm-3 fields_box">
+                <label for="search-input">{{'Translation.Participant Code' | translate}} <span class="validation"></span></label>
+                <wj-input-mask tabindex="1" [(ngModel)]="searchParticipantCode" class="wijmo_style" [isRequired]="false"> </wj-input-mask>
+            </div>
+            <div class="col-sm-3 fields_box">
+                <label for="search-input">{{'Translation.Participant Name' | translate}}<span class="validation"></span></label>
+                <wj-input-mask tabindex="2" [(ngModel)]="searchParticipantName" class="wijmo_style" [isRequired]="false"> </wj-input-mask>
+            </div>
+            <div class="col-sm-3 fields_box">
+                <label for="search-input">{{'Translation.Custodian' | translate}}<span class="validation"></span></label>
+                <wj-combo-box tabindex="3" [(ngModel)]="searchParticipantType" class="wijmo_style" [isEditable]="true" [itemsSource]="participantTypeList"
+                    displayMemberPath="name" selectedValuePath="code"></wj-combo-box>
+            </div>
+            <div class="col-sm-2">
+                <div class="form_search part-btn">
+                    <button  class="add_new_btn" style="width: 32px; height: 32px; margin: auto"
+                     title="{{'Translation.Search' | translate}}" data-toggle="collapse in" data-target="#filter_box" (click)="onSearchAction()"
+                        role="button"><span class="fa fa-search"></span> </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="table_container">
+        <wj-flex-grid class="grid" [isReadOnly]="true" [itemsSource]="itemsList"  [selectionMode]="'Row'" [autoSizeMode]="'Headers'"
+            [headersVisibility]="'Column'" style="height: 350px;" #flex>
+            <wj-flex-grid-filter [filterColumns]="['participantCode', 'displayName_','accountType','participantType.description','active']"></wj-flex-grid-filter>
+            <wj-flex-grid-column [header]="'Translation.Code' | translate" [align]="'left'" [binding]="'participantCode'" [width]="'0.15*'" [minWidth]="20"></wj-flex-grid-column>
+            <wj-flex-grid-column [header]="'Translation.Name' | translate" [align]="'left'" [binding]="'displayName_'" [width]="'0.4*'" [minWidth]="20"></wj-flex-grid-column>
+            <wj-flex-grid-column [header]="'Translation.Account Type' | translate" [align]="'left'" [binding]="'accountType'" [width]="'0.2*'" [minWidth]="20"></wj-flex-grid-column>
+            <wj-flex-grid-column [header]="'Translation.Participant Type' | translate" [align]="'left'" [binding]="'participantType.description'" [width]="'0.2*'"
+                [minWidth]="20"></wj-flex-grid-column>
+            <wj-flex-grid-column [header]="'Active'" [binding]="'active'" [width]="'0.1*'" [minWidth]="10"></wj-flex-grid-column>
+            <wj-flex-grid-column *ngIf="userService.isAuhtorized(userService.EB_PARTICIPANT_UPDATE)" [header]="'Action'" [align]="'center'"
+                [width]="'0.1*'">
+                <ng-template wjFlexGridCellTemplate [cellType]="'Cell'">
+                    <!--<button *ngIf="userService.isAuhtorized(userService.EB_PARTICIPANT_UPDATE)" id="btnEdit" class="on_edit_button" role="button"
+                        (click)="onEditAction()" title="Edit"  data-target="#add_new" data-toggle="modal"
+                        data-backdrop="static"> <img src="assets/img/edit_orange.png"/> </button>-->
+                    <img src="assets/img/edit_orange.png" class="gridImg" style="width: 14px; height : 14px" title="{{'Translation.Edit' | translate}}" (click)="onEditAction()" data-target="#add_new" data-toggle="modal" data-backdrop="static"
+                    />
+
+                </ng-template>
+            </wj-flex-grid-column>
+
+        </wj-flex-grid>
+
+    </div>
+    <div class="row"></div>
+    <div class="btn-group col-xs-12 align-right">
+        <!-- Paginator -->
+        <wj-collection-view-pager [cv]="flex?.collectionView"></wj-collection-view-pager>
+        <!-- page size -->
+        <wj-menu [(value)]="pageSize" [header]= "'Common.Page Size' | translate">
+            <wj-menu-item [value]="0">{{ 'Common.No Paging' | translate }}</wj-menu-item>
+            <wj-menu-item [value]="5">5 {{ 'Common.items' | translate }}</wj-menu-item>
+            <wj-menu-item [value]="10">10 {{ 'Common.items' | translate }}</wj-menu-item>
+            <wj-menu-item [value]="20">20 {{ 'Common.items' | translate }}</wj-menu-item>
+            <wj-menu-item [value]="30">30 {{ 'Common.items' | translate }}</wj-menu-item>
+            <wj-menu-item [value]="50">50 {{ 'Common.items' | translate }}</wj-menu-item>
+            <wj-menu-item [value]="100">100 {{ 'Common.items' | translate }}</wj-menu-item>
+        </wj-menu>
+    </div>
+</section>
+
+
+
+
+
+<!-- Modal -->
+<div id="add_new" class="modal fade ps-setup" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <form class="form-horizontal form-label-left parsleyjs" [formGroup]="myForm" (ngSubmit)="onSaveAction(myForm.value, myForm.valid)"
+            data-parsley-priority-enabled="false" novalidate="novalidate">
+
+            <div class="modal-content" style="background: #1e293b;">
+
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" (click)="onCancelAction()">&times;</button>
+                    <h4 class="modal-title">{{'Translation.Participant Setup' | translate}}</h4>
+                </div>
+                <div bootstrap-wizard data-height="444" class="form-wizard client_wizard">
+                    <div class="dashboard_tabs">
+                        <div class="clearfix">
+                            <ul class="nav-justified nav nav-tabs" style="background-color: #1e293b;">
+                                <li class="nav-item"><a class="nav-link active" href="#tab1" data-toggle="tab" (click)="onTabChangeEvent('BI')"
+                                    #basicTab>{{'Translation.Basic' | translate}} <span class="validation">*</span></a></li>
+                                <li class="nav-item"><a class="nav-link" href="#tab2" data-toggle="tab" (click)="onTabChangeEvent('CON')" 
+                                    #contactTab>{{'Translation.Contact' | translate}} <span class="validation">*</span></a></li>
+                                <li class="nav-item" *ngIf="!isCustodian"><a class="nav-link" href="#tab3" data-toggle="tab" (click)="onTabChangeEvent('EA')" 
+                                    #exchangeTab>{{'Translation.Exch Association' | translate}} <span class="validation">*</span></a></li>
+                                <li class="nav-item" *ngIf="!isCustodian"><a class="nav-link" href="#tab4" data-toggle="tab" (click)="onTabChangeEvent('M')" 
+                                    #modulesTab>{{'Translation.Modules' | translate}} <span class="validation">*</span></a></li>
+                                <li class="nav-item"  *ngIf="!isCustodian"><a class="nav-link" href="#tab5" data-toggle="tab" (click)="onTabChangeEvent('SA')" 
+                                    #systemAccessTab>{{'Translation.System Access' | translate}} <span class="validation">*</span></a></li>
+                                <li class="nav-item" *ngIf="!isCustodian"><a class="nav-link" href="#tab6" data-toggle="tab" (click)="onTabChangeEvent('DU')" 
+                                        #depoUserTab>{{'Translation.Depo User' | translate}} <span class="validation">*</span></a></li>
+                            </ul>
+                            <div class="progress-bar mt-xs">
+                                <progress id="bar" class="progress progress-xs progress-bar-gray-light" value="100" max="100" style="width: 100%;" #progressBar></progress>
+                            </div>
+                            <div class="tab-content" style="padding:15px;background-color: #1E293B;">
+                                <div class="tab-pane  active in clearfix dashboard_data_grid" id="tab1">
+                                    <alert *ngIf="compulsoryError" [type]="'danger alert-sm'" (close)="closeAlert()" dismissible="true">
+                                        <div [innerHTML]="alertMessage"></div>
+                                    </alert>
+                                    <div class="row wizard_data">
+                                        <div class="col-sm-6 col-lg-4 fields_box">
+                                            <label for="search-input">{{'Translation.Participant Code' | translate}} <span class="validation">*</span></label>
+                                            <wj-input-mask #participantCode class="wijmo_style" [isRequired]="true" tabindex="1" formControlName="participantCode" [(ngModel)]="selectedItem.participantCode"
+                                                maxlength="10" required [isDisabled]="isEditing">
+                                            </wj-input-mask>
+                                            <div *ngIf="myForm.controls['participantCode'].hasError('required')" [hidden]="myForm.controls.participantCode.valid || (myForm.controls.participantCode.pristine && !isSubmitted)"
+                                                class="text-danger">{{'Translation.Participant Code' | translate}} {{'Translation.is required' | translate}}.</div>
+                                            <div *ngIf="myForm.controls['participantCode'].hasError('pattern')" class="text-danger">{{'Translation.Invalid' | translate}} {{'Translation.Participant Code' | translate}}.</div>
+                                        </div>
+                                        <div class="col-sm-6 col-lg-4 fields_box">
+                                            <label for="exchangeName">{{'Translation.Primary Exchange' | translate}} <span class="validation">*</span></label>
+                                            <wj-combo-box id="exchangeName" class="wijmo_style" formControlName="exchangeName" (ngModelChange)="onExchangeChange($event)"
+                                                [itemsSource]="primaryExchangeList" [(ngModel)]="primaryExchangeId" displayMemberPath="exchangeCode"
+                                                selectedValuePath="exchangeId" tabindex="1" [isRequired]="true" [isEditable]="true">
+                                            </wj-combo-box>
+                                            <div *ngIf="myForm.controls['exchangeName'].hasError('required')" [hidden]="myForm.controls.exchangeName.valid || myForm.controls.exchangeName.pristine"
+                                                class="text-danger">{{'Translation.Primary Exchange' | translate}} {{'Translation.is required' | translate}}.</div>
+                                        </div>
+                                        <div class="col-sm-6 col-lg-4 fields_box wizard_checkBox">
+                                            <div>
+                                                <label for="search-input">{{'Translation.Type' | translate}}  <span class="validation">*</span> </label>
+                                            </div>
+                                            <div class="abc-radio">
+                                                <input type="radio" name="accountType" (click)="onaccountTypeChangeEvent('I')" tabindex="2" value="I" id="accountTypeI" [checked]="selectedItem.accountType == 'I'">
+                                                <label for="accountTypeI"> {{'Translation.Individual' | translate}} </label>
+                                            </div>
+                                            <div class="abc-radio">
+                                                <input type="radio" name="accountType" (click)="onaccountTypeChangeEvent('C')" tabindex="2" value="C" id="accountTypeC" [checked]="selectedItem.accountType  == 'C'">
+                                                <label for="accountTypeC"> {{'Translation.Corporate' | translate}} </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-2 fields_box chk-box" *ngIf="!isEditing">
+                                            <div class="abc-checkbox abc-checkbox-primary">
+                                                <input type="checkbox" tabindex="4" [(ngModel)]="selectedItem.active" id="active" formControlName="active">
+                                                <label for="active"> {{'Common.Active' | translate}} </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-2 fields_box chk-box" *ngIf="!isEditing">
+                                            <div class="abc-checkbox abc-checkbox-primary">
+                                                <input type="checkbox" tabindex="4" [(ngModel)]="isCustodian" id="custodian" (click)="onCustodianSelected($event)" formControlName="custodian">
+                                                <label for="custodian"> {{'Translation.Custodian' | translate}} </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-2 fields_box chk-box" *ngIf="isEditing">
+                                            <div class="abc-checkbox abc-checkbox-primary">
+                                                <input type="checkbox" tabindex="4" [(ngModel)]="selectedItem.active" id="active" formControlName="active">
+                                                <label for="active"> {{'Common.Active' | translate}} </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-2 fields_box chk-box" *ngIf="isEditing">
+                                            <div class="abc-checkbox abc-checkbox-primary">
+                                                <input type="checkbox" tabindex="4" [(ngModel)]="isCustodian" id="custodian" disabled="true" formControlName="custodian">
+                                                <label for="custodian"> {{'Translation.Custodian' | translate}} </label>
+                                            </div>
+                                        </div>
+                                        
+
+                                    </div>
+                                    <div class="tabrow wizard_data" *ngIf="selectedItem.accountType == 'I'">
+                                        <h3 class="global-heading">{{'Translation.Individual Detail' | translate}}</h3>
+                                        <!-- <h4 class="sub_heading"> Individual<span class="fw-semi-bold"> Detail</span></h4> -->
+                                        <div class="row">
+                                            <div class="col-sm-4 fields_box">
+                                                <label for="search-input">{{'Translation.First Name' | translate}}  <span class="validation">*</span></label>
+                                                <wj-input-mask class="wijmo_style" tabindex="7" id="firstName" formControlName="firstName" maxlength="30" [(ngModel)]="selectedItem.contactDetail.firstName"
+                                                    required [isRequired]="true"> </wj-input-mask>
+                                                <div *ngIf="myForm.controls['firstName'].hasError('required')" [hidden]="myForm.controls.firstName.valid || (myForm.controls.firstName.pristine && !isSubmitted)"
+                                                    class="text-danger">{{'Translation.First Name' | translate}} {{'Translation.is required' | translate}}.</div>
+                                                <div *ngIf="myForm.controls['firstName'].hasError('pattern')" class="text-danger">{{'Translation.Invalid' | translate}} {{'Translation.First Name' | translate}}</div>
+                                            </div>
+                                            <div class="col-sm-4 fields_box">
+                                                <label for="search-input">{{'Translation.Middle Name' | translate}}</label>
+                                                <wj-input-mask class="wijmo_style" tabindex="8" id="middleName" formControlName="middleName" maxlength="30" [(ngModel)]="selectedItem.contactDetail.middleName">
+                                                </wj-input-mask>
+                                                <div *ngIf="myForm.controls['middleName'].hasError('pattern')" class="text-danger">{{'Translation.Invalid' | translate}} {{'Translation.Middle Name' | translate}}</div>
+                                            </div>
+                                            <div class="col-sm-4 fields_box">
+                                                <label for="search-input">{{'Translation.Last Name' | translate}}  <span class="validation">*</span></label>
+                                                <wj-input-mask class="wijmo_style" tabindex="9" id="lastName" formControlName="lastName" maxlength="30" [(ngModel)]="selectedItem.contactDetail.lastName"
+                                                    required [isRequired]="true"> </wj-input-mask>
+                                                <div *ngIf="myForm.controls['lastName'].hasError('required')" [hidden]="myForm.controls.lastName.valid || (myForm.controls.lastName.pristine && !isSubmitted)"
+                                                    class="text-danger">{{'Translation.Last Name' | translate}} {{'Translation.is required' | translate}}.</div>
+                                                <div *ngIf="myForm.controls['lastName'].hasError('pattern')" class="text-danger">{{'Translation.Invalid' | translate}} {{'Translation.Last Name' | translate}}</div>
+                                            </div>
+                                            <div class="col-sm-12 col-lg-4 fields_box">
+                                                <label for="search-input">{{'Translation.Father/Husband Name' | translate}} </label>
+                                                <wj-input-mask class="wijmo_style" tabindex="10" id="fatherHusbandName" formControlName="fatherHusbandName" maxlength="30"
+                                                    [(ngModel)]="selectedItem.contactDetail.fatherHusbandName"> </wj-input-mask>
+                                                <div *ngIf="myForm.controls['fatherHusbandName'].hasError('pattern')" class="text-danger">{{'Translation.Invalid' | translate}} {{'Translation.Father/Husband Name' | translate}}</div>
+                                            </div>
+                                            <div class="col-sm-6 col-lg-4 fields_box">
+                                                <label for="identificationType">{{'Translation.Identification Type' | translate}}</label>
+                                                <wj-combo-box class="wijmo_style" tabindex="12" id="identificationType" formControlName="identificationType" [isEditable]="true"
+                                                    [itemsSource]="identificationTypeList" displayMemberPath="identificationType"
+                                                    selectedValuePath="identificationTypeId" [(ngModel)]="selectedItem.contactDetail.identificationTypeId"
+                                                    [isRequired]="true"></wj-combo-box>
+                                            </div>
+                                            <div class="col-sm-6 col-lg-4 fields_box">
+                                                <label for="identificationNumber">{{'Translation.Identification Number' | translate}}  <span class="validation">*</span></label>
+                                                <wj-input-mask class="wijmo_style" tabindex="13" id="identificationNumber" formControlName="identificationNumber" maxlength="50"
+                                                    [(ngModel)]="selectedItem.contactDetail.identificationType" required [isRequired]="true">
+                                                </wj-input-mask>
+                                                <div *ngIf="myForm.controls['identificationNumber'].hasError('required')" [hidden]="myForm.controls.identificationNumber.valid || (myForm.controls.identificationNumber.pristine && !isSubmitted)"
+                                                    class="text-danger">{{'Translation.Identification Number' | translate}} {{'Translation.is required' | translate}}.</div>
+                                                <div *ngIf="myForm.controls['identificationNumber'].hasError('pattern')" class="text-danger">{{'Translation.Invalid' | translate}} {{'Translation.Identification Number' | translate}}</div>
+                                            </div>
+                                            <div class="col-sm-4 fields_box">
+                                                <label for="search-input">{{'Translation.Gender' | translate}} <span class="validation">*</span></label>
+                                                <wj-combo-box class="wijmo_style" tabindex="11" id="gender" formControlName="gender" [isEditable]="true" [itemsSource]="genderList"
+                                                    displayMemberPath="name" selectedValuePath="code" [(ngModel)]="selectedItem.contactDetail.gender"
+                                                    [isRequired]="true"></wj-combo-box>
+                                                <div *ngIf="myForm.controls['gender'].hasError('required')" [hidden]="myForm.controls.gender.valid || (myForm.controls.gender.pristine && !isSubmitted)"
+                                                    class="text-danger">{{'Translation.Gender' | translate}} {{'Translation.is required' | translate}}.</div>
+                                            </div>
+                                            <div class="col-sm-4 fields_box date-birth">
+                                                <label for="search-input">{{'Translation.Date of Birth' | translate}}  <span class="validation"></span></label>
+                                                <wj-input-date tabindex="14" id="dob" formControlName="dob" max="{{today}}" [(ngModel)]="selectedItem.contactDetail.dob"
+                                                    [format]="'yyyy-MM-dd'" [showYearPicker]="false">
+                                                </wj-input-date>
+                                            </div>
+                                            <div class="col-sm-4 fields_box">
+                                                <label for="profession">{{'Translation.Profession' | translate}}</label>
+                                                <wj-combo-box class="wijmo_style" tabindex="15" id="profession" formControlName="profession" [isEditable]="true" [itemsSource]="professionList"
+                                                    displayMemberPath="professionDesc" selectedValuePath="professionId" [(ngModel)]="selectedItem.contactDetail.professionId"></wj-combo-box>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tabrow wizard_data" *ngIf="selectedItem.accountType != 'I'">
+                                        <h3 class="global-heading">{{'Translation.Corporate Detail' | translate}}</h3>
+                                        <!-- <h4 class="sub_heading">Corporate <span class="fw-semi-bold">Detail</span></h4> -->
+                                        <div class="row" *ngIf="selectedItem.accountType != 'I'">
+                                            <div class="col-sm-4 fields_box">
+                                                <label for="search-input">{{'Translation.Company Name' | translate}} <span class="validation">*</span></label>
+                                                <wj-input-mask class="wijmo_style" tabindex="7" id="companyName" formControlName="companyName" maxlength="50" [(ngModel)]="selectedItem.contactDetail.companyName"
+                                                    required [isRequired]="true"> </wj-input-mask>
+                                                <div *ngIf="myForm.controls['companyName'].hasError('required')" [hidden]="myForm.controls.companyName.valid || (myForm.controls.companyName.pristine && !isSubmitted)"
+                                                    class="text-danger">{{'Translation.Company Name' | translate}} {{'Translation.is required' | translate}}.</div>
+                                                <div *ngIf="myForm.controls['companyName'].hasError('pattern')" class="text-danger">{{'Translation.Invalid' | translate}} {{'Translation.Company Name' | translate}}</div>
+                                            </div>
+                                            <div class="col-sm-4 fields_box">
+                                                <label for="search-input">{{'Translation.Registration Number' | translate}} <span class="validation">*</span></label>
+                                                <wj-input-mask class="wijmo_style" tabindex="8" id="registrationNo" formControlName="registrationNo" maxlength="50" [(ngModel)]="selectedItem.contactDetail.registrationNo"
+                                                    required [isRequired]="true"> </wj-input-mask>
+                                                <div *ngIf="myForm.controls['registrationNo'].hasError('required')" [hidden]="myForm.controls.registrationNo.valid || (myForm.controls.registrationNo.pristine && !isSubmitted)"
+                                                    class="text-danger">{{'Translation.Registration Number' | translate}} {{'Translation.is required' | translate}}.</div>
+                                                <div *ngIf="myForm.controls['registrationNo'].hasError('pattern')" class="text-danger">{{'Translation.Invalid' | translate}} {{'Translation.Registration Number' | translate}}</div>
+                                            </div>
+                                            <div class="col-sm-4 fields_box">
+                                                <label for="industry">{{'Translation.Industry' | translate}}</label>
+                                                <wj-combo-box class="wijmo_style" tabindex="9" id="industry" formControlName="industry" [isEditable]="true" [itemsSource]="industryList"
+                                                    displayMemberPath="industryName" selectedValuePath="industryId" [(ngModel)]="selectedItem.contactDetail.industryId"></wj-combo-box>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="tab-pane" id="tab2">
+                                    <alert *ngIf="compulsoryError" [type]="'danger alert-sm'" (close)="closeAlert()" dismissible="true">
+                                        <div [innerHTML]="alertMessage"></div>
+                                    </alert>
+
+                                    <div class="row wizard_data">
+                                        <div class="col-sm-6 fields_box">
+                                            <label for="countryId">{{'Translation.Country' | translate}} <span class="validation">*</span></label>
+                                            <wj-combo-box id="countryId" formControlName="countryId" class="wijmo_style" [isEditable]="true" [itemsSource]="countryList"
+                                                (ngModelChange)="onCountryChangeEvent($event)" displayMemberPath="countryName"
+                                                selectedValuePath="countryId" [(ngModel)]="selectedItem.contactDetail.countryId"
+                                                [isRequired]="true"></wj-combo-box>
+                                            <div *ngIf="myForm.controls['countryId'].hasError('required')" [hidden]="myForm.controls.countryId.valid || (myForm.controls.countryId.pristine && !isSubmitted)"
+                                                class="text-danger">{{'Translation.Country' | translate}} {{'Translation.is required' | translate}}.</div>
+                                        </div>
+                                        <div class="col-sm-6 fields_box">
+                                            <label for="search-input">{{'Translation.City' | translate}} <span class="validation">*</span></label>
+                                            <wj-combo-box id="cityId" #cmbCityId formControlName="cityId" class="wijmo_style" [isEditable]="true" [itemsSource]="cityList"
+                                                displayMemberPath="cityName" selectedValuePath="cityId" [(ngModel)]="selectedItem.contactDetail.cityId"
+                                                [isRequired]="true"></wj-combo-box>
+                                            <div *ngIf="myForm.controls['cityId'].hasError('required')" [hidden]="myForm.controls.cityId.valid || (myForm.controls.cityId.pristine && !isSubmitted)"
+                                                class="text-danger">{{'Translation.City' | translate}} {{'Translation.is required' | translate}}.</div>
+                                        </div>
+                                        <div class="col-sm-12 fields_box">
+                                            <label for="search-input">{{'Translation.Address' | translate}} <span class="validation">*</span></label>
+                                            <wj-input-mask class="wijmo_style" tabindex="18" id="address" formControlName="address" maxlength="250" [(ngModel)]="selectedItem.contactDetail.address1"
+                                                required> </wj-input-mask>
+                                            <div *ngIf="myForm.controls['address'].hasError('required')" [hidden]="myForm.controls.address.valid || (myForm.controls.address.pristine && !isSubmitted)"
+                                                class="text-danger">{{'Translation.Address' | translate}} {{'Translation.is required' | translate}}.</div>
+                                            <div *ngIf="myForm.controls['address'].hasError('pattern')" class="text-danger">{{'Translation.Invalid' | translate}} {{'Translation.Address' | translate}}.</div>
+                                        </div>
+                                        <div class="col-sm-6 fields_box">
+                                            <label for="search-input">{{'Translation.Postal Code' | translate}}  <span class="validation">*</span></label>
+                                            <wj-input-mask class="wijmo_style" tabindex="19" id="postalCode" formControlName="postalCode" maxlength="10" [(ngModel)]="selectedItem.contactDetail.postalCode"
+                                                required> </wj-input-mask>
+                                            <div *ngIf="myForm.controls['postalCode'].hasError('required')" [hidden]="myForm.controls.postalCode.valid || (myForm.controls.postalCode.pristine && !isSubmitted)"
+                                                class="text-danger">{{'Translation.Postal Code' | translate}} {{'Translation.is required' | translate}}.</div>
+                                            <div *ngIf="myForm.controls['postalCode'].hasError('pattern')" class="text-danger">{{'Translation.Invalid' | translate}} {{'Translation.Postal Code' | translate}}.</div>
+                                        </div>
+                                        <div class="col-sm-6 fields_box">
+                                            <label for="search-input">{{'Translation.Phone Number' | translate}}  <span class="validation">*</span></label>
+                                            <wj-input-mask class="wijmo_style" tabindex="20" id="phone1" formControlName="phone1" maxlength="20" [(ngModel)]="selectedItem.contactDetail.phone1"
+                                                required></wj-input-mask>
+                                            <div *ngIf="myForm.controls['phone1'].hasError('required')" [hidden]="myForm.controls.phone1.valid || (myForm.controls.phone1.pristine && !isSubmitted)"
+                                                class="text-danger">{{'Translation.Phone Number' | translate}} {{'Translation.is required' | translate}}.</div>
+                                            <div *ngIf="myForm.controls['phone1'].hasError('pattern')" class="text-danger">{{'Translation.Invalid' | translate}} {{'Translation.Phone Number' | translate}}.</div>
+                                        </div>
+                                        <div class="col-sm-6 fields_box">
+                                            <label for="search-input">{{'Translation.Mobile Number' | translate}}  <span class="validation"></span></label>
+                                            <wj-input-mask class="wijmo_style" tabindex="21" id="cellNo" formControlName="cellNo" maxlength="20" [(ngModel)]="selectedItem.contactDetail.cellNo"></wj-input-mask>
+                                            <div *ngIf="myForm.controls['cellNo'].hasError('pattern')" class="text-danger">{{'Translation.Invalid' | translate}} {{'Translation.Mobile Number' | translate}}</div>
+                                        </div>
+                                        <div class="col-sm-6 fields_box">
+                                            <label for="search-input">{{'Translation.Email' | translate}}  <span class="validation">*</span></label>
+                                            <wj-input-mask class="wijmo_style" tabindex="22" placeholder="abc@xyz.com" id="email" formControlName="email" maxlength="100"
+                                                [(ngModel)]="selectedItem.contactDetail.email"></wj-input-mask>
+                                            <div *ngIf="myForm.controls['email'].hasError('required')" [hidden]="myForm.controls.email.valid || (myForm.controls.email.pristine && !isSubmitted)"
+                                                class="text-danger">{{'Translation.Email' | translate}} {{'Translation.is required' | translate}}.</div>
+                                            <div *ngIf="myForm.controls['email'].hasError('pattern')" class="text-danger">{{'Translation.Invalid' | translate}} {{'Translation.Email' | translate}}.</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="tab-pane" *ngIf="!isCustodian" id="tab3">
+                                    <alert *ngIf="compulsoryError" [type]="'danger alert-sm'" (close)="closeAlert()" dismissible="true">
+                                        <div [innerHTML]="alertMessage"></div>
+                                    </alert>
+
+                                    <div class="row wizard_data">
+                                        <div class="col-sm-6 fields_box">
+                                            <label for="exchanges">{{'Translation.Associated Exchange' | translate}}(s) <span class="validation">*</span> </label>
+                                            <wj-multi-select #exchanges id="exchanges" [placeholder]="'Select'" [isEditable]="true" formControlName="exchanges" class="form-control"
+                                                [itemsSource]="exchangeList" (checkedItemsChanged)="onExchangesCheckedEvent($event)"
+                                                [displayMemberPath]="'exchangeCode'">
+                                            </wj-multi-select>
+                                            <div *ngIf="isExchangeEmpty" class="text-danger">{{'Translation.Associated Exchange' | translate}} {{'Translation.is required' | translate}}.</div>
+                                            <div *ngIf="primaryExchangeSelectedError" class="text-danger">{{'Translation.Primary Exchange is not Selected' | translate}}.</div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div class="tab-pane" id="tab4" *ngIf="!isCustodian">
+                                    <alert *ngIf="compulsoryError" [type]="'danger alert-sm'" (close)="closeAlert()" dismissible="true">
+                                        <div [innerHTML]="alertMessage"></div>
+                                    </alert>
+
+                                    <div class="row wizard_data">
+                                        <div class="col-sm-6 fields_box">
+                                            <label for="modules">{{'Translation.Module' | translate}}(s) <span class="validation">*</span> </label>
+                                            <wj-multi-select #modules id="modules" [placeholder]="'Select'" [isEditable]="true" formControlName="modules" class="form-control"
+                                                [itemsSource]="moduleList" [displayMemberPath]="'moduleName'">
+                                            </wj-multi-select>
+                                            <div *ngIf="isModuleEmpty" class="text-danger">{{'Translation.Module' | translate}}(s) {{'Translation.is required' | translate}}.</div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+
+
+
+                                <div class="tab-pane" id="tab5" *ngIf="!isCustodian">
+                                  
+                                    <alert *ngIf="compulsoryError" [type]="'danger alert-sm'" (close)="closeAlert()" dismissible="true">
+                                        <div [innerHTML]="alertMessage"></div>
+                                    </alert>
+                                    <div class="row wizard_data">
+                                        <div class="col-sm-6 fields_box">
+                                            <label for="userName">{{'Translation.User Name' | translate}} <span class="validation">*</span></label>
+                                            <wj-input-mask class="wijmo_style" tabindex="7" id="userName" formControlName="userName" maxlength="30" [(ngModel)]="selectedItem.user.userName"
+                                                required [isRequired]="true"> </wj-input-mask>
+                                            <div *ngIf="myForm.controls['userName'].hasError('required')" [hidden]="myForm.controls.userName.valid || (myForm.controls.userName.pristine && !isSubmitted && !isCustodian)"
+                                                class="text-danger">{{'Translation.User Name' | translate}} {{'Translation.is required' | translate}}.</div>
+                                            <div *ngIf="myForm.controls['userName'].hasError('pattern')" class="text-danger">{{'Translation.Invalid' | translate}} {{'Translation.User Name' | translate}}.</div>
+                                        </div>
+                                        <div class="col-sm-6 fields_box">
+                                            <label for="userEmail">{{'Translation.Email' | translate}} <span class="validation">*</span></label>
+                                            <wj-input-mask class="wijmo_style" tabindex="7" id="userEmail" formControlName="userEmail" maxlength="100" [(ngModel)]="selectedItem.user.email"
+                                                required [isRequired]="true"> </wj-input-mask>
+                                            <div *ngIf="myForm.controls['userEmail'].hasError('required')" [hidden]="myForm.controls.userEmail.valid || (myForm.controls.userEmail.pristine && !isSubmitted)"
+                                                class="text-danger">{{'Translation.Email' | translate}} {{'Translation.is required' | translate}}.</div>
+                                            <div *ngIf="myForm.controls['userEmail'].hasError('pattern')" class="text-danger">{{'Translation.Invalid' | translate}} {{'Translation.Email' | translate}}.</div>
+                                        </div>
+                                        <div class="col-sm-6 fields_box" *ngIf="!isEditing">
+                                            <label for="password">{{'Translation.Password' | translate}} <span class="validation">*</span></label>
+                                            <input type="password" class="wijmo_style pass" minlength="8" maxlength="32" required placeholder="Password" (ngModelChange)="onNewPasswordChange($event)"
+                                                formControlName="password" [(ngModel)]="selectedItem.user.password" />
+                                            <div class="bg-gray-lighter m-t-2">
+                                                <progress class="progress progress-sm progress-warning" value="100" max="100" [class.progress-danger]="passwordStrength >= 0 && passwordStrength < 40"
+                                                    [class.progress-warning]="passwordStrength >= 40 && passwordStrength < 80"
+                                                    [class.progress-success]="passwordStrength >= 80 && passwordStrength <= 100"
+                                                    [style.width.%]="passwordStrength"></progress>
+                                            </div>
+
+                                            <div *ngIf="myForm.controls['password'].hasError('required')" [hidden]="myForm.controls.password.valid || (myForm.controls.password.pristine && !isSubmitted)"
+                                                class="text-danger">{{'Translation.Password' | translate}} {{'Translation.is required' | translate}} .</div>
+                                            <div *ngIf="myForm.controls['password'].hasError('minlength')" [hidden]="myForm.controls.password.valid || (myForm.controls.password.pristine && !isSubmitted)"
+                                                class="text-danger">{{'Translation.Password must be at least 8 characters' | translate}}.</div>
+                                            <div *ngIf="myForm.controls['password'].hasError('maxlength')" [hidden]="myForm.controls.password.valid || (myForm.controls.password.pristine && !isSubmitted)"
+                                                class="text-danger">{{'Translation.Password must be at most 32 characters' | translate}}.</div>
+                                            <div *ngIf="myForm.controls['password'].hasError('repeatCharacterRegexRule')" [hidden]="myForm.controls.password.valid || (myForm.controls.password.pristine && !isSubmitted)"
+                                                class="text-danger">{{'Translation.Password contains repeating characters' | translate}}.</div>
+                                            <div *ngIf="myForm.controls['password'].hasError('digitCharacterRule')" [hidden]="myForm.controls.password.valid || (myForm.controls.password.pristine && !isSubmitted)"
+                                                class="text-danger">{{'Translation.Password should contain at least one digit' | translate}}.</div>
+                                            <div *ngIf="myForm.controls['password'].hasError('alphabeticalCharacterRule')" [hidden]="myForm.controls.password.valid || (myForm.controls.password.pristine && !isSubmitted)"
+                                                class="text-danger">{{'Translation.Password should contain at least one alphabetical character' | translate}}.</div>
+                                            <div *ngIf="myForm.controls['password'].hasError('lowercaseCharacterRule')" [hidden]="myForm.controls.password.valid || (myForm.controls.password.pristine && !isSubmitted)"
+                                                class="text-danger">{{'Translation.Password should contain at least one lowercase character' | translate}}.</div>
+                                            <div *ngIf="myForm.controls['password'].hasError('uppercaseCharacterRule')" [hidden]="myForm.controls.password.valid || (myForm.controls.password.pristine && !isSubmitted)"
+                                                class="text-danger">{{'Translation.Password should contain at least one uppercase character' | translate}}.
+                                            </div>
+
+                                        </div>
+                                        <div class="col-sm-6 fields_box" *ngIf="!isEditing">
+                                            <label for="confirmPassword">{{'Translation.Confirm Password' | translate}} <span class="validation">*</span></label>
+                                            <input type="password" class="wijmo_style pass" required placeholder="Re-enter Password" minlength="8" maxlength="32" formControlName="confirmPassword"
+                                                [(ngModel)]="confirmPassword_" />
+                                            <div *ngIf="myForm.controls['confirmPassword'].hasError('required')" [hidden]="myForm.controls.confirmPassword.valid || (myForm.controls.confirmPassword.pristine && !isSubmitted)"
+                                                class="text-danger">{{'Translation.Confirm Password' | translate}} {{'Translation.is required' | translate}}.</div>
+                                        </div>
+                                        <div class="col-sm-6 fields_box" *ngIf="!isEditing">
+                                            <div *ngIf="(myForm.controls['password'].value !='' &&  myForm.controls['confirmPassword'].value !='') && (myForm.controls['password'].value !=  myForm.controls['confirmPassword'].value)"
+                                                class="text-danger"> {{'Translation.Password and Confirm Password mismatch' | translate}}.
+                                            </div>
+
+                                        </div>
+                                        <div class="col-sm-6 fields_box">
+                                            <div class="abc-checkbox abc-checkbox-primary">
+                                                <input type="checkbox" tabindex="7" [(ngModel)]="selectedItem.user.active" id="activeUser" formControlName="activeUser">
+                                                <label for="activeUser"> {{'Common.Active' | translate}} </label>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="tab6" *ngIf="!isCustodian">
+                                    <alert *ngIf="compulsoryError" [type]="'danger alert-sm'" (close)="closeAlert()" dismissible="true">
+                                        <div [innerHTML]="alertMessage"></div>
+                                    </alert>
+                                    <div class="row">
+                                        <div class="col-sm-6 mb-4 fields_box">
+                                          <label for="user-name">{{'Translation.User Name' | translate}}  <span class="validation">*</span></label>       
+                                          <wj-input-mask class="wijmo_style" tabindex="1" id="user-name" formControlName="usernameDU" maxlength="100" 
+                                          required [isRequired]="true" [(ngModel)]="selectedItem.depoUser.userName"> </wj-input-mask>
+                                        </div> 
+                                     <div class="col-sm-12">
+                                        <div class="row">
+                                            <div class="col-sm-6 fields_box">
+                                                <label for="password">{{'Translation.Password' | translate}} <span class="validation">*</span></label>
+                                                      <input type="password" class="wijmo_style pass" minlength="8" maxlength="32" required placeholder="Password" (ngModelChange)="onNewPasswordChange($event)"
+                                                          formControlName="passwordDU" [(ngModel)]="selectedItem.depoUser.password" />
+                                                      <div class="bg-gray-lighter m-t-2">
+                                                          <progress class="progress progress-sm progress-warning" value="100" max="100" [class.progress-danger]="passwordStrength >= 0 && passwordStrength < 40"
+                                                              [class.progress-warning]="passwordStrength >= 40 && passwordStrength < 80"
+                                                              [class.progress-success]="passwordStrength >= 80 && passwordStrength <= 100"
+                                                              [style.width.%]="passwordStrength"></progress>
+                                                      </div>
+          
+                                                      <div *ngIf="myForm.controls['passwordDU'].hasError('required')" [hidden]="myForm.controls.passwordDU.valid || (myForm.controls.passwordDU.pristine && !isSubmitted)"
+                                                          class="text-danger">{{'Translation.Password' | translate}} {{'Translation.is required' | translate}} .</div>
+                                                      <div *ngIf="myForm.controls['passwordDU'].hasError('minlength')" [hidden]="myForm.controls.passwordDU.valid || (myForm.controls.passwordDU.pristine && !isSubmitted)"
+                                                          class="text-danger">{{'Translation.Password must be at least 8 characters' | translate}}.</div>
+                                                      <div *ngIf="myForm.controls['passwordDU'].hasError('maxlength')" [hidden]="myForm.controls.passwordDU.valid || (myForm.controls.passwordDU.pristine && !isSubmitted)"
+                                                          class="text-danger">{{'Translation.Password must be at most 32 characters' | translate}}.</div>
+                                                      <div *ngIf="myForm.controls['passwordDU'].hasError('repeatCharacterRegexRule')" [hidden]="myForm.controls.passwordDU.valid || (myForm.controls.passwordDU.pristine && !isSubmitted)"
+                                                          class="text-danger">{{'Translation.Password contains repeating characters' | translate}}.</div>
+                                                      <div *ngIf="myForm.controls['passwordDU'].hasError('digitCharacterRule')" [hidden]="myForm.controls.passwordDU.valid || (myForm.controls.passwordDU.pristine && !isSubmitted)"
+                                                          class="text-danger">{{'Translation.Password should contain at least one digit' | translate}}.</div>
+                                                      <div *ngIf="myForm.controls['passwordDU'].hasError('alphabeticalCharacterRule')" [hidden]="myForm.controls.passwordDU.valid || (myForm.controls.passwordDU.pristine && !isSubmitted)"
+                                                          class="text-danger">{{'Translation.Password should contain at least one alphabetical character' | translate}}.</div>
+                                                      <div *ngIf="myForm.controls['passwordDU'].hasError('lowercaseCharacterRule')" [hidden]="myForm.controls.passwordDU.valid || (myForm.controls.passwordDU.pristine && !isSubmitted)"
+                                                          class="text-danger">{{'Translation.Password should contain at least one lowercase character' | translate}}.</div>
+                                                      <div *ngIf="myForm.controls['passwordDU'].hasError('uppercaseCharacterRule')" [hidden]="myForm.controls.passwordDU.valid || (myForm.controls.passwordDU.pristine && !isSubmitted)"
+                                                          class="text-danger">{{'Translation.Password should contain at least one uppercase character' | translate}}.
+                                                      </div>
+                                            </div>
+     
+                                           <div class="col-sm-6 fields_box" *ngIf="!isEditing">
+                                             <label for="confirmPassword">{{'Translation.Confirm Password' | translate}} <span class="validation">*</span></label>
+                                             <input type="password" class="wijmo_style pass" required placeholder="Re-enter Password" minlength="8" maxlength="32" 
+                                                 [(ngModel)]="confirmPasswordDU_" formControlName="confirmPasswordDU"/>
+                                             <div *ngIf="myForm.controls['confirmPasswordDU'].hasError('required')" [hidden]="myForm.controls.confirmPasswordDU.valid || (myForm.controls.confirmPasswordDU.pristine && !isSubmitted)"
+                                                 class="text-danger">{{'Translation.Confirm Password' | translate}} {{'Translation.is required' | translate}}.</div>
+                                              <div class="col-sm-6 fields_box" *ngIf="!isEditing">
+                                                    <div *ngIf="(myForm.controls['passwordDU'].value !='' &&  myForm.controls['confirmPasswordDU'].value !='') && (myForm.controls['passwordDU'].value !=  myForm.controls['confirmPasswordDU'].value)"
+                                                        class="text-danger"> {{'Translation.Password and Confirm Password mismatch' | translate}}.
+                                                    </div>
+        
+                                            </div>
+                                           </div>
+                                        </div>
+                                     </div>
+                                     </div> 
+                                </div>
+                                <ul class="pager wizard" style="list-style-type: none;">
+                                    <li><label>&nbsp;&nbsp;</label> </li>
+                                    <li>
+                                        <button *ngIf="currentTab_ != 'BI' && !isEditing" class="save_btn pull-left" (click)="onPreviousAction()" role="button" type="button"> <i class="fa fa-caret-left"></i>&nbsp; {{'Translation.Previous' | translate}}</button>
+                                    </li>
+                                    <li class="next" *ngIf="!((currentTab_ == 'CON' && isCustodian) || (currentTab_ == 'DU'))"
+                                        style="padding-right:20px;">
+                                        <button class="save_btn pull-right" (click)="onNextAction()" role="button" type="button">{{'Translation.Next' | translate}} &nbsp; <i class="fa fa-caret-right"></i></button>
+                                    </li>
+                                    <li class="next" *ngIf="isEditing" style="padding-right:20px;">
+                                        <button *ngIf="currentTab_ == 'BI'" (click)="onUpdateBasic()" class="save_btn pull-right mx-1">{{'Translation.Update Basic' | translate}} &nbsp; <i class="fa fa-ok"></i></button>
+                                        <button *ngIf="currentTab_ == 'CON'" (click)="onUpdateContact()" class="save_btn pull-right mx-1">{{'Translation.Update Contact' | translate}} &nbsp; <i class="fa fa-ok"></i></button>
+                                        <button *ngIf="currentTab_ == 'EA'" (click)="onUpdateExchange()" class="save_btn pull-right mx-1">{{'Translation.Update Exchange Association' | translate}} &nbsp; <i class="fa fa-ok"></i></button>
+                                        <button *ngIf="currentTab_ == 'M'" (click)="onUpdateModules()" class="save_btn pull-right mx-1">{{'Translation.Update Modules' | translate}} &nbsp; <i class="fa fa-ok"></i></button>
+                                        <button *ngIf="currentTab_ == 'SA'" (click)="onUpdateUser()" class="save_btn pull-right mx-1">{{'Translation.Update User' | translate}} &nbsp; <i class="fa fa-ok"></i></button>
+                                        <button *ngIf="currentTab_ == 'DU'" (click)="onUpdateDepoUser()" class="save_btn pull-right mx-1">{{'Translation.Update Depo User' | translate}} &nbsp; <i class="fa fa-ok"></i></button>
+                                    </li>
+                                    <li class="next" *ngIf="!isEditing" style="padding-right:20px;">
+                                        <button *ngIf="currentTab_ == 'CON' && isCustodian" (click)="onFinalSave()" class="save_btn pull-right mx-1">{{'Common.Save' | translate}}  <i class="fa fa-ok"></i></button>
+                                        <button *ngIf="currentTab_ == 'DU'" (click)="onFinalSave()" class="save_btn pull-right mx-1">{{'Common.Save' | translate}}  <i class="fa fa-ok"></i></button>
+                                    </li>
+                                    <li><label>&nbsp;&nbsp;</label> </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<dialog-cmp #dialogCmp (btnClick)="getNotification($event)"> </dialog-cmp>

@@ -1,0 +1,154 @@
+<div class="w-full max-w-4xl">
+    <div [formGroup]="customerOrCompanyDetailFormGroup">
+        <div class="w-full">
+            <div class="text-xl">CUSTOMER/COMPANY DETAIL</div>
+            <div class="text-secondary">CUSTOMER/COMPANY DETAIL of Corporate</div>
+        </div>
+        <div class="grid sm:grid-cols-6 gap-6 w-full mt-8">
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Name</mat-label>
+                    <input matInput name="name" formControlName="name" required>
+                </mat-form-field>
+            </div>
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Company/Business Registration no</mat-label>
+                    <input matInput name="buisinessRegNum" formControlName="buisinessRegNum" required>
+                </mat-form-field>
+            </div>
+
+            <div class="sm:col-span-2">
+                <mat-label class="mb-2 font-medium leading-4">Residential Status</mat-label>
+                <mat-radio-group class="flex flex-row" name="residentialStatus" formControlName="residentialStatus"
+                                 required
+                                 aria-label="Residential Status">
+                    <mat-radio-button [color]="'primary'" class="ml-2 justify-between" value="1">Resident
+                    </mat-radio-button>
+                    <mat-radio-button [color]="'primary'" class="ml-2 justify-between" value="2">Non-Resident
+                    </mat-radio-button>
+                </mat-radio-group>
+            </div>
+
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Mailing Address</mat-label>
+                    <input matInput name="mailingAddress" formControlName="mailingAddress" required>
+                </mat-form-field>
+            </div>
+
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Date of Operations</mat-label>
+                    <input matInput [matDatepicker]="picker1" name="operationsDate" formControlName="operationsDate"
+                           required>
+                    <mat-datepicker-toggle matSuffix [for]="picker1">
+                    </mat-datepicker-toggle>
+                    <mat-datepicker #picker1></mat-datepicker>
+                </mat-form-field>
+            </div>
+
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>No. of Employees</mat-label>
+                    <input matInput name="numOfEmployees" formControlName="numOfEmployees" required>
+                </mat-form-field>
+            </div>
+
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Telephone no</mat-label>
+                    <input matInput name="telephoneNum" formControlName="telephoneNum" required>
+                </mat-form-field>
+            </div>
+
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Email ID</mat-label>
+                    <input matInput name="emailID" formControlName="emailID" required>
+                </mat-form-field>
+            </div>
+
+            <div class="sm:col-span-2">
+                <div formArrayName="legalStatus">
+                    <mat-label>Legal Status</mat-label>
+                    <br/>
+                    <ng-container class="flex-row" *ngFor="let status of legalStatusCheckboxes; let i = index">
+                        <mat-checkbox [color]="'primary'" class="ml-1"
+                                      [formControlName]="i">{{status.name}}</mat-checkbox>
+                    </ng-container>
+                </div>
+            </div>
+
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Date of Incorporation</mat-label>
+                    <input matInput [matDatepicker]="picker2" name="dateOfIncorporation"
+                           formControlName="dateOfIncorporation"
+                           required>
+                    <mat-datepicker-toggle matSuffix [for]="picker2">
+                    </mat-datepicker-toggle>
+                    <mat-datepicker #picker2></mat-datepicker>
+                </mat-form-field>
+            </div>
+
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Country of Incorporation</mat-label>
+                    <input matInput name="countryOfIncorporation" formControlName="countryOfIncorporation" required>
+                </mat-form-field>
+            </div>
+
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Permanent Address</mat-label>
+                    <input matInput name="permanentAddress" formControlName="permanentAddress" required>
+                </mat-form-field>
+            </div>
+
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Years of Experience</mat-label>
+                    <input matInput name="yearsOfExperience" formControlName="yearsOfExperience" required>
+                </mat-form-field>
+            </div>
+
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Fax No.</mat-label>
+                    <input matInput name="faxNumber" formControlName="faxNumber" required>
+                </mat-form-field>
+            </div>
+
+            <div class="sm:col-span-2">
+                <div formArrayName="businessPremises">
+                    <mat-label>Business Premises</mat-label>
+                    <br/>
+                    <ng-container class="flex-row" *ngFor="let premise of businessPremisesCheckboxes; let i = index">
+                        <mat-checkbox [color]="'primary'" class="ml-1"
+                                      [formControlName]="i">{{premise.name}}</mat-checkbox>
+                    </ng-container>
+                </div>
+            </div>
+
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Website Add</mat-label>
+                    <input matInput name="websiteAdd" formControlName="websiteAdd" required>
+                </mat-form-field>
+            </div>
+
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Category of Company Public</mat-label>
+                    <mat-select name="companyCategory" formControlName="companyCategory">
+                        <mat-option *ngFor="let companyCategory of companyCategories"
+                                    [value]="companyCategory.category">
+                            {{companyCategory.category}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+    </div>
+</div>

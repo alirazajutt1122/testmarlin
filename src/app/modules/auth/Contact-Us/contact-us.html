@@ -1,0 +1,108 @@
+<div class="signInRouterImg">
+    <div class=" w-full h-40" style="padding-top: 80px;">
+        <span class="flex justify-center text-primary text-5xl font-medium font-serif">{{'GET IN TOUCH WITH US' |
+            transloco}}</span>
+        <span class="flex justify-center"> <img class="w-auto h-auto" src="assets/images/auth/Underline.png"> </span>
+        <span class="flex justify-center text-xl font-sans mt-6"> {{'contactUsHeader' | transloco}}.</span>
+    </div>
+
+    <div class="ml-40 mr-40 mt-20 mb-20  p-5 ">
+        <form [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}" class="mt-8" [formGroup]="contactUsForm"
+            (ngSubmit)="onSubmit()" #signInNgForm="ngForm">
+
+            <div class="row">
+
+                <div class="col-sm-6 flex justify-start">
+                    <mat-form-field style="width: 80%;">
+                        <mat-label>{{"First Name" | transloco}}</mat-label>
+                        <input matInput [(ngModel)]="selectedItem.firstName" [formControlName]="'firstName'">
+                        <mat-error *ngIf="contactUsForm.get('firstName').hasError('required')">
+                            {{"First Name is required" | transloco}}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
+                <div class="col-sm-6 flex justify-end">
+                    <mat-form-field style="width: 80%;">
+                        <mat-label>{{"Last Name" | transloco}}</mat-label>
+                        <input matInput [(ngModel)]="selectedItem.lastName" [formControlName]="'lastName'">
+                        <mat-error *ngIf="contactUsForm.get('lastName').hasError('required')">
+                            {{"Last Name is required" | transloco}}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+
+
+            <div class="row mt-4">
+                <div class="col-sm-6 flex justify-start">
+                    <mat-form-field style="width: 80%;">
+                        <mat-label>{{'Email' | transloco}}</mat-label>
+                        <input #email [(ngModel)]="selectedItem.emailAddress" matInput
+                            [formControlName]="'emailAddress'">
+                        <mat-error *ngIf="contactUsForm.get('emailAddress').hasError('required')">
+                            {{"Email address is required" | transloco}}
+                        </mat-error>
+                        <mat-error *ngIf="contactUsForm.get('emailAddress').hasError('email')">
+                            {{'Please enter a valid email address' | transloco}}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="row mt-4">
+                <mat-form-field id="message" class="col-sm-12">
+                    <mat-label>{{'Message' | transloco}}</mat-label>
+                    <textarea matInput [(ngModel)]="selectedItem.message" [formControlName]="'message'" style="min-height: 89px;"></textarea>
+                    <mat-error *ngIf="contactUsForm.get('message').hasError('required')">
+                        {{"Message is required" | transloco}}
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+            <div class="row ">
+                <div class="col-sm-8">
+                    <span>{{'For more infoemation reach us out on' | transloco}}:
+                        <span class="underline text-primary">marlin@infotechgroup.com </span>
+                    </span>
+                </div>
+                <div class="col-sm-4 flex justify-end -mt-2">
+                    <button style="background-color: #adacac; color: #000000;border-radius: 5px !important;"
+                        class="fuse-mat-button-small w-30 hover:bg-gray-200" mat-flat-button
+                        [disabled]="contactUsForm.disabled" type="submit">
+                        <span *ngIf="!contactUsForm.disabled">{{'Contact Us' | transloco}} </span>
+                        <mat-progress-spinner *ngIf="contactUsForm.disabled" [diameter]="24" [mode]="'indeterminate'">
+                        </mat-progress-spinner>
+                    </button>
+                </div>
+
+            </div>
+        </form>
+
+        <div class="row mt-28  pl-16 pr-16">
+            <div class="col-sm-4 ">
+                <img class=" m-auto" style="width: 37px;" src="assets/images/auth/location.png">
+                <span class="flex justify-center ">12-N Gurumangat Rd, Block N</span>
+                <span class="flex justify-center "> Gulberg 2, Lahore,</span>
+                <span class="flex justify-center "> Punjab 54660</span>
+
+            </div>
+            <div class="col-sm-4 ">
+                <img class=" m-auto" style="width: 41px;" src="assets/images/auth/contact.png">
+                <span class="flex justify-center ">+92 (042) 111 427 427 </span>
+
+            </div>
+            <div class="col-sm-4 mt-3">
+                <img class=" m-auto" style="width: 41px;" src="assets/images/auth/mail.png">
+                <span class="flex justify-center ">marlin@infotechgroup.com </span>
+
+            </div>
+        </div>
+    </div>
+
+    <div id="footer">
+        <span class="flex justify-end pt-2 pr-6"> <img style="width: 160px;"
+                src="assets/images/auth/infotech-briliantly-built.png" alt=""> </span>
+
+    </div>
+</div>

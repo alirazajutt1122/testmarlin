@@ -1,0 +1,234 @@
+<section class="widget " widget="">
+    <header>
+        <h3>{{ 'Security Wise Client Activity' | translate }}</h3>
+
+    </header>
+
+    <div class="widget-body">
+        <form class="form-horizontal form-label-left" method="post" data-parsley-priority-enabled="false" novalidate
+            role="form" name="myForm" [formGroup]="myForm" (ngSubmit)="printReport(myForm.value, myForm.valid)">
+            <div class="row">
+                <div class="col-sm-3 fields_box">
+                    <label for="code"> {{ 'Translation.Exchange' | translate }} <span class="validation">*</span></label>
+                    <wj-combo-box autofocus="autofocus" tabindex="1" id="exchangeId" formControlName="exchangeId"
+                        class="wijmo_style" #inputExchange [isEditable]="true" [itemsSource]="exchangeList"
+                        displayMemberPath="exchangeName" selectedValuePath="exchangeId" [(ngModel)]="params.EXCHANGE_ID"
+                        (ngModelChange)="onExchangeChange($event)" [isRequired]="true"></wj-combo-box>
+
+                    <div *ngIf="myForm.controls['exchangeId'].hasError('required') || myForm.controls['exchangeId'].hasError('pattern')"
+                        [hidden]="myForm.controls['exchangeId'].valid || (myForm.controls['exchangeId'].pristine && !isSubmitted)"
+                        class="text-danger">{{ 'Translation.Exchange' | translate }} {{ 'is required' | translate }}.</div>
+                </div>
+
+                <div class="col-sm-3 fields_box">
+                    <label for="participantBranch">{{ 'Translation.Brokerage Branch' | translate }} </label>
+                    <wj-combo-box id="participantBranch" class="wijmo_style" name="participantBranch"
+                        [itemsSource]="participantBranchList" displayMemberPath="displayName_" #inputBranch
+                        [isEditable]="true" selectedValuePath="branchId" [(ngModel)]="params.PARTICIPANT_BRANCH_ID"
+                        [isRequired]="true" formControlName="participantBranch"> </wj-combo-box>
+                    <div *ngIf="myForm.controls['participantBranch'].hasError('required') || myForm.controls['participantBranch'].hasError('pattern')"
+                        [hidden]="myForm.controls['participantBranch'].valid || (myForm.controls['participantBranch'].pristine && !isSubmitted)"
+                        class="text-danger">{{ 'Translation.Brokerage Branch' | translate }} {{ 'is required' | translate }}.</div>
+
+                </div>
+                <div class="col-sm-3 fields_box">
+                    <label for="status">{{ 'Translation.From Date' | translate }} <span class="validation">*</span></label>
+                    <wj-input-date id="fromDate" formControlName="fromDate" class="wijmo_style"
+                        [(ngModel)]="params.START_DATE" [format]="dateFormat" [mask]="dateMask" [isRequired]="true" [showYearPicker]="false">
+                    </wj-input-date>
+
+                    <div *ngIf="myForm.controls['fromDate'].hasError('required')"
+                        [hidden]="myForm.controls['fromDate'].valid || (myForm.controls['fromDate'].pristine && !isSubmitted)"
+                        class="text-danger"> {{ 'Translation.Date' | translate }} {{ 'is required' | translate }}.</div>
+                    <div *ngIf="!isValidStartDate" class="text-danger"> {{ 'Translation.From date should be less or equal than To date' | translate }}.</div>
+                </div>
+
+                <div class="col-sm-3 fields_box">
+                    <label for="status">{{ 'Translation.To Date' | translate }} <span class="validation">*</span></label>
+                    <wj-input-date id="toDate" formControlName="toDate" class="wijmo_style"
+                        [(ngModel)]="params.END_DATE" [format]="dateFormat" [mask]="dateMask" [isRequired]="true" [showYearPicker]="false">
+                    </wj-input-date>
+
+                    <div *ngIf="myForm.controls['toDate'].hasError('required')"
+                        [hidden]="myForm.controls['toDate'].valid || (myForm.controls['toDate'].pristine && !isSubmitted)"
+                        class="text-danger"> {{ 'Translation.Date' | translate }} {{ 'is required' | translate }}.</div>
+
+                </div>
+
+                <div class="col-sm-3 fields_box">
+                    <label for="search-input">{{ 'Translation.Agent' | translate }} <span class="validation">*</span></label>
+                    <wj-combo-box id="userTypeAgentId" class="wijmo_style" name="userTypeAgentId"
+                        [itemsSource]="agentList" #inputAgent displayMemberPath="displayName_"
+                        selectedValuePath="agentId" (ngModelChange)="onAgentChange($event)" [isRequired]="true"
+                        [isEditable]="true" [(ngModel)]="params.AGENT_ID" formControlName="userTypeAgentId">
+                    </wj-combo-box>
+                    <div *ngIf="myForm.controls['userTypeAgentId'].hasError('required')"
+                        [hidden]="myForm.controls.userTypeAgentId.valid || (myForm.controls.userTypeAgentId.pristine && !isSubmitted)"
+                        class="text-danger">{{ 'Translation.Agent' | translate }} {{ 'is required' | translate }}.</div>
+                </div>
+
+
+                <div class="col-sm-3 fields_box">
+                    <label for="endDate"> {{ 'Translation.From Client' | translate }} <span class="validation">*</span></label>
+                    <wj-auto-complete tabindex="3" id="fromClientId" class="wijmo_style" formControlName="fromClientId"
+                        [isRequired]="true" [itemsSource]="fromClientList" [isEditable]="false"
+                        displayMemberPath="displayName" selectedValuePath="code" [(ngModel)]="params.FROM_ACCOUNT"
+                        [maxItems]="50"></wj-auto-complete>
+
+                    <div *ngIf="myForm.controls['fromClientId'].hasError('required')"
+                        [hidden]="myForm.controls['fromClientId'].valid || (myForm.controls['fromClientId'].pristine && !isSubmitted)"
+                        class="text-danger">{{ 'Translation.Client' | translate }} {{ 'is required' | translate }}.</div>
+                    <!-- <button id="btnPopupFrom" style="float:left;" type="button" (click)="onSearch()" class="btn btn-primary btn-xs mb-xs"><i class="fa fa-calendar"> Search</i></button> -->
+                </div>
+
+                <div class="col-sm-3 fields_box">
+                    <label for="endDate"> {{ 'Translation.To Client' | translate }} <span class="validation">*</span></label>
+                    <wj-auto-complete tabindex="3" id="toClientId" class="wijmo_style" formControlName="toClientId"
+                        [isRequired]="true" [itemsSource]="toClientList" [isEditable]="false"
+                        displayMemberPath="displayName" selectedValuePath="code" [(ngModel)]="params.TO_ACCOUNT"
+                        [maxItems]="50"></wj-auto-complete>
+
+                    <div *ngIf="myForm.controls['toClientId'].hasError('required')"
+                        [hidden]="myForm.controls['toClientId'].valid || (myForm.controls['toClientId'].pristine && !isSubmitted)"
+                        class="text-danger">{{ 'Translation.Client' | translate }} {{ 'is required' | translate }}.</div>
+                    <!-- <button id="btnPopupTo" style="float:left;" type="button" (click)="onSearch()" class="btn btn-primary btn-xs mb-xs"><i class="fa fa-calendar"> Search</i></button> -->
+                </div>
+
+                <div class="col-sm-3 fields_box">
+                    <label for="transactionType">{{ 'Translation.Transaction Type' | translate }} <span class="validation">*</span></label>
+                    <!-- <wj-combo-box id="transactionType" #cmbTransactionType formControlName="transactionType" class="wijmo_style" [isEditable]="true"
+                             [itemsSource]="transactionTypeList" [(ngModel)]="params.TRANSACTION_TYPE_ID" displayMemberPath="transactionType" selectedValuePath="transactionTypeId" [isRequired]="true">
+                            </wj-combo-box>
+                            <div *ngIf="myForm.controls['transactionType'].hasError('required')" [hidden]="myForm.controls.transactionType.valid || (myForm.controls.transactionType.pristine && !isSubmitted)"
+                             class="text-danger">Transaction Type {{ 'is required' | translate }}.</div> -->
+
+                    <wj-multi-select id="transactionType" [placeholder]="'All'" class="wijmo_style" 
+                        [itemsSource]="transactionTypeList" [displayMemberPath]="'transactionType'" tabindex="2"
+                        required [isRequired]="true" #transactionType>
+                    </wj-multi-select>
+                    <div *ngIf="!transType" class="text-danger">{{ 'Translation.Transaction Type' | translate }} {{ 'is required' | translate }}.</div>
+                </div>
+
+                <div class="col-sm-3 fields_box">
+                    <label for="startDate">{{ 'Translation.Security' | translate }}</label>
+                    <wj-combo-box tabindex="2" id="securityId" class="wijmo_style" formControlName="securityId"
+                        [isEditable]="true" [itemsSource]="securityList" displayMemberPath="symbol"
+                        selectedValuePath="securityId" #inputSecurity [(ngModel)]="params.SECURITY_ID"
+                        [isRequired]="true"></wj-combo-box>
+                    <div *ngIf="myForm.controls['securityId'].hasError('required') || myForm.controls['securityId'].hasError('pattern')"
+                        [hidden]="myForm.controls['securityId'].valid || (myForm.controls['securityId'].pristine && !isSubmitted)"
+                        class="text-danger">{{ 'Translation.Security' | translate }} {{ 'is required' | translate }}.</div>
+
+                </div>
+                <!-- <div class="col-sm-3 fields_box">
+                            <label for="startDate">Quantity</label>
+                            <wj-input-number tabindex="2" id="volume" class="wijmo_style" formControlName="volume" #inputVolume [isDisabled]="reportType!='Detail'"
+                                [(ngModel)]="params.VOLUME"></wj-input-number>
+
+                        </div> -->
+
+                <div class="col-sm-3 fields_box">
+                    <label for="status"> {{ 'Translation.Report Type' | translate }} <span class="validation">*</span></label>
+                    <wj-combo-box tabindex="3" id="reportType" class="wijmo_style" formControlName="reportType"
+                        [isEditable]="true" [itemsSource]="reportTypeList" [isRequired]="true" #inputReportType
+                        displayMemberPath="label" selectedValuePath="value" [(ngModel)]="reportType">
+                    </wj-combo-box>
+
+                    <div *ngIf="myForm.controls['reportType'].hasError('required')"
+                        [hidden]="myForm.controls['reportType'].valid || (myForm.controls['reportType'].pristine && !isSubmitted)"
+                        class="text-danger">{{ 'Translation.Report Type' | translate }} {{ 'is required' | translate }}.</div>
+
+                </div>
+                <div class="col-sm-12">
+                    <div class="row">
+                        <div class="col-sm-1">
+                            <!--Custom Checkbox Start-->
+                            <div class="checkbox c-chkbox">
+                                <label class="checkbox-inline" for="active">
+                                    <input type="checkbox" [(ngModel)]='email' formControlName="email">
+                                    <span class="m-checkbox"></span>
+                                    <span class="m-checkbox-lbl">{{ 'Email' | translate }}</span>
+                                </label>
+                            </div>
+                            <!--Custom Checkbox End-->
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="rpt-btn">
+                                <label for="status">&nbsp;</label>
+                                <button type="submit" class="btn btn-success">{{ 'Common.View Report' | translate }}</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div *ngIf="pdf" class="flex justify-center m-4 mt-4">
+        <ngx-extended-pdf-viewer [base64Src]="pdfSrc" theme="dark" backgroundColor="#151922a8" [useBrowserLocale]="true"  [showOpenFileButton]="false" filenameForDownload="{{fileNameForDownload}}"
+            class="w-full" style="display: block;height: 775px;"></ngx-extended-pdf-viewer>
+   </div>
+</section>
+
+<wj-popup owner="#btnPopupFrom" [modal]="true" #clCodePopupFrom style="width:620px;background:#333333;padding:10px;">
+    <div class="row client-filter">
+        <div class="col-sm-4">
+            <label class="control-label" for="clCode">{{ 'Translation.Client Code' | translate }}</label>
+            <wj-input-mask #clCodeFrom tabindex="1" class="wijmo_style" maxlength="50" [isRequired]="false">
+            </wj-input-mask>
+        </div>
+        <div class="col-sm-7">
+            <label class="control-label" for="clDesc">{{ 'Translation.Client Name' | translate }}</label>
+            <wj-input-mask #clDescFrom tabindex="2" class="wijmo_style" maxlength="50" [isRequired]="false">
+            </wj-input-mask>
+        </div>
+        <div class="col-sm-1">
+            <button type="button" class="add_btn" (click)="populateItemGrid(clCodeFrom.value, clDescFrom.value)">
+                <i class="fa fa-filter"></i>
+            </button>
+        </div>
+    </div>
+    <div>
+        <wj-flex-grid [itemsSource]="itemsList" [isReadOnly]="true" [selectionMode]="'Row'" [autoSizeMode]="'Headers'"
+            [headersVisibility]="'Column'" #GridFrom class="grid" style="height:320px;width:100%;">
+            <wj-flex-grid-column [header]="'Translation.Client Code' | translate" [binding]="'clientCode'" [align]="'left'" [minWidth]="75" [width]="150"></wj-flex-grid-column>
+            <wj-flex-grid-column [header]="'Translation.Client Name' | translate" [binding]="'displayName_'" [align]="'left'" [minWidth]="150" [width]="450"></wj-flex-grid-column>
+        </wj-flex-grid>
+        <div class="modal-footer">
+            <button class="add_btn" *ngIf="recExist" (click)="updateControlsFrom()">OK</button>
+            <button class="cancel_btn_small wj-hide-cancel" (click)="clearControls()">{{ 'Common.Cancel' | translate }}</button>
+        </div>
+    </div>
+</wj-popup>
+
+<wj-popup owner="#btnPopupTo" [modal]="true" #clCodePopupTo style="width:620px;background:#333333;padding:10px;">
+    <div class="row client-filter">
+        <div class="col-sm-4">
+            <label class="control-label" for="clCode">{{ 'Translation.Client Code' | translate }}</label>
+            <wj-input-mask #clCodeTo tabindex="1" class="wijmo_style" maxlength="50" [isRequired]="false">
+            </wj-input-mask>
+        </div>
+        <div class="col-sm-7">
+            <label class="control-label" for="clDesc">{{ 'Translation.Client Name' | translate }}</label>
+            <wj-input-mask #clDescTo tabindex="2" class="wijmo_style" maxlength="50" [isRequired]="false">
+            </wj-input-mask>
+        </div>
+        <div class="col-sm-1">
+            <button type="button" class="add_btn" (click)="populateItemGrid(clCodeTo.value, clDescTo.value)">
+                <i class="fa fa-filter"></i>
+            </button>
+        </div>
+    </div>
+    <div>
+        <wj-flex-grid [itemsSource]="itemsList" [isReadOnly]="true" [selectionMode]="'Row'" [autoSizeMode]="'Headers'"
+            [headersVisibility]="'Column'" #GridTo class="grid" style="height:320px;width:100%;">
+            <wj-flex-grid-column [header]="'Translation.Client Code' | translate" [binding]="'clientCode'" [align]="'left'" [minWidth]="75" [width]="150"></wj-flex-grid-column>
+            <wj-flex-grid-column [header]="'Translation.Client Name' | translate" [binding]="'displayName_'" [align]="'left'" [minWidth]="150" [width]="450"></wj-flex-grid-column>
+        </wj-flex-grid>
+        <div class="modal-footer">
+            <button class="add_btn" *ngIf="recExist" (click)="updateControlsTo()">OK</button>
+            <button class="cancel_btn_small wj-hide-cancel" (click)="clearControls()">{{ 'Common.Cancel' | translate }}</button>
+        </div>
+    </div>
+</wj-popup>
+
+<dialog-cmp #dialogCmp (btnClick)="getNotification($event)"> </dialog-cmp>

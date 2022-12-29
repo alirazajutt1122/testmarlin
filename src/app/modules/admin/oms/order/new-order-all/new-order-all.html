@@ -1,0 +1,52 @@
+
+
+
+
+
+  <!-- Modal -->
+  <div class="modal fade" id="{{modalId}}" tabindex="-1" role="dialog" aria-labelledby="new-order-all" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document" style="width: 850px; min-width : 850px">
+      <div class="modal-content ">
+        <div class="modal-header">
+            <button type="button" class="close" (click)="onClose()" >&times;</button>
+            <h4 class="modal-title"><span class="fw-semi-bold">{{ 'Translation.New Order' | translate }}</span>
+             <span style="font-size: 11px;" class="text-success" *ngIf="tradeType === 'gTrade'"> -  {{'Translation.Actual Trade' | translate}}</span>
+             <span style="font-size: 11px;" class="text-blue" *ngIf="tradeType === 'vTrade'"> -  {{'Translation.Virtual Trade' | translate}}</span>
+            </h4>
+          </div>
+        <div class="modal-body" style="padding-top: 5px;">
+            <!------------------------Tabs Bar Start--------------------------->
+               <div class="row">
+                   <div class="col-md-9" style="border-right: 3px solid #2A3243;">
+                   <ul class="ml-5 mb-0 mt-3" style="display: flex;">
+                    <li  class="tabsBtns" (click)="changeAssetClass('equities')" *ngIf="authService.isAuhtorized(authService.OM_EQUITY_ORDER_NEW) || loggedInUserType=== userType.CLIENT" [class.tabsBtnsActive]="selectedAssetClass === 'equities'"><a ><span [class.tabsBtnsTextActive]="selectedAssetClass === 'equities'" class="tabsBtnsText">{{'EQUITIES' | translate }}</span></a></li>
+                    <li  class="tabsBtns" (click)="changeAssetClass('bonds')" *ngIf="authService.isAuhtorized(authService.OM_BOND_ORDER_NEW) && this.tradeType === 'gTrade'" [class.tabsBtnsActive]="selectedAssetClass === 'bonds'"><a  ><span [class.tabsBtnsTextActive]="selectedAssetClass === 'bonds'" class="tabsBtnsText">{{'BONDS' | translate }}</span></a></li>
+                    <li class="tabsBtns" (click)="changeAssetClass('etf')" *ngIf="((authService.isAuhtorized(authService.OM_EQUITY_ORDER_NEW)) || (authService.isAuhtorized(authService.OM_BOND_ORDER_NEW))) && this.tradeType === 'gTrade'" [class.tabsBtnsActive]="selectedAssetClass === 'etf' "><a><span [class.tabsBtnsTextActive]="selectedAssetClass === 'etf'" class="tabsBtnsText">ETF</span></a></li>
+                   </ul>
+            <!------------------------Tabs Bar End--------------------------->
+
+        
+                <div order-new-nav [class.displayNone]="(selectedAssetClass === 'bonds' || selectedAssetClass === 'etf')" [sharedData]="selectedAssetClassData" [sharedSide]="selectedAssetClassSide" [sharedIndex]="loadIndex"></div>
+                <div [class.displayNone]="(selectedAssetClass === 'equities' || selectedAssetClass === 'etf')" bond-order-new [sharedData]="selectedAssetClassData" [sharedSide]="selectedAssetClassSide" [sharedIndex]="loadIndex"></div>
+              <div order-new-etf [class.displayNone]="(selectedAssetClass === 'equities' || selectedAssetClass === 'bonds')" #newOrderETF [sharedData]="selectedAssetClassData" [sharedSide]="selectedAssetClassSide" [sharedIndex]="loadIndex"> </div>
+         
+               </div>
+
+              <ng-container>
+                <div class="col-md-3"  style=" height: max-content; padding-left: 0px;">
+                    <order-book-shared></order-book-shared>
+                 </div>
+              </ng-container>
+
+
+
+
+
+
+
+        </div>
+
+
+      </div>
+    </div>
+  </div>

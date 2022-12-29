@@ -1,0 +1,160 @@
+<section class="widget" widget="">
+    <header>
+        <h3><span class="fw-semi-bold">{{ 'Menu.Terminal Binding' | translate }}</span></h3>
+        <div class="other_btns">
+            <button class="add_new_btn" data-toggle="modal" data-target="#add_new" role="button" data-backdrop="static"
+                title="{{ 'Translation.Add Slab' | translate }}" *ngIf="userService.isAuhtorized(userService.EB_TERMINAL_BIND_NEW)"
+                (click)="onNewAction()"><i class="fa fa-plus" aria-hidden="true"></i> </button>
+            <button data-toggle="collapse" data-target="#filter_box" class="filter_btn"><i class="fa fa-filter mr-2"
+                    aria-hidden="true"></i></button>
+        </div>
+    </header>
+
+    <div id="filter_box" class="collapse in">
+        <div class="row">
+            <div class="col-sm-3  fields_box">
+                <label for="userName">{{ 'Translation.User' | translate }} <span class="validation">*</span></label>
+                <wj-combo-box id="userName" class="wijmo_style" name="userName" [itemsSource]="usersList"
+                    [(ngModel)]="userId" displayMemberPath="email" selectedValuePath="userId" [isRequired]="false"
+                    [isEditable]="true">
+                </wj-combo-box>
+            </div>
+
+            <div class="col-sm-3 fields_box">
+                <label for="clientName">{{ 'Translation.Client' | translate }} <span class="validation">*</span></label>
+                <wj-combo-box id="clientName" class="wijmo_style" name="clientName" [itemsSource]="clientListSearch"
+                    [(ngModel)]="clientId" displayMemberPath="clientCode" selectedValuePath="clientId"
+                    [isRequired]="false" [isEditable]="true">
+                </wj-combo-box>
+            </div>
+
+            <div class="col-sm-2">
+                <div class="form_search part-btn">
+                    <button [class]="'add_new_btn'" *ngIf="userService.isAuhtorized(userService.EB_TERMINAL_BIND_VIEW)"
+                        title="{{ 'Common.Search' | translate }}" data-toggle="collapse in" data-target="#filter_box" (click)="onSearchAction()"
+                        role="button"><span class="fa fa-search"></span> </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="table_container">
+        <wj-flex-grid id="xyz" [allowDragging]="'Both'" [isReadOnly]="true" [selectionMode]="'Row'"
+            [autoSizeMode]="'Headers'" [itemsSource]="itemsList2" style="height: 320px;" #flex>
+            <wj-flex-grid-filter [filterColumns]="['user.userName','user.email']"></wj-flex-grid-filter>
+            <wj-flex-grid-column [header]="'Translation.User Name' | translate" [align]="'left'" [allowMerging]="true" [align]="'left'"
+                [binding]="'user.userName'" [width]="'0.3*'" [minWidth]="30"> </wj-flex-grid-column>
+            <wj-flex-grid-column [header]="'Email' | translate" [align]="'left'" [allowMerging]="true" [align]="'left'"
+                [binding]="'user.email'" [width]="'0.3*'" [minWidth]="30"> </wj-flex-grid-column>
+            <wj-flex-grid-column [header]="'Common.Action' | translate" [width]="'0.1*'" [allowMerging]="false" [align]="'center'"
+                [minWidth]="30" *ngIf="userService.isAuhtorized(userService.EB_TERMINAL_BIND_UPDATE)">
+                <ng-template wjFlexGridCellTemplate [cellType]="'Cell'">
+                    <img src="assets/img/edit_orange.png" style="height: 15px; width: 14px; display: -webkit-inline-box;" title="{{ 'Translation.Edit' | translate }}" (click)="onEditAction()" data-target="#add_new"
+                        data-toggle="modal" data-backdrop="static" />
+                    <img src="assets/img/cross_orange.png" style="height: 14px; width: 14px; display: -webkit-inline-box;" title="{{ 'Translation.Delete' | translate }}" (click)="onDeleteAction()" />
+                    <!--<button id="btnEdit" class="on_edit_button" role="button" (click)="onEditAction()" title="Edit" data-target="#add_new" data-toggle="modal"
+                                data-backdrop="static"> <img src="assets/img/edit_orange.png"/> </button>
+
+                            <button *ngIf="userService.isAuhtorized(userService.EB_TERMINAL_BIND_UPDATE)" id="btnDetailRemove" class="on_edit_button"
+                                role="button" (click)="onDeleteAction()" title="Delete"> <img src="assets/img/cross_orange.png"/> </button>-->
+
+                </ng-template>
+            </wj-flex-grid-column>
+
+            <ng-template wjFlexGridDetail [maxHeight]="250" [detailVisibilityMode]="detailMode" let-item="item">
+                <wj-flex-grid [itemsSource]="getClients(item.user.userId)" [isReadOnly]="true"
+                    [autoSizeMode]="'Headers'" [headersVisibility]="'Column'">
+                    <wj-flex-grid-column [header]="'Clients'" [align]="'left'" [binding]="'clientCode'" [align]="'left'"
+                        [width]="'1*'" [minWidth]="30"></wj-flex-grid-column>
+                </wj-flex-grid>
+            </ng-template>
+        </wj-flex-grid>
+    </div>
+    <div class="row"></div>
+    <div class="btn-group col-xs-12 align-right">
+        <!-- Paginator -->
+        <wj-collection-view-pager [cv]="flex?.collectionView"></wj-collection-view-pager>
+        <!-- page size -->
+        <wj-menu [(value)]="pageSize" [header]="'Common.Page Size' | translate">
+            <wj-menu-item [value]="0">{{ 'Common.No Paging' | translate }}</wj-menu-item>
+            <wj-menu-item [value]="5">5 {{ 'Common.items' | translate }}</wj-menu-item>
+            <wj-menu-item [value]="10">10 {{ 'Common.items' | translate }}</wj-menu-item>
+            <wj-menu-item [value]="20">20 {{ 'Common.items' | translate }}</wj-menu-item>
+            <wj-menu-item [value]="30">30 {{ 'Common.items' | translate }}</wj-menu-item>
+            <wj-menu-item [value]="50">50 {{ 'Common.items' | translate }}</wj-menu-item>
+            <wj-menu-item [value]="100">100 {{ 'Common.items' | translate }}</wj-menu-item>
+          </wj-menu>
+    </div>
+</section>
+
+
+
+<!-- Add New Bank Modal -->
+<div id="add_new" class="modal fade" role="dialog" data-keyboard="true">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <form class="form-horizontal form-label-left" method="post" data-parsley-priority-enabled="false"
+                novalidate="novalidate" role="form" [formGroup]="myForm"
+                (ngSubmit)="onSaveAction(myForm.value, myForm.valid)">
+                <div class="modal-body modal-no-border">
+                    <div class="row setup_box_container">
+                        <div class="col-md-3 col-sm-5 modal_left">
+                            <div class="wizard_Logo">
+                                <img src="assets/img/Terminal-Binding.png"  class="formImg"/>
+                                <h4>{{ 'Menu.Terminal Binding' | translate }}</h4>
+                                <p>{{ 'Translation.Association/binding of Clients with trading terminals to restrict the terminal access' | translate }}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-md-9 col-sm-7 modal_center">
+                            <div class="row" style="margin: 40px 40px 0px 40px">
+
+                                <div class="col-sm-12 fields_box">
+                                    <label for="slabName">{{ 'Translation.User' | translate }} <span class="validation">*</span></label>
+                                    <wj-combo-box #userName id="userName" class="wijmo_style" [isDisabled]="isEditing"
+                                        formControlName="userName" name="userName" [itemsSource]="usersList"
+                                        displayMemberPath="email" (ngModelChange)="onUserChangeEvent($event)"
+                                        selectedValuePath="userId" [(ngModel)]="selectedItem.user.userId"
+                                        [isRequired]="true" [isEditable]="true">
+                                    </wj-combo-box>
+                                    <div *ngIf="!isEditing">
+                                    <div *ngIf="myForm.controls['userName'].hasError('required')"
+                                        [hidden]="myForm.controls.userName.valid || (myForm.controls.userName.pristine && !isSubmitted)"
+                                        class="text-danger">{{ 'Translation.User is required' | translate }}.</div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12 fields_box mr-select">
+                                    <label for="clients">{{ 'Translation.Client' | translate }}(s) <span class="validation">*</span> </label>
+                                    <!-- <wj-multi-select #clients id="clients" [placeholder]="'Select'" [isEditable]="true" formControlName="clients" class="form-control"
+                                        [itemsSource]="clientList" [displayMemberPath]="'clientCode'">
+                                    </wj-multi-select> -->
+                                    <select class="form-control select2-multiselect" id="clients" multiple="multiple"
+                                        style="width: 100%" >
+                                        <option *ngFor="let client of clientList; let ind = index"
+                                            value="{{client.clientId}}">{{client.clientCode}} -
+                                            [{{client.displayName_}}]</option>
+                                    </select>
+                                    <div *ngIf="isExchangeEmpty" class="text-danger"> {{ 'Translation.Client' | translate }}(s) {{ 'Translation.is required' | translate }}.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="orange_footer_small">
+                    <button id="btnSave" type="submit"
+                        *ngIf="!isEditing && userService.isAuhtorized(userService.EB_TERMINAL_BIND_NEW)"
+                        class="save_btn" (click)="FinalSave()">{{ 'Common.Save' | translate }}</button>
+                    <button id="btnEdit" type="submit"
+                        *ngIf="isEditing && userService.isAuhtorized(userService.EB_TERMINAL_BIND_UPDATE)"
+                        class="save_btn" (click)="FinalSave()">{{ 'Common.Update' | translate }}</button>
+                    <button type="button" class="cancel_btn" data-dismiss="modal"
+                        (click)="onCancelAction()">{{ 'Common.Cancel' | translate }}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<dialog-cmp #dialogCmp (btnClick)="getNotification($event)"> </dialog-cmp>

@@ -1,0 +1,78 @@
+
+        <section class="widget" widget="">
+            <header>
+                <h3>{{"Menu.Reset Participant" | translate}} </h3>
+
+            </header>
+
+            <div class="widget-body">
+                <form class="form-horizontal form-label-left" method="post" data-parsley-priority-enabled="false" novalidate role="form"
+                    name="myForm" [formGroup]="myForm" (ngSubmit)="delParticipant(myForm.value, myForm.valid)">
+                    <div class="row">
+                        <div class="col-sm-6 fields_box">
+                            <label for="code"> {{"Translation.Exchange" | translate}}
+                                <span class="validation">*</span>
+                            </label>
+                            <wj-combo-box tabindex="1" #exchangeCombo formControlName="exchangeId" id="exchangeId" class="wijmo_style" [isEditable]="true"
+                                [itemsSource]="exchangeList" (ngModelChange)="onExchangeChange($event)" [(ngModel)]="exchangeId"
+                                displayMemberPath="exchangeCode" selectedValuePath="exchangeId" required></wj-combo-box>
+
+                            <div *ngIf="myForm.controls['exchangeId'].hasError('required') || myForm.controls['exchangeId'].hasError('pattern')" [hidden]="myForm.controls['exchangeId'].valid || (myForm.controls['exchangeId'].pristine || myForm.controls['exchangeId'].touched && !isSubmitted)"
+                                class="text-danger">{{"Translation.Exchange" | translate}} {{"Translation.is required" | translate}}.</div>
+                        </div>
+                        <div class="col-sm-6 fields_box">
+                            <label for="participantId">{{"Translation.Participant" | translate}} </label>
+                            <wj-combo-box [isEditable]="true" id="participantId" class="wijmo_style" name="participantId" [itemsSource]="participantList"
+                                displayMemberPath="displayName_" [(ngModel)]="participantId" selectedValuePath="participantId"
+                                #participantCombo formControlName="participantId" [isRequired]="true"></wj-combo-box>
+                            <div *ngIf="myForm.controls['participantId'].hasError('required') || myForm.controls['participantId'].hasError('pattern')"
+                                [hidden]="myForm.controls['participantId'].valid || (myForm.controls['participantId'].pristine && !isSubmitted)"
+                                class="text-danger">{{"Translation.Participant" | translate}} {{"Translation.is required" | translate}}.</div>
+
+                        </div>
+                        <div class="row"> </div>
+                        <div class="col-sm-4 fields_box abc-checkbox abc-checkbox-primary pull-bottom">
+                            <div class="abc-checkbox abc-checkbox-primary pull-bottom">
+                                <input type="checkbox" id="delVoucher" #delVoucher formControlName="delVoucher">
+                                <label for="delVoucher">{{"Menu.Voucher" | translate}}s</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-4 fields_box">
+                            <div class="abc-checkbox abc-checkbox-primary pull-bottom">
+                                <input type="checkbox" id="delTrades" #delTrades formControlName="delTrades">
+                                <label for="delTrades">{{"Translation.Trades" | translate}}</label>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-4 fields_box">
+                            <div class="abc-checkbox abc-checkbox-primary pull-bottom">
+                                <input type="checkbox" id="delStock" #delStock formControlName="delStock">
+                                <label for="delStock">{{"Translation.Stock Deposit/Withdraw" | translate}}</label>
+                            </div>
+                        </div>
+                        <div class="row"> </div>
+                        <div class="col-sm-4 fields_box">
+                            <div class="abc-checkbox abc-checkbox-primary pull-bottom">
+                                <input type="checkbox" id="delClient" #delClient formControlName="delClient">
+                                <label for="delClient">{{"Translation.Client" | translate}}s</label>
+                            </div>
+                        </div>
+
+
+                        <div class="col-sm-4 fields_box">
+                            <div class="abc-checkbox abc-checkbox-primary pull-bottom">
+                                <input type="checkbox" id="delCOA" #delCOA formControlName="delCOA">
+                                <label for="delCOA">{{"Translation.Chart of Account" | translate}}s</label>
+                            </div>
+                        </div>
+
+                        <div class="row"> </div>
+                        <div class="col-sm-4 fields_box">
+                            <label for="status"> &nbsp; </label>
+                            <button type="submit" class="btn btn-success">{{"Translation.Delete" | translate}}</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </section>
+<dialog-cmp #dialogCmp (btnClick)="getNotification($event)"> </dialog-cmp>

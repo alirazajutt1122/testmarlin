@@ -1,0 +1,77 @@
+
+        <section class="widget" widget="">
+            <header>
+                <h3><span class="fw-semi-bold">{{'Menu.Voucher' | translate }}</span> </h3>
+            </header>
+
+
+            <div class="widget-body">
+                <div class="table_container" style="background: transparent;">
+                    <div class="" style="background: transparent;">
+                        <form class="form-horizontal form-label-left" method="post" data-parsley-priority-enabled="false" novalidate="novalidate"
+                            role="form" [formGroup]="myForm" (ngSubmit)="printReport(myForm.value, myForm.valid)">
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-sm-6 fields_box">
+                                        <label for="search-input">{{'Translation.From Date' | translate}} <span class="validation">*</span></label>
+                                        <wj-input-date tabindex="1" formControlName="START_DATE" autofocus="autofocus" id="START_DATE" [(ngModel)]="selectedItem.START_DATE"
+                                            class="wijmo_style" [format]="'yyyy-MM-dd'" required [isRequired]="true" [showYearPicker]="false">
+                                        </wj-input-date>
+                                        <div *ngIf="!dateComparison" class="text-danger">{{'Translation.From Date should be less or equal than To Date' | translate}}.</div>
+                                    </div>
+                                    <div class="col-sm-6 fields_box">
+                                        <label for="search-input">{{'Translation.To Date' | translate}} <span class="validation">*</span></label>
+                                        <wj-input-date tabindex="2" formControlName="END_DATE" id="END_DATE" [(ngModel)]="selectedItem.END_DATE" class="wijmo_style"
+                                            [format]="'yyyy-MM-dd'" required [isRequired]="true" [showYearPicker]="false">
+                                        </wj-input-date>
+                                    </div>
+                                    <div class="col-sm-6 fields_box">
+                                        <label for="search-input">{{'Translation.Voucher Type(s)' | translate}} <span class="validation">*</span></label>
+                                        <wj-multi-select [(ngModel)]="selectedItem.VOUCHER_TYPE_ID" formControlName="VOUCHER_TYPES" id="VOUCHER_TYPES" [placeholder]="'Select'"
+                                            class="wijmo_style" [itemsSource]="voucherTypeList" [displayMemberPath]="'typeDesc'"
+                                            tabindex="3" required [isRequired]="true" #vouchertypeid>
+                                        </wj-multi-select>
+                                        <div *ngIf="!vouchertype" class="text-danger">{{'Translation.Voucher Type(s) is required' | translate}}.</div>                                            
+                                    </div>
+                                    <div class="col-sm-6 fields_box">
+                                        <label for="search-input">{{'Translation.Voucher No' | translate}}. </label>
+                                        <wj-input-number id="VOUCHER_NO" [(ngModel)]="selectedItem.VOUCHER_NO" tabindex="4" class="wijmo_style" formControlName="VOUCHER_NO"
+                                            maxlength="12" format="n0" [isRequired]="false">
+                                        </wj-input-number>
+
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <!--Custom Checkbox Start-->
+                                        <div class="checkbox c-chkbox">
+                                            <label class="checkbox-inline" for="active">
+                                                <input type="checkbox" [(ngModel)]='email' formControlName="email">
+                                                <span class="m-checkbox"></span>
+                                                <span class="m-checkbox-lbl">{{'Translation.Print Bank Voucher' | translate}}</span>
+                                            </label>                                           
+                                            <label class="checkbox-inline" for="active">
+                                                <input type="checkbox" [(ngModel)]='sms' formControlName="sms">
+                                                <span class="m-checkbox"></span>
+                                                <span class="m-checkbox-lbl">SMS</span>
+                                            </label>
+                                        </div>
+                                        <!--Custom Checkbox End-->
+                                    </div>
+                                    <div class="col-sm-6 fields_box">
+                                        <div class="form_search">
+                                            <button id="btnSave" type="submit" class="btn btn-success" title="View Report" >{{'Translation.View Report' | translate}}</button>
+                                            <!-- <button id="btnPrintVoucher" type="button" (click)="onPrintVoucher(myForm.value, myForm.valid)" class="btn btn-success" title="Print Bank Voucher" >Print Bank Voucher</button> -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="pdf" class="flex justify-center m-4 mt-4">
+                <ngx-extended-pdf-viewer [base64Src]="pdfSrc" theme="dark" backgroundColor="#151922a8" [useBrowserLocale]="true"  [showOpenFileButton]="false" filenameForDownload="{{fileNameForDownload}}"
+                    class="w-full" style="display: block;height: 775px;"></ngx-extended-pdf-viewer>
+            </div>
+        </section>
+
+<dialog-cmp #dialogCmp (btnClick)="getNotification($event)"> </dialog-cmp>

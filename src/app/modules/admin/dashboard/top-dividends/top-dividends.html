@@ -1,0 +1,45 @@
+<div class="p-6 w-full mt-1">
+    <div>
+        <div class="flex items-center justify-between">
+            <div class="text-xl font-semibold ml-4 text-primary">Top Dividends</div>
+            <div class="text-sm text-primary-500 hover:underline font-semibold mr-6 cursor-pointer">View all
+            </div>
+        </div>
+        <div class="my-8 space-y-8">
+            <div class="overflow-x-auto mx-6">
+                <table class="w-full mt-4 bg-transparent" mat-table
+                    [dataSource]="recentTransactionsDataSourceForTopDividends" #recentTransactionsTable>
+
+                    <ng-container matColumnDef="date">
+                        <th style="background-color: #193c5d" class="text-primary-500 text-lg" mat-header-cell
+                            *matHeaderCellDef>
+                            SYMBOL
+                        </th>
+                        <td class="shadow-2xl item-end" mat-cell *matCellDef="let transaction">
+                            <span class="pr-6 whitespace-nowrap">
+                                {{transaction.symbol}}
+                            </span>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="name">
+                        <th style="background-color: #193c5d" class="text-primary-500 text-lg" mat-header-cell
+                            *matHeaderCellDef>
+                            PRICE
+                        </th>
+                        <td class="shadow-2xl" mat-cell *matCellDef="let transaction">
+                            <span class="whitespace-nowrap">
+                                {{transaction.price}}
+                            </span>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="recentTransactionsTableColumnsForDividends">
+                    </tr>
+                    <tr class="h-12" mat-row *matRowDef="let row; columns: recentTransactionsTableColumnsForDividends;">
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

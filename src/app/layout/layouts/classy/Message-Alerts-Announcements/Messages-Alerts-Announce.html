@@ -1,0 +1,39 @@
+
+                <span class="icon nav-item dropdown">
+                    <button type="button" title="{{'Menu.Messages' | translate}}" class="btn btn-danger icon-btn dropdown-toggle dropdown-toggle-notifications" id="messages-dropdown-toggle" data-toggle="dropdown" style="padding: 0px 5px;">
+                     <i class="fa fa-envelope"></i>
+                    </button>
+                    <span class="badge badge-light">{{messages.messages.length}}</span>
+                    <div notifications #messages class="dropdown-menu dropdown-menu-right animated animated-fast fadeInUp" [type]=0></div>
+                </span>
+                <span class="icon nav-item dropdown">
+                    <button type="button"  title="{{'Menu.Alerts' | translate}}" class="btn btn-warning icon-btn dropdown-toggle dropdown-toggle-notifications" id="alerts-dropdown-toggle" data-toggle="dropdown" style="padding: 0px 5px;">
+                     <i class="fa fa-bell"></i>
+                    </button>
+                    <span class="badge badge-light">{{alerts.alerts.length}}</span>
+                    <div notifications #alerts class="dropdown-menu dropdown-menu-right animated animated-fast fadeInUp" [type]=1></div>
+                </span>
+                <span class="icon nav-item dropdown">
+                    <button type="button"  title="{{'Menu.Announcements' | translate}}" class="btn btn-info icon-btn dropdown-toggle dropdown-toggle-notifications" id="announcements-dropdown-toggle" data-toggle="dropdown" style="padding: 0px 5px;">
+                        <i class="fa fa-bullhorn" aria-hidden="true"></i>
+                    </button>
+                    <span class="badge badge-light">{{announcements.announcements.length}}</span>
+                    <div notifications #announcements class="dropdown-menu dropdown-menu-right animated animated-fast fadeInUp" [type]=2></div>
+                </span>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

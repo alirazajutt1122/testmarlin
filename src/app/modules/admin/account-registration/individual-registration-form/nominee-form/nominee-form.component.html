@@ -1,0 +1,173 @@
+<div class="w-full max-w-4xl">
+    <div [formGroup]="nominationFormGroup">
+
+        <div class="w-full">
+            <div class="text-xl">Personal Information</div>
+            <div class="text-secondary">Personal data of Main Applicant</div>
+        </div>
+        <div class="grid sm:grid-cols-6 gap-6 w-full mt-8">
+
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Name of Nominee</mat-label>
+                    <input [readOnly]="isApprovedByNCCPL" matInput name="NAME" formControlName="NAME"/>
+                </mat-form-field>
+            </div>
+
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Nominee Identification Type</mat-label>
+                    <mat-select [disabled]="isApprovedByNCCPL" name="IDENTIFICATION_TYPE"
+                                formControlName="IDENTIFICATION_TYPE">
+                        <mat-option *ngFor="let identity of identificationArr" [value]="identity.uinId">
+                            {{ identity.uinDesc }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Relationship with Nominee</mat-label>
+                    <mat-select [disabled]="isApprovedByNCCPL" required name="RELATIONSHIP"
+                                formControlName="RELATIONSHIP">
+                        <mat-option *ngFor="let relation of relationArr" [value]="relation.relativeId">
+                            {{ relation.relativeDesc }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+            <div class="sm:col-span-2">
+
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>UIN No.</mat-label>
+                    <input [readOnly]="isApprovedByNCCPL" matInput name="CNIC" formControlName="CNIC"/>
+                </mat-form-field>
+            </div>
+            <div class="sm:col-span-2">
+
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Life Time Expiry of Identification</mat-label>
+                    <mat-select [disabled]="isApprovedByNCCPL" name="CNIC_LIFETIME"
+                                formControlName="CNIC_LIFETIME">
+                        <mat-option *ngFor="let token of lttStatusArr" [value]="token.value">
+                            {{ token.label }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="sm:col-span-2">
+
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>CNIC/ SNIC/ NICOP/ ARC No. Expiry Date</mat-label>
+                    <input
+                        matInput
+                        [disabled]="isApprovedByNCCPL"
+                        [matDatepicker]="picker1"
+                        name="CNIC_EXPIRY_DATE"
+                        formControlName="CNIC_EXPIRY_DATE"
+                    />
+                    <mat-datepicker-toggle matSuffix [for]="picker1">
+                        <!-- <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon> -->
+                    </mat-datepicker-toggle>
+                    <mat-datepicker #picker1></mat-datepicker>
+                </mat-form-field>
+            </div>
+            <div class="sm:col-span-2">
+
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Select Document</mat-label>
+                    <mat-select [disabled]="isApprovedByNCCPL"
+                                (selectionChange)="onSelectDoc($event.value)">
+                        <mat-option *ngFor="let doc of docTypeArr" [value]="doc.documentTypeId">
+                            {{ doc.documentTypeDesc }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+
+
+        <div class="grid sm:grid-cols-4 gap-6 w-full mt-8">
+            <div class="sm:col-span-2">
+
+                <ng-container *ngFor="let uploader of fileUploaderArr">
+                    <mat-grid-tile>
+
+                        <fuse-card class="flex flex-col max-w-full w-full filter-article">
+                            <img class="object-scale-down" [src]="getRelevantBase64(uploader.fileTypeBase64)"/>
+                            <div class="m-8 mb-4">
+                                <div class="text-secondary text-md mt-1">Upload Proof of
+                                    Relationship
+                                </div>
+                                <div class="mt-3 -mx-3">
+                                    <button
+                                        class="px-3"
+                                        type="button"
+                                        mat-button
+                                        [color]="'primary'"
+                                        [disabled]="isApprovedByNCCPL"
+                                        (click)="triggerInputFile(uploader.id)">
+                                        Upload
+                                    </button>
+                                    <input
+                                        hidden
+                                        [disabled]="isApprovedByNCCPL"
+                                        (change)="onFileSelected($event.target, uploader.fileTypeObj, uploader.fileTypeBase64)"
+                                        type="file"
+                                        [id]="uploader.id"
+                                        accept="image/*"
+                                    />
+                                </div>
+                            </div>
+                        </fuse-card>
+
+                    </mat-grid-tile>
+                </ng-container>
+
+            </div>
+            <div class="sm:col-span-2">
+
+            </div>
+        </div>
+
+        <div class="grid sm:grid-cols-6 gap-6 w-full mt-4">
+            <div class="sm:col-span-2" *ngFor="let uploader of fileUploaderArr">
+                <fuse-card class="flex flex-col max-w-full w-full filter-article">
+                    <img class="object-scale-down" [src]="getRelevantBase64(uploader.fileTypeBase64)"/>
+                    <div class="m-8 mb-4">
+                        <div class="mt-3 -mx-3">
+                            <button
+                                class="px-3"
+                                type="button"
+                                mat-stroked-button
+                                [disabled]="isApprovedByNCCPL"
+                                [color]="'primary'"
+                                (click)="triggerInputFile(uploader.id)">
+                                {{uploader.name}}
+                            </button>
+                            <input hidden
+                                   [disabled]="isApprovedByNCCPL"
+                                   (change)="onFileSelected($event.target, uploader.fileTypeObj, uploader.fileTypeBase64)"
+                                   type="file" [id]="uploader.id" accept="image/*"/>
+                        </div>
+                    </div>
+                </fuse-card>
+            </div>
+        </div>
+        <div class="grid sm:grid-cols-4 gap-6 w-full mt-4">
+            <div class="sm:col-span-2">
+                <button
+                    class="mat-btn"
+                    [disabled]="isApprovedByNCCPL"
+                    type="button"
+                    mat-stroked-button
+                    [color]="'primary'"
+                    (click)="uploadImages()">
+                    Upload images
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,108 @@
+
+<section class="widget" widget>
+	<header>
+		<h3><span class="fw-semi-bold">{{"Menu.Sector" | translate}}s </span></h3>
+		<div class="other_btns">
+			<button *ngIf="userService.isAuhtorized(userService.EB_SECTOR_NEW)" class="add_new_btn" id="btnNew" data-toggle="modal" (click)="onNewAction()"
+			 data-target="#add_new" type="button" data-backdrop="static" title="{{'Translation.Add' | translate}}" ><i class="fa fa-plus" aria-hidden="true"></i> </button>
+		</div>
+	</header>
+
+	<div class="table_container">
+		<wj-flex-grid [itemsSource]="itemsList" [isReadOnly]="true" [selectionMode]="'Row'" [autoSizeMode]="'Headers'" [headersVisibility]="'Column'"
+		 style="height: 320px;" #flex>
+			<wj-flex-grid-filter [filterColumns]="['sectorCode', 'sectorName','desc','active']"></wj-flex-grid-filter>
+			<wj-flex-grid-column [header]="'Translation.Code' | translate" [align]="'left'" [binding]="'sectorCode'" [width]="'0.5*'" [minWidth]="30"></wj-flex-grid-column>
+			<wj-flex-grid-column [header]="'Translation.Name' | translate" [align]="'left'" [binding]="'sectorName'" [width]="'0.5*'" [minWidth]="30"></wj-flex-grid-column>
+			<wj-flex-grid-column [header]="'Translation.Description' | translate" [align]="'left'" [binding]="'desc'" [width]="'0.5*'" [minWidth]="30"></wj-flex-grid-column>
+			<wj-flex-grid-column [header]="'Common.Active' | translate" [binding]="'active'" [width]="'0.15*'" [minWidth]="30"></wj-flex-grid-column>
+			<wj-flex-grid-column [header]="'Common.Action' | translate" [width]="'0.2*'" [align]="'center'" [minWidth]="30" *ngIf="userService.isAuhtorized(userService.EB_SECTOR_UPDATE)">
+				<ng-template wjFlexGridCellTemplate [cellType]="'Cell'">
+					<!--<button  id="btnEdit" class="on_edit_button" role="button"
+					 (click)="onEditAction()" title="Edit"  data-target="#add_new" data-toggle="modal" data-backdrop="static"> <img src="assets/img/edit_orange.png"/> </button>-->
+					 <img src="assets/img/edit_orange.png" class="gridImg" title="{{'Translation.Edit' | translate}}" (click)="onEditAction()" data-target="#add_new" data-toggle="modal" data-backdrop="static"/>
+				</ng-template>
+			</wj-flex-grid-column>
+		</wj-flex-grid>
+	</div>
+	<div class="row"></div>
+	<div class="btn-group col-xs-12 align-right">
+		<!-- Paginator -->
+		<wj-collection-view-pager [cv]="flex?.collectionView"></wj-collection-view-pager>
+		<!-- page size -->
+		<wj-menu [(value)]="pageSize" [header]= "'Common.Page Size' | translate">
+			<wj-menu-item [value]="0">{{ 'Common.No Paging' | translate }}</wj-menu-item>
+			<wj-menu-item [value]="5">5 {{ 'Common.items' | translate }}</wj-menu-item>
+			<wj-menu-item [value]="10">10 {{ 'Common.items' | translate }}</wj-menu-item>
+			<wj-menu-item [value]="20">20 {{ 'Common.items' | translate }}</wj-menu-item>
+			<wj-menu-item [value]="30">30 {{ 'Common.items' | translate }}</wj-menu-item>
+			<wj-menu-item [value]="50">50 {{ 'Common.items' | translate }}</wj-menu-item>
+			<wj-menu-item [value]="100">100 {{ 'Common.items' | translate }}</wj-menu-item>
+		</wj-menu>
+	</div>
+</section>
+<!--</div>
+</div>-->
+
+<div id="add_new" class="modal fade" role="dialog" data-keyboard="true">
+	<div class="modal-dialog modal-lg">
+		<!-- Modal content-->
+		<div class="modal-content">
+			<form class="form-horizontal form-label-left parsleyjs" data-parsley-priority-enabled="false" role="form" [formGroup]="myForm"
+			 novalidate (ngSubmit)="onSaveAction(myForm.value, myForm.valid)">
+				<div class="modal-body modal-no-border">
+					<div class="row setup_box_container">
+						<div class="col-md-3 col-sm-5 modal_left">
+							<div class="wizard_Logo">
+								<img src="assets/img/Sectors.png" class="formImg"/>
+								<h4>{{"Menu.Sector" | translate}}</h4>
+								<p>{{"Translation.Management of industrial sectors in exchange" | translate}}</p>
+							</div>
+						</div>
+						<div class="col-md-9 col-sm-7 modal_center">
+							<div class="row" style="margin: 40px 40px 0px 40px">
+								<div class="col-sm-6 fields_box">
+									<label for="sectorCode">{{"Translation.Code" | translate}} <span class="validation">*</span></label>
+									<wj-input-mask #sectorCode id="sectorCode" tabindex="1" class="wijmo_style" formControlName="sectorCode" maxlength="30" [(ngModel)]="selectedItem.sectorCode"
+									 myForm required [isRequired]="true"> </wj-input-mask>
+									<div *ngIf="myForm.controls['sectorCode'].hasError('required')" [hidden]="myForm.controls.sectorCode.valid || (myForm.controls.sectorCode.pristine && !isSubmitted)"
+									 class="text-danger">{{"Translation.Code" | translate}} {{"Translation.is required" | translate}}.</div>
+									<div *ngIf="myForm.controls['sectorCode'].hasError('pattern')" class="text-danger">{{"Translation.Invalid" | translate}} {{"Translation.Code" | translate}}.</div>
+								</div>
+								<div class="col-sm-6 fields_box">
+									<label for="sectorName">{{"Translation.Name" | translate}} <span class="validation">*</span></label>
+									<wj-input-mask id="sectorName" tabindex="2" class="wijmo_style" formControlName="sectorName" maxlength="100" [(ngModel)]="selectedItem.sectorName"
+									 myForm required [isRequired]="true"> </wj-input-mask>
+									<div *ngIf="myForm.controls['sectorName'].hasError('required')" [hidden]="myForm.controls.sectorName.valid || (myForm.controls.sectorName.pristine && !isSubmitted)"
+									 class="text-danger">{{"Translation.Name" | translate}} {{"Translation.is required" | translate}}.</div>
+									<div *ngIf="myForm.controls['sectorName'].hasError('pattern')" class="text-danger">{{"Translation.Invalid" | translate}} {{"Translation.Name" | translate}}.</div>
+								</div>
+								<div class="col-sm-6 fields_box">
+									<label for="desc">{{"Translation.Description" | translate}}</label>
+									<textarea tabindex="3" maxlength="500" class="wijmo_style" id="desc" [(ngModel)]='selectedItem.desc' rows="2" cols="50" formControlName="desc">                             
+								</textarea>
+								</div>
+
+								<div class="col-sm-6">
+									<div class="abc-checkbox abc-checkbox-primary">
+										<input type="checkbox" tabindex="4" id="active" [(ngModel)]='selectedItem.active' formControlName="active">
+										<label for="active">{{"Common.Active" | translate}}</label>
+									</div>
+								</div>
+
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="orange_footer_small">
+					<button id="btnSave"  type="submit" class="save_btn" *ngIf="!isEditing && userService.isAuhtorized(userService.EB_SECTOR_NEW)">{{"Common.Save" | translate}}</button>
+					<button id="btnEdit"  type="submit" class="save_btn" *ngIf="isEditing && userService.isAuhtorized(userService.EB_SECTOR_UPDATE)">{{"Common.Update" | translate}}</button>
+					<button id="btnCancel"  type="button" data-dismiss="modal" class="cancel_btn" (click)="onCancelAction()">{{"Common.Cancel" | translate}}</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<dialog-cmp #dialogCmp (btnClick)="getNotification($event)"> </dialog-cmp>

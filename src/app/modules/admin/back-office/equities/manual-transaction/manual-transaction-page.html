@@ -1,0 +1,361 @@
+<section class="widget widget-bg border-0" [ngClass]="{'no-padding' : isDashBoard}">
+	<header>
+		<h3><span class="fw-semi-bold">{{ 'Menu.Transaction' | translate }}</span></h3>
+		<div *ngIf="!isDashBoard" class="other_btns">
+			<button *ngIf="userService.isAuhtorized(userService.EB_EQUITY_TRANSACTION_NEW)" class="add_new_btn" id="btnNew" data-toggle="modal"
+			 (click)="onNewAction()" data-target="#add_new_transaction" type="button" data-backdrop="static" title="{{'Translation.Add Transaction' | translate}}"><i class="fa fa-plus" aria-hidden="true"></i> </button>
+			<button data-toggle="collapse" data-target="#filter_box" class="filter_btn mr-2"><i class="fa fa-filter" aria-hidden="true"></i> </button>
+			<div class="dropdown action_box">
+				<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true"
+				 aria-expanded="true">
+                 {{ 'Common.Action' | translate }}
+						<span class="caret"></span>
+						</button>
+				<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+					<li>
+						<a href="javascript:void(0);" *ngIf="(transStatus=='New / Unpost'  || unPost) && userService.isAuhtorized(userService.EB_EQUITY_TRANSACTION_POST)"
+						 (click)="onPostAction('POSTED')">{{ 'Common.Post' | translate }}</a>
+					</li>
+					<li>
+						<a href="javascript:void(0);" *ngIf="(transStatus=='Post') && userService.isAuhtorized(userService.EB_EQUITY_TRANSACTION_UN_POST)"
+						 (click)="onPostAction('UNPOSTED')">{{ 'Common.Unpost' | translate }}</a>
+					</li>
+					<li>
+						<a href="javascript:void(0);" *ngIf="(transStatus=='New / Unpost'  || unPost) && userService.isAuhtorized(userService.EB_EQUITY_TRANSACTION_CANCEL)"
+						 (click)="onPostAction('CANCELED')">{{ 'Common.Cancel' | translate }}</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+
+		<div *ngIf="isDashBoard" class="grid_icon_box">
+			<a href="#" *ngIf="userService.isAuhtorized(userService.EB_EQUITY_TRANSACTION_NEW)" data-backdrop="static" title="{{'Translation.Add Transaction' | translate}}"
+			 data-toggle="modal" (click)="onNewAction()" data-target="#add_new_transaction"><i class="fa fa-plus" aria-hidden="true"></i></a>
+			<div class="dropdown action_box">
+				<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true"
+				 aria-expanded="true">
+                 {{ 'Common.Action' | translate }}
+					<span class="caret"></span>
+					</button>
+				<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+					<li>
+						<a href="javascript:void(0);" *ngIf="(transStatus=='New / Unpost'  || unPost) && userService.isAuhtorized(userService.EB_EQUITY_TRANSACTION_POST)"
+						 (click)="onPostAction('POSTED')">{{ 'Common.Post' | translate }}</a>
+					</li>
+					<li>
+						<a href="javascript:void(0);" *ngIf="(transStatus=='Post') && userService.isAuhtorized(userService.EB_EQUITY_TRANSACTION_UN_POST)"
+						 (click)="onPostAction('UNPOSTED')">{{ 'Common.Unpost' | translate }}</a>
+					</li>
+					<li>
+						<a href="javascript:void(0);" *ngIf="(transStatus=='New / Unpost'  || unPost) && userService.isAuhtorized(userService.EB_EQUITY_TRANSACTION_CANCEL)"
+						 (click)="onPostAction('CANCELED')">{{ 'Common.Cancel' | translate }}</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</header>
+
+	<div>
+		<div *ngIf="!isDashBoard" id="filter_box" class="collapse in">
+			<div class="row mt-2">
+				<div class="col-sm-4 form-group">
+					<label for="search-input">{{ 'Translation.Trade Date' | translate }} <span class="validation">*</span></label>
+					<wj-input-date tabindex="1" #transactionDate class="wijmo_style" [format]="'yyyy-MM-dd'" required [showYearPicker]="false">
+					</wj-input-date>
+				</div>
+				<div class="col-sm-4 form-group">
+					<label for="search-input">{{ 'Common.Status' | translate }} <span class="validation">*</span></label>
+					<wj-combo-box tabindex="2" id="transactionStatus" class="wijmo_style" [isEditable]="true" [itemsSource]="TransactionStatusList"
+					 displayMemberPath="name" #transactionStatus selectedValuePath="code"></wj-combo-box>
+				</div>
+				<div class="col-sm-2">
+					<div class="form_search">
+						<button *ngIf="userService.isAuhtorized(userService.EB_EQUITY_TRANSACTION_VIEW)" [class]="'btn btn-success btn-sm'" [disabled]="transactionStatus.selectedValue == null"
+						 (click)="onSearchTransaction(transactionStatus.selectedValue,transactionDate.value)" title="{{'Translation.Search' | translate}}" data-toggle="collapse in"
+						 data-target="#filter_box"><span class="fa fa-search"></span> </button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div *ngIf="!isDashBoard" class="table_container">
+			<wj-flex-grid class="grid" [isReadOnly]="true" [itemsSource]="itemsList" [selectionMode]="'Row'" [autoSizeMode]="'Headers'"
+			 [headersVisibility]="'Column'" style="height: 350px;background: transparent;" #flex>
+				<wj-flex-grid-filter [filterColumns]="['exchangeCode', 'marketCode','symbol','clientCode','buySell','price','volume','ticketNo','processed','traansactionTypeCode']"></wj-flex-grid-filter>
+				<wj-flex-grid-column [header]= "'Translation.Exchange' | translate" [align]="'left'" [binding]="'exchangeCode'" [minWidth]="30" [width]="'0.4*'"></wj-flex-grid-column>
+				<wj-flex-grid-column [header]="'Translation.Market' | translate" [align]="'left'" [binding]="'marketCode'" [minWidth]="30" [width]="'0.5*'"></wj-flex-grid-column>
+				<wj-flex-grid-column [header]="'Translation.Transaction Type' | translate" [align]="'left'" [binding]="'traansactionTypeCode'" [minWidth]="30" [width]="'0.55*'"></wj-flex-grid-column>
+				<wj-flex-grid-column [header]="'Translation.Security' | translate" [align]="'left'" [binding]="'symbol'" [minWidth]="30" [width]="'0.5*'"></wj-flex-grid-column>
+				<wj-flex-grid-column [header]="'Translation.Client' | translate" [align]="'left'" [binding]="'clientCode'" [minWidth]="30" [width]="'0.5*'"></wj-flex-grid-column>
+				<wj-flex-grid-column [header]="'Translation.Type' | translate" [align]="'left'" [binding]="'buySell'" [minWidth]="30" [width]="'0.30*'"></wj-flex-grid-column>
+				<wj-flex-grid-column [header]="'Translation.Price' | translate" [binding]="'price'" [align]="'right'" [format]="'n4'" [minWidth]="30" [width]="'0.5*'"></wj-flex-grid-column>
+				<wj-flex-grid-column [header]="'Translation.Quantity' | translate" [binding]="'volume'" [align]="'right'" [minWidth]="30" [width]="'0.5*'"></wj-flex-grid-column>
+				<wj-flex-grid-column [header]="'Translation.Ticket No' | translate" [binding]="'ticketNo'" [align]="'right'" [minWidth]="30" [width]="'0.5*'"></wj-flex-grid-column>
+				<wj-flex-grid-column [header]="'Comm. Flag'" [align]="'left'" [binding]="'commFlag'" [minWidth]="30" [width]="'0.45*'"></wj-flex-grid-column>
+				<wj-flex-grid-column [header]="'Del. Comm.'" [align]="'right'" [binding]="'delCommRate'" [format]="'n4'" [minWidth]="30" [width]="'0.5*'"></wj-flex-grid-column>
+				<wj-flex-grid-column [header]="'Dif. Comm.'" [align]="'right'" [binding]="'diffCommRate'" [format]="'n4'" [minWidth]="30" [width]="'0.5*'"></wj-flex-grid-column>
+				<wj-flex-grid-column [header]="'Translation.Start Date' | translate" [binding]="'badlaDate'" [minWidth]="30" [width]="'0.4*'"></wj-flex-grid-column>
+				<wj-flex-grid-column [header]="'Translation.Settlement Date' | translate" [binding]="'settlementDate'" [minWidth]="30" [width]="'0.4*'"></wj-flex-grid-column>
+				<wj-flex-grid-column [header]="'Translation.Processed' | translate" [binding]="'processed'" [minWidth]="30" [width]="'0.4*'"></wj-flex-grid-column>
+				<wj-flex-grid-column [header]="'Translation.Action' | translate" [width]="'0.50*'" [minWidth]="30" [align]="'center'" *ngIf="(transStatus=='New / Unpost' || unPost) && userService.isAuhtorized(userService.EB_EQUITY_TRANSACTION_UPDATE)">
+					<ng-template wjFlexGridCellTemplate [cellType]="'Cell'">
+						<img src="assets/img/edit_orange.png" title="{{'Translation.Edit' | translate}}" (click)="onEditAction()" data-target="#add_new_transaction" data-toggle="modal"
+						 data-backdrop="static" />
+					</ng-template>
+				</wj-flex-grid-column>
+			</wj-flex-grid>
+		</div>
+
+		<div *ngIf="isDashBoard" class="table_container">
+			<wj-flex-grid class="grid" [isReadOnly]="true" [itemsSource]="itemsList" [selectionMode]="'Row'" [autoSizeMode]="'Headers'"
+			 [headersVisibility]="'Column'" style="height: 180px;" #flex>
+             <wj-flex-grid-column [header]="'Translation.Security' | translate" [align]="'left'" [binding]="'symbol'" [minWidth]="30" [width]="'0.5*'"></wj-flex-grid-column>
+             <wj-flex-grid-column [header]="'Translation.Client Code' | translate" [align]="'left'" [binding]="'clientCode'" [minWidth]="30" [width]="'*'"></wj-flex-grid-column>
+             <wj-flex-grid-column [header]="'Translation.Side' | translate" [align]="'left'" [binding]="'buySell'" [minWidth]="30" [width]="'0.5*'"></wj-flex-grid-column>
+             <wj-flex-grid-column [header]="'Translation.Price' | translate" [binding]="'price'" [align]="'right'" [format]="'n4'" [minWidth]="30" [width]="'0.5*'"></wj-flex-grid-column>
+             <wj-flex-grid-column [header]="'Volume'" [binding]="'volume'" [align]="'right'" [minWidth]="30" [width]="'0.5*'"></wj-flex-grid-column>
+             <wj-flex-grid-column [header]="'Translation.Ticket No' | translate" [binding]="'ticketNo'" [align]="'right'" [minWidth]="30" [width]="'0.75*'"></wj-flex-grid-column>
+             <wj-flex-grid-column [header]="'Translation.Action' | translate" [width]="'0.50*'" [minWidth]="30" [align]="'center'">
+					<ng-template wjFlexGridCellTemplate [cellType]="'Cell'">
+						<input type="image" *ngIf="(transStatus=='New / Unpost' || unPost) && userService.isAuhtorized(userService.EB_EQUITY_TRANSACTION_UPDATE)"
+						 src="assets/img/edit_orange.png" class="btTxt submit" (click)="onEditAction()" title="{{'Translation.Edit' | translate}}" data-target="#add_new_transaction"
+						 data-toggle="modal" data-backdrop="static" id="btnEdit" />
+					</ng-template>
+				</wj-flex-grid-column>
+			</wj-flex-grid>
+		</div>
+
+		<div class="row"></div>
+		<div *ngIf="!isDashBoard" class="btn-group col-xs-12 align-right">
+			<!-- Paginator -->
+			<wj-collection-view-pager [cv]="flex?.collectionView"></wj-collection-view-pager>
+			<!-- page size -->
+			<wj-menu [(value)]="pageSize" [header]= "'Common.Page Size' | translate">
+				<wj-menu-item [value]="0">{{ 'Common.No Paging' | translate }}</wj-menu-item>
+				<wj-menu-item [value]="5">5 {{ 'Common.items' | translate }}</wj-menu-item>
+				<wj-menu-item [value]="10">10 {{ 'Common.items' | translate }}</wj-menu-item>
+				<wj-menu-item [value]="20">20 {{ 'Common.items' | translate }}</wj-menu-item>
+				<wj-menu-item [value]="30">30 {{ 'Common.items' | translate }}</wj-menu-item>
+				<wj-menu-item [value]="50">50 {{ 'Common.items' | translate }}</wj-menu-item>
+				<wj-menu-item [value]="100">100 {{ 'Common.items' | translate }}</wj-menu-item>
+			</wj-menu>
+		</div>
+	</div>
+</section>
+<!--</div>
+</div>-->
+
+<!-- Modal -->
+<div id="add_new_transaction" class="modal fade" role="dialog" data-keyboard="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<form class="form-horizontal form-label-left parsleyjs" [formGroup]="myForm" (ngSubmit)="onSaveAction(myForm.value, myForm.valid)"
+			 data-parsley-priority-enabled="false" novalidate="novalidate">
+				<div class="modal-body modal-no-border">
+					<div class="row setup_box_container">
+						<div class="col-md-3 col-sm-5 modal_left">
+							<div class="wizard_Logo">
+								<img src="assets/img/Transactions_large.png"  style="height:64px; width:64px; display: -webkit-inline-box;"/>
+								<h4>{{ 'Menu.Transaction' | translate }}</h4>
+								<p>{{ 'Translation.Agreementb/t' | translate }}</p>
+							</div>
+						</div>
+						<div class="col-md-9 col-sm-7 modal_center">
+							<div class="row" style="margin: 40px 40px 0px 40px">
+
+								<div class="col-sm-6 fields_box">
+									<label for="search-input">{{ 'Translation.Trade Date' | translate }}  <span class="validation">*</span></label>
+									<wj-input-date class="wijmo_style" tabindex="1" max="{{today}}" [format]="'yyyy-MM-dd'" #tradeDate id="tradeDate" formControlName="tradeDate"
+									 (ngModelChange)="onDateChangeEvent($event)" [(ngModel)]="selectedItem.transDate" required [isDisabled]="isEditing" [showYearPicker]="false">
+									</wj-input-date>
+									<button #btnPopup style="float:left;" type="button" class="btn btn-primary btn-xs mb-xs" (click)="onCalendarSelect()"
+									 [disabled]="isEditing"><i class="fa fa-calendar"></i> {{ 'Translation.Settlement Calendar' | translate }}</button>
+								</div>
+								<div class="col-sm-6 fields_box">
+									<label for="search-input">{{ 'Translation.Exchange' | translate }}  <span class="validation">*</span></label>
+									<wj-input-mask type="text" class="wijmo_style" id="exchangeCode" formControlName="exchangeCode" [(ngModel)]="selectedItem.exchangeCode"
+									 [isDisabled]="true"> </wj-input-mask>
+									<div *ngIf="myForm.controls['exchangeCode'].hasError('required')" [hidden]="myForm.controls.exchangeCode.valid || (myForm.controls.exchangeCode.pristine && !isSubmitted)"
+									 class="text-danger">{{ 'Translation.Exchange is required' | translate }}.</div>
+									<div *ngIf="myForm.controls['exchangeCode'].hasError('pattern')" class="text-danger">{{ 'Translation.Invalid Exchange' | translate }}.</div>
+								</div>
+								<div class="col-sm-6 fields_box">
+									<label for="search-input">{{ 'Translation.Settlement Type' | translate }}  <span class="validation">*</span></label>
+									<wj-input-mask type="text" id="settlementType" formControlName="settlementType" class="wijmo_style" [(ngModel)]="selectedItem.settlementType"
+									 [isDisabled]="true"></wj-input-mask>
+									<div *ngIf="myForm.controls['settlementType'].hasError('required')" [hidden]="myForm.controls.settlementType.valid || (myForm.controls.settlementType.pristine && !isSubmitted)"
+									 class="text-danger">{{ 'Translation.Settlement Type is required' | translate }}.</div>
+									<div *ngIf="myForm.controls['settlementType'].hasError('pattern')" class="text-danger">{{ 'Translation.Invalid Settlement Type' | translate }}.</div>
+
+								</div>
+								<div class="col-sm-6 fields_box">
+									<label for="search-input">{{ 'Translation.From Date' | translate }}  <span class="validation">*</span></label>
+									<wj-input-date [(value)]="selectedItem.startDate" class="wijmo_style" [format]="'yyyy-MM-dd'" [isDisabled]="true" [showYearPicker]="false">
+									</wj-input-date>
+								</div>
+								<div class="col-sm-6 fields_box">
+									<label for="search-input">{{ 'Translation.To Date' | translate }}  <span class="validation">*</span></label>
+									<wj-input-date [(value)]="selectedItem.endDate" class="wijmo_style" [format]="'yyyy-MM-dd'" [isDisabled]="true" [showYearPicker]="false">
+									</wj-input-date>
+								</div>
+								<div class="col-sm-6 fields_box">
+									<label for="search-input">{{ 'Translation.Settlement Date' | translate }}  <span class="validation">*</span></label>
+									<wj-input-date class="wijmo_style" [format]="'yyyy-MM-dd'" [(value)]="selectedItem.settlementDate" [isDisabled]="true" [showYearPicker]="false">
+									</wj-input-date>
+								</div>
+							</div>
+
+							<div class="row" style="margin: 40px 40px 0px 40px">
+								<h3><span class="fw-semi-bold">{{ 'Translation.Details' | translate }}</span></h3>
+								<div class="col-sm-12"></div>
+
+								<div class="col-sm-6 fields_box">
+									<label for="search-input">{{ 'Translation.Market' | translate }}  <span class="validation">*</span></label>
+									<wj-combo-box tabindex="2" #cmbMarketId id="marketId" formControlName="marketId" class="wijmo_style" [isEditable]="true"
+									 [itemsSource]="marketList" displayMemberPath="marketCode" selectedValuePath="marketId" (lostFocus)="onMarketChangeEvent()"
+									 [(ngModel)]="selectedItem.marketId" required></wj-combo-box>
+									<div *ngIf="myForm.controls['marketId'].hasError('required')" [hidden]="myForm.controls.marketId.valid || (myForm.controls.marketId.pristine && !isSubmitted)"
+									 class="text-danger">{{ 'Translation.Market is required' | translate }}.</div>
+								</div>
+								<div class="col-sm-6">
+									<label for="transactionType">{{ 'Translation.Transaction Type' | translate }}  <span class="validation">*</span></label>
+									<wj-combo-box id="transactionType" #cmbTransactionType formControlName="transactionType" class="wijmo_style" [isEditable]="true"
+									 [itemsSource]="transactionTypeList" [(ngModel)]="selectedItem.traansactionTypeId" (ngModelChange)="onTransactionTypeChangeEvent($event)"
+									 displayMemberPath="code" selectedValuePath="traansactionTypeId" [isRequired]="true">
+									</wj-combo-box>
+									<div *ngIf="myForm.controls['transactionType'].hasError('required')" [hidden]="myForm.controls.transactionType.valid || (myForm.controls.transactionType.pristine && !isSubmitted)"
+									 class="text-danger">{{ 'Translation.Transaction Type is required' | translate }} .</div>
+								</div>
+								<div class="col-sm-6 fields_box">
+									<label for="search-input">{{ 'Translation.Security' | translate }}  <span class="validation">*</span></label>
+									<wj-combo-box tabindex="3" #cmbSecurityId id="securityId" formControlName="securityId" class="wijmo_style" [isEditable]="true"
+									 [itemsSource]="symbolList" [isDisabled]="!securityExist" displayMemberPath="symbol" selectedValuePath="securityId"
+									 (ngModelChange)="onSecurityChangeEvent($event)" [(ngModel)]="selectedItem.securityId"></wj-combo-box>
+									<div *ngIf="myForm.controls['securityId'].hasError('required')" [hidden]="myForm.controls.securityId.valid || (myForm.controls.securityId.pristine && !isSubmitted)"
+									 class="text-danger">{{ 'Translation.Security is required' | translate }} .</div>
+								</div>
+								<div class="col-sm-6 fields_box">
+									<label for="search-input">{{ 'Buy' | translate }}/{{ 'Sell' | translate }}  <span class="validation">*</span></label>
+									<wj-combo-box tabindex="6" #cmbBuySellType id="buySellType" formControlName="buySellType" class="wijmo_style" [isEditable]="true"
+									 [itemsSource]="tradeSideList" displayMemberPath="name" selectedValuePath="code" [(ngModel)]="selectedItem.buySell"
+									 (ngModelChange)="onBuySellTypeChangeEvent($event)"></wj-combo-box>
+									<div *ngIf="myForm.controls['buySellType'].hasError('required')" [hidden]="myForm.controls.buySellType.valid || (myForm.controls.buySellType.pristine && !isSubmitted)"
+									 class="text-danger">{{ 'Buy' | translate }}/{{ 'Sell' | translate }} {{ 'is required' | translate }}.</div>
+								</div>
+								<div class="col-sm-6 fields_box" *ngIf="disabledCheckbox">
+									<label for="search-input">C2C  <span class="validation"></span></label>
+									<input id="c2c" formControlName="c2c" type="checkbox" (change)="onc2cChange($event)" [(ngModel)]="selectedItem.c2c">
+								</div>
+								<div class="col-sm-6 fields_box" *ngIf="disabledCheckbox"></div>
+								<div class="col-sm-6 fields_box">
+									<label for="search-input">{{ 'Buyer Client' | translate }}  <span class="validation">*</span></label>
+									<wj-auto-complete tabindex="4" #cmbBuyerClient id="buyerClientId" formControlName="buyerClientId" class="wijmo_style" [isEditable]="true"
+									 [isRequired]="true"  [itemsSource]="clientList" displayMemberPath="displayName" selectedValuePath="id"
+									 [(ngModel)]="selectedItem.buyerClientId" (ngModelChange)="onBuyerClientIdChangeEvent($event)" [maxItems]="50"></wj-auto-complete>
+									<div *ngIf="buyerClientError" class="text-danger">{{ 'Buyer Client' | translate }}  {{ 'is required' | translate }}.</div>
+								</div>
+								<div class="col-sm-6 fields_box">
+									<label for="search-input">{{ 'Translation.Custodian Code' | translate }} </label>
+									<wj-combo-box tabindex="5" #cmbRefParticipantId id="refParticipantId" formControlName="refParticipantId" class="wijmo_style"
+									 [isEditable]="true" [itemsSource]="clientCustodianList" displayMemberPath="custodian.participantCode" selectedValuePath="custodian.participantId"
+									 [(ngModel)]="selectedItem.refParticipantId" [isDisabled]="!custodianExist"></wj-combo-box>
+								</div>
+								<div class="col-sm-6 fields_box">
+									<label for="search-input">{{ 'Seller Client' | translate }}  <span class="validation">*</span></label>
+									<wj-auto-complete tabindex="4" #cmbSellerClient id="sellerClientId" formControlName="sellerClientId" class="wijmo_style"
+									 [isEditable]="true" [isRequired]="true"  [itemsSource]="clientList" displayMemberPath="displayName"
+									 selectedValuePath="id" [(ngModel)]="selectedItem.sellerClientId" (ngModelChange)="onSellerClientIdChangeEvent($event)" [maxItems]="50"></wj-auto-complete>
+									<div *ngIf="sellerClientError" class="text-danger">{{ 'Seller Client' | translate }} {{ 'is required' | translate }}.</div>
+								</div>
+								<div class="col-sm-6 fields_box"></div>
+								<div class="col-sm-6 fields_box">
+									<label for="search-input">{{ 'Translation.Price' | translate }}  <span class="validation">*</span></label>
+									<wj-input-number tabindex="7" name="price" id="price" formControlName="price" [max]="999999.9999" [min]="0.0001" [format]="'n4'"
+									 class="wijmo_style" [(ngModel)]="selectedItem.price" required></wj-input-number>
+									<div *ngIf="myForm.controls['price'].hasError('required')" [hidden]="myForm.controls.price.valid || (myForm.controls.price.pristine && !isSubmitted)"
+									 class="text-danger">{{ 'Translation.Price' | translate }} {{ 'is required' | translate }}.</div>
+								</div>
+								<div class="col-sm-6 fields_box">
+									<label for="search-input">{{ 'Translation.Quantity' | translate }}  <span class="validation">*</span></label>
+									<wj-input-number tabindex="8" name="volume" id="volume" formControlName="volume" maxlength="10" [min]="1" [format]="'n0'"
+									 class="wijmo_style" [(ngModel)]="selectedItem.volume" required></wj-input-number>
+									<div *ngIf="myForm.controls['volume'].hasError('required')" [hidden]="myForm.controls.volume.valid || (myForm.controls.volume.pristine && !isSubmitted)"
+									 class="text-danger">{{ 'Translation.Quantity' | translate }} {{ 'is required' | translate }}.</div>
+								</div>
+								<div class="col-sm-6 fields_box">
+									<label for="search-input">{{ 'Translation.Ticket No' | translate }}.</label>
+									<wj-input-mask tabindex="9" id="ticketNo" class="wijmo_style" maxlength="15" formControlName="ticketNo" [(ngModel)]="selectedItem.ticketNo"></wj-input-mask>
+									<div *ngIf="myForm.controls['ticketNo'].hasError('pattern')" class="text-danger">{{ 'Translation.Invalid Ticket No' | translate }}.</div>
+								</div>
+								<div class="col-sm-6 fields_box" *ngIf="isEditing">
+									<label for="search-input">{{ 'Translation.Commission Rate' | translate }}  <span class="validation"></span></label>
+									<wj-input-number tabindex="10" name="delCommRate" id="delCommRate" formControlName="delCommRate" [max]="999999.9999" [min]="0.0000"
+									 [format]="'n4'" class="wijmo_style" [(ngModel)]="selectedItem.delCommRate" required></wj-input-number>
+									<div *ngIf="myForm.controls['delCommRate'].hasError('required')" [hidden]="myForm.controls.delCommRate.valid || (myForm.controls.delCommRate.pristine && !isSubmitted)"
+									 class="text-danger">{{ 'Translation.Commission Rate' | translate }}  {{ 'is required' | translate }}.</div>
+								</div>
+								<div class="col-sm-6 fields_box">
+									<label for="search-input">FC {{ 'Rate' | translate }}  <span class="validation"></span></label>
+									<wj-input-number tabindex="10" #fcRate name="fcRate" id="fcRate" formControlName="fcRate" [max]="999999.9999" [min]="0.0000"
+									 [format]="'n4'" class="wijmo_style" [(ngModel)]="selectedItem.fcRate" required></wj-input-number>
+									<div *ngIf="myForm.controls['fcRate'].hasError('required')" [hidden]="myForm.controls.fcRate.valid || (myForm.controls.fcRate.pristine && !isSubmitted)"
+									 class="text-danger">FC {{ 'Rate' | translate }} {{ 'is required' | translate }}.</div>
+								</div>
+								<div class="col-sm-6 fields_box">
+									<label for="search-input">FC {{ 'Days' | translate }}  <span class="validation"></span></label>
+									<wj-input-number tabindex="11" #fcDays name="fcDays" id="fcDays" formControlName="fcDays" maxlength="10" [min]="0" [format]="'n0'"
+									 class="wijmo_style" [(ngModel)]="selectedItem.fcDays" required (lostFocus)="onFCDaysLostFocusEvent($event)"></wj-input-number>
+								</div>
+								<div class="col-sm-6 fields_box">
+									<label for="search-input">FC {{ 'Translation.Amount' | translate }}  <span class="validation"></span></label>
+									<wj-input-number tabindex="12" #fcAmount name="fcAmount" id="fcAmount" formControlName="fcAmount" [max]="999999.9999" [min]="0.0000"
+									 [format]="'n4'" class="wijmo_style" [(ngModel)]="selectedItem.fcAmount" [isReadOnly]="true" required></wj-input-number>
+								</div>
+								<div class="col-sm-6 fields_box">
+									<label for="search-input">{{ 'Translation.Start Date' | translate }}  <span class="validation">*</span></label>
+									<wj-input-date id="badlaDate" formControlName="badlaDate" class="wijmo_style" [(ngModel)]="selectedItem.badlaDate"
+									[format]="'yyyy-MM-dd'" #badlaDate > </wj-input-date>
+
+                                    <!-- <div *ngIf="myForm.controls['badlaDate'].hasError('required')" [hidden]="myForm.controls['badlaDate'].valid || (myForm.controls['badlaDate'].pristine && !isSubmitted)"
+                                        class="text-danger"> MTS Start Date {{ 'is required' | translate }}.</div> -->
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="orange_footer">
+					<button id="btnSave" type="submit" class="save_btn" *ngIf="!isEditing && userService.isAuhtorized(userService.EB_EQUITY_TRANSACTION_NEW)">{{ 'Translation.Save' | translate }}</button>
+					<button id="btnEdit" type="submit" class="save_btn" *ngIf="isEditing && userService.isAuhtorized(userService.EB_EQUITY_TRANSACTION_UPDATE)">{{ 'Translation.Update' | translate }}</button>
+					<button type="button" class="cancel_btn" data-dismiss="modal" (click)="onCancelAction()">{{ 'Translation.Cancel' | translate }}</button>
+				</div>
+			</form>
+		</div>
+
+	</div>
+	  <wj-popup [owner]="btnPopup" [modal]="true" #settlementPopup style="width:630px;" class="SearchBox">
+		<div >
+		  <wj-flex-grid [itemsSource]="settlementCalendarList" [isReadOnly]="true" [selectionMode]="'Row'"
+			[autoSizeMode]="'Headers'" [headersVisibility]="'Column'" #settlementGrid class="grid SearchBox"
+			style="height: 350px;width:100%;" >
+			<wj-flex-grid-column [header]="'Translation.Exchange' | translate" [binding]="'exchange.exchangeCode'" [minWidth]="30" [width]="'0.2*'">
+			</wj-flex-grid-column>
+			<wj-flex-grid-column [header]="'Translation.Settlement Type' | translate" [binding]="'settlementType.settlementType'" [minWidth]="30"
+			  [width]="'0.3*'"></wj-flex-grid-column>
+			<wj-flex-grid-column [header]="'Translation.From Date' | translate" [binding]="'startDate'" [minWidth]="30" [width]="'0.3*'">
+			</wj-flex-grid-column>
+			<wj-flex-grid-column [header]="'Translation.To Date' | translate" [binding]="'endDate'" [minWidth]="30" [width]="'0.3*'">
+			</wj-flex-grid-column>
+			<wj-flex-grid-column [header]="'Translation.Settlement Date' | translate" [binding]="'settlementDate'" [minWidth]="30" [width]="'0.3*'">
+			</wj-flex-grid-column>
+		  </wj-flex-grid>
+		  <div class="modal-footer SearchBox">
+			<button class="btn btn-success wj-hide-cancel" *ngIf="recExist"
+			  (click)="updateControls(sgrid)">OK</button>&nbsp;&nbsp;
+			<button class="btn btn-default wj-hide-cancel">{{ 'Common.Cancel' | translate }}</button>
+		  </div>
+		</div>
+	  </wj-popup>
+</div>
+
+
+<dialog-cmp #dialogCmp (btnClick)="getNotification($event)"> </dialog-cmp>

@@ -1,0 +1,665 @@
+<div class="flex flex-col flex-auto w-full min-h-full overflow-hidden  overflow-y-auto" style="background-image:
+     url('assets/images/marlin-dashboard/background-theme.png');
+     background-size: cover;
+     background-repeat: no-repeat;">
+
+    <!-- Header -->
+    <div style="background-image: linear-gradient(to right, #3d3d43 0%, #ABB0B8 35%, #193c5d  100%);"
+        class="fixed flex flex-0 items-center w-full h-16 px-4 md:px-6 z-49 shadow dark:shadow-none dark:border-b bg-card dark:bg-transparent print:hidden ">
+        <!-- Navigation toggle button -->
+        <div class="w-32">
+            <img class="w-30 cursor-pointer loginHvr" src="assets/images/logo/marlinNewLogo.png" (click)="nevigate('signin')">
+        </div>
+        <!-- Components -->
+        <div class="flex items-center pl-2 ml-auto space-x-0.5 sm:space-x-2">
+            <!-- <button
+                class="text-accent-100 px-3 text-slate-50"
+                mat-button>
+               <span class="lg:text-lg md:text-md sm:text-sm "> {{'Features'| transloco}}</span>
+            </button> -->
+            <button class="text-accent-100 px-3" mat-button (click)="nevigate('FAQs')">
+                <span class="lg:text-lg md:text-md sm:text-sm ">{{'FAQs' | transloco}}</span>
+            </button>
+            <button class="text-accent-100 px-3" mat-button (click)="nevigate('aboutUS')">
+                <span class="lg:text-lg md:text-md sm:text-sm ">{{'About Us' | transloco}}</span>
+            </button>
+            <button class="text-accent-100 px-3" mat-button (click)="nevigate('contactUs')" >
+                <span class="lg:text-lg md:text-md sm:text-sm ">{{'Contact Us' | transloco}}</span>
+            </button>
+
+            <button mat-button class="text-accent-100 px-3" [matMenuTriggerFor]="menu" *ngIf="activelang=== 'en'">
+                <span class="lg:text-lg md:text-md sm:text-sm ">English</span>
+                <!-- <span class="material-icons" style="font-size: 22px; margin-right: 2px;line-height: 1;">language</span> -->
+                <span class="relative w-6 shadow rounded-sm overflow-hidden"
+                    style="margin-left: 4px; margin-bottom: 5px;">
+                    <img [src]="'assets/images/flags/US.svg'">
+                </span>
+            </button>
+            <button mat-button class="text-accent-100 px-3" [matMenuTriggerFor]="menu" *ngIf="activelang=== 'pt'">
+                <!-- <span class="material-icons" style="font-size: 22px; margin-right: 2px;line-height: 1;">language</span>  -->
+                <span class="lg:text-lg md:text-md sm:text-sm ">Portuguese</span>
+                <span class="relative w-6 shadow rounded-sm overflow-hidden"
+                    style="margin-left: 4px; margin-bottom: -3px;">
+                    <img [src]="'assets/images/flags/Angola.png'">
+                </span>
+            </button>
+            <mat-menu #menu="matMenu">
+                <button mat-menu-item (click)="setActiveLang('en')">English</button>
+                <button mat-menu-item (click)="setActiveLang('pt')">Portuguese</button>
+            </mat-menu>
+
+            <button *ngIf="formType === 'signIn'" (click)="formType = 'signUp'; signUpForm.reset()"
+                class="text-accent-100 px-3" mat-button>
+                <span class="lg:text-lg md:text-md sm:text-sm ">{{'Sign Up'| transloco}}</span>
+            </button>
+            <button *ngIf="formType === 'signUp' || formType === 'forgotPassword'"
+                (click)="formType = 'signIn'; signInForm.reset() ; clearSignupFields()" class="text-accent-100 px-3"
+                mat-button>
+                {{'Login'| transloco}}
+            </button>
+        </div>
+    </div>
+
+    <div *ngIf="mainPage == 'signin'">
+        <!-- Content -->
+        <div class="mt-14 flex flex-col flex-auto w-full  min-w-screen max-w-screen overflow-hidden">
+            <!-- Login And Side -->
+            <div class="mt-4 pr-6 sm:pr-16 bg-local text-on-primary-600">
+                <div class="lg:flex md:flex sm:flex xs:flex-none items-center justify-between w-full  ">
+                    <div class="grid grid-cols-1 sm:grid-cols-1 grid-flow-row gap-y-12 sm:gap-x-4 pl-16"
+                        style="background-image: url('assets/images/marlin-dashboard/dashboard-globe.png'); background-size: contain;background-repeat: no-repeat; height: 700px; overflow-y: hidden;">
+
+                        <div [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}" class="flex flex-col">
+                            <div id="Portfolio" class="btn btn-primary"
+                                class="hover:shadow-2xl PM-pl flex items-center cursor-pointer focus:animate-bounce">
+                                <img class="w-12" src="assets/images/auth/portfolio.png">
+                                <div class="flex flex-col " data-toggle="modal" data-target="#portfolioManagement"
+                                    (click)="gettingPostion('Portfolio')">
+                                    <div class="text-primary-500 pl-4 text-xl md:text-2xl font-semibold">
+                                        {{'Portfolio Management' | transloco}}
+                                    </div>
+                                    <div class="pl-10 font-lg"> {{'Equities' | transloco}} , DEBT , ETFs
+                                    </div>
+                                    <div class="pl-16 font-lg">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="Graph" type="button" class="btn btn-primary"
+                                class="hover:shadow-2xl flex items-center   IG-pl cursor-pointer">
+                                <img class="w-12" src="assets/images/auth/interactive.png">
+                                <div class="flex flex-col" data-toggle="modal" data-target="#interactingGraph"
+                                    (click)="gettingPostion('Graph')">
+                                    <div class="pl-4 text-primary-500 text-xl md:text-2xl font-semibold">
+                                        {{'Interacting Graph' | transloco}}
+                                    </div>
+                                    <div class="pl-6 font-lg"> {{'Live & Historical Graph with' | transloco}}</div>
+                                    <div class="pl-10 font-lg"> {{'multiple Frequencies' | transloco}}</div>
+                                </div>
+                            </div>
+
+                            <div id="RealMarket" type="button" class="btn btn-primary"
+                                class="hover:shadow-2xl flex items-center ml-8  RMI-pl cursor-pointer">
+                                <img class="w-12" src="assets/images/auth/realmarketing.png">
+                                <div class="flex flex-col" data-toggle="modal" data-target="#realMarket"
+                                    (click)="gettingPostion('RealMarket')">
+                                    <div
+                                        class="pl-2 text-primary-500 text-xl md:text-2xl font-semibold tracking-tight leading-7">
+                                        {{'Real Market Information' | transloco}}
+                                    </div>
+                                    <div class="pl-3.5 font-lg"> {{'Integrated With Relevant' | transloco}}</div>
+                                    <div class="pl-3.5 font-lg"> {{'Exchange' | transloco}}</div>
+                                </div>
+                            </div>
+                            <div id="WatchList" type="button" class="btn btn-primary"
+                                class="hover:shadow-2xl flex items-center  PWL-pl cursor-pointer">
+                                <img class="w-12" src="assets/images/auth/personlized-watch-list.png">
+                                <div class="flex flex-col" data-toggle="modal" data-target="#watchList"
+                                    (click)="gettingPostion('WatchList')">
+                                    <div
+                                        class="pl-4 text-primary-500 text-xl md:text-2xl font-semibold tracking-tight leading-7">
+                                        {{'Personalized Watch List' | transloco}}
+                                    </div>
+                                    <div class="pl-4 font-lg"> {{'List Your Favourite' | transloco}}</div>
+                                    <div class="pl-2 font-lg"> {{'Asset Classes' | transloco}}</div>
+                                </div>
+                            </div>
+                            <div id="AssetClass" type="button" class="btn btn-primary"
+                                class="hover:shadow-2xl flex items-center   MAC-pl cursor-pointer">
+                                <img class="w-12" src="assets/images/auth/multiasset.png">
+                                <div class="flex flex-col" data-toggle="modal" data-target="#assetClass"
+                                    (click)="gettingPostion('AssetClass')">
+                                    <div
+                                        class="pl-8 text-primary-500 text-xl md:text-2xl font-semibold tracking-tight leading-7">
+                                        {{'Multi Asset Class' | transloco}}
+                                    </div>
+                                    <div class="pl-4 font-lg"> {{'Real Time Trading in Equities,' | transloco}}</div>
+                                    <div class="pl font-lg"> DEBT , ETFs </div>
+                                </div>
+                            </div>
+                            <div id="VirtualTrading" type="button" class="btn btn-primary"
+                                class="hover:shadow-2xl flex items-center  VT-ml cursor-pointer">
+                                <img class="w-12 -mt-8" src="assets/images/auth/virtualtrading.png">
+                                <div class="flex flex-col" data-toggle="modal" data-target="#virtualTrading"
+                                    (click)="gettingPostion('VirtualTrading')">
+                                    <div
+                                        class="ml-10 text-primary-500 text-xl md:text-2xl font-semibold tracking-tight leading-7">
+                                        {{'Virtual Trading' | transloco}}
+                                    </div>
+                                    <div class="font-lg ml-2"> {{'Practice Account For Trading' | transloco}}
+                                    </div>
+                                    <div class="-ml-8 font-lg"> {{'on Real Market Information' | transloco}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="flex items-start"
+                        [class.signInForm]="formType === 'signIn' || formType === 'forgotPassword'">
+
+                        <ng-container *ngIf="formType === 'signIn'">
+                            <fuse-card
+                                style="background-image: url('assets/images/marlin-dashboard/sign-in.png'); background-size: cover;background-repeat: no-repeat;"
+                                class="mx-auto max-w-100 w-full mt-5 px-8 pt-5 pb-4 filter-list">
+                                <div class="w-full sm:w-full    sm:mx-0">
+
+                                    <!-- Title -->
+                                    <div class="text-4xl tracking-tight leading-tight text-accent-100">
+                                        {{'Login'| transloco}}
+                                    </div>
+
+                                    <form [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}" class="mt-8"
+                                        [formGroup]="signInForm" #signInNgForm="ngForm">
+
+                                        <mat-form-field class="w-full">
+                                            <mat-label>{{'Email' | transloco}}</mat-label>
+                                            <input #email matInput [formControlName]="'email'">
+                                            <mat-error *ngIf="signInForm.get('email').hasError('required')">
+                                                {{"Email address is required" | transloco}}
+                                            </mat-error>
+                                            <mat-error *ngIf="signInForm.get('email').hasError('email')">
+                                                {{'Please enter a valid email address' | transloco}}
+                                            </mat-error>
+                                        </mat-form-field>
+
+                                        <mat-form-field class="fuse-mat-no-subscript w-full">
+                                            <mat-label>{{'Password' | transloco}}</mat-label>
+                                            <input id="password" matInput type="password" [formControlName]="'password'"
+                                                #passwordField>
+
+                                            <mat-icon aria-hidden="false" class="cursor-pointer"
+                                                aria-label="Example home icon" type="button"
+                                                (click)="passwordField.type === 'password' ? passwordField.type = 'text' : passwordField.type = 'password'"
+                                                matSuffix>remove_red_eye</mat-icon>
+
+                                            <mat-error *ngIf="signInForm.get('password').hasError('required')">
+                                                {{'Password is required' | transloco}}
+                                            </mat-error>
+                                        </mat-form-field>
+                                        <!-- {{'' | transloco}} -->
+                                        <button style="background-color: #193c5d; color: #E2E8F0"
+                                            class="fuse-mat-button-large w-full mt-6" mat-flat-button
+                                            [disabled]="signInForm.disabled" (click)="signIn()">
+                                            <span *ngIf="!signInForm.disabled">{{'Login' | transloco}} </span>
+                                            <mat-progress-spinner *ngIf="signInForm.disabled" [diameter]="24"
+                                                [mode]="'indeterminate'">
+                                            </mat-progress-spinner>
+                                        </button>
+
+                                        <div class="flex items-center mt-4 font-medium">
+                                            <a (click)="formType = 'forgotPassword'; forgotPasswordForm.reset()"
+                                                class="cursor-pointer text-accent-100 hover:underline"><u>{{'Forgot
+                                                    password' | transloco}}?</u>
+                                            </a>
+                                        </div>
+
+                                        <div class="flex items-center font-medium">
+                                            <div class="text-accent-100">{{"Don't have an account" | transloco}}?</div>
+                                            <a (click)="formType = 'signUp'; signUpForm.reset()"
+                                                class="cursor-pointer ml-1 text-accent-100 hover:underline"><u>{{'Sign
+                                                    up' |
+                                                    transloco}}</u>
+                                            </a>
+                                        </div>
+                                    </form>
+                                </div>
+                            </fuse-card>
+                        </ng-container>
+
+                        <ng-container *ngIf="formType === 'signUp'">
+                            <fuse-card
+                                style="background-image: url('assets/images/marlin-dashboard/sign-in.png'); background-size: cover;background-repeat: no-repeat;"
+                                class="mx-auto flex flex-col max-w-w-full w-full  mt-5 px-8 pt-6 pb-4 filter-list">
+                                <div class="mx-auto w-80 sm:w-80  sm:mx-0">
+                                    <div class="text-4xl tracking-tight leading-tight text-accent-100">
+                                        {{'Sign up' | transloco}}
+                                    </div>
+
+                                    <form [@animate]="{value:'*', params:{delay:'50ms',scale:'0.2'}}" class="mt-8"
+                                        [formGroup]="signUpForm" #signUpNgForm="ngForm">
+
+                                        <mat-form-field class="w-full">
+                                            <mat-label>{{'Full name' | transloco}}</mat-label>
+                                            <input id="name" matInput [formControlName]="'name'">
+                                            <mat-error *ngIf="signUpForm.get('name').hasError('required')">
+                                                {{'Full name is required' | transloco}}
+                                            </mat-error>
+                                        </mat-form-field>
+
+                                        <mat-form-field class="w-full">
+                                            <mat-label>{{'Email address' | transloco}}</mat-label>
+                                            <input matInput [formControlName]="'email'">
+                                            <mat-error *ngIf="signUpForm.get('email').hasError('required')">
+                                                {{'Email address is required' | transloco}}
+                                            </mat-error>
+                                            <mat-error *ngIf="signUpForm.get('email').hasError('email')">
+                                                {{'Please enter a valid email address' | transloco}}
+                                            </mat-error>
+                                        </mat-form-field>
+
+                                        <mat-form-field class="w-full">
+                                            <mat-label>{{'Country' | transloco}}</mat-label>
+                                            <mat-select [(ngModel)]="selectedCountry" [formControlName]="'countryId'"
+                                                (selectionChange)="countryChanged($event.value)">
+                                                <mat-option class="text-accent-100" *ngFor="let country of allCountries"
+                                                    [value]="country.countryId">{{country.countryName}}</mat-option>
+                                            </mat-select>
+                                            <mat-error *ngIf="signUpForm.get('countryId').hasError('required')">
+                                                {{'Country is required' | transloco}}
+                                            </mat-error>
+                                        </mat-form-field>
+
+                                        <mat-form-field class="w-full">
+                                            <mat-label>{{'Exchange' | transloco}}</mat-label>
+                                            <mat-select [(ngModel)]="selectedExchange" [formControlName]="'exchangeId'">
+                                                <mat-option class="text-accent-100"
+                                                    *ngFor="let exchange of allExchanges" [value]="exchange.exchangeId">
+                                                    {{exchange.exchangeName}}</mat-option>
+                                            </mat-select>
+                                            <mat-error *ngIf="signUpForm.get('exchangeId').hasError('required')">
+                                                {{'Exchange is required' | transloco}}
+                                            </mat-error>
+                                        </mat-form-field>
+
+
+                                        <mat-form-field id="dialCode"
+                                            style=" width: 20%; margin-right: 7px; position: absolute; display: block;">
+                                            <mat-label>Dial Code</mat-label>
+                                            <input [(ngModel)]="dialingCountryCode" matInput readonly
+                                                [formControlName]="'countryCode'">
+                                        </mat-form-field>
+
+                                        <mat-form-field id="mobileNum" style="width: 72%;margin-left: 79px;">
+                                            <mat-label>{{'Mobile Number' | transloco}}</mat-label>
+                                            <input maxlength="11" id="mobile-number" matInput
+                                                [formControlName]="'mobile'">
+                                            <mat-error *ngIf="signUpForm.get('mobile').hasError('required')">
+                                                {{'Mobile Number is required' | transloco}}
+                                            </mat-error>
+                                            <mat-error *ngIf="signUpForm.get('mobile').hasError('pattern') || 
+                                                        signUpForm.get('mobile').hasError('minlength') || 
+                                                        signUpForm.get('mobile').hasError('maxlength')">
+                                                {{'Enter Valid Mobile Number' | transloco}}
+                                            </mat-error>
+                                        </mat-form-field>
+
+
+
+                                        <mat-form-field class="w-full">
+                                            <mat-label>{{'Password' | transloco}}</mat-label>
+                                            <input matInput type="password" [formControlName]="'password'"
+                                                #passwordField>
+
+                                            <mat-icon aria-hidden="false" aria-label="Example home icon"
+                                                class="cursor-pointer" type="button"
+                                                (click)="passwordField.type === 'password' ? passwordField.type = 'text' : passwordField.type = 'password'"
+                                                matSuffix>remove_red_eye</mat-icon>
+
+                                            <mat-error>
+                                                {{'Password is required' | transloco}}
+                                            </mat-error>
+                                        </mat-form-field>
+
+                                        <mat-form-field class="w-full">
+                                            <mat-label>{{'Confirm Password' | transloco}}</mat-label>
+                                            <input matInput type="password" [formControlName]="'confirmPassword'"
+                                                #confirmPasswordField>
+
+                                            <mat-icon aria-hidden="false" aria-label="Example home icon"
+                                                class="cursor-pointer" type="button"
+                                                (click)="confirmPasswordField.type === 'password' ? confirmPasswordField.type = 'text' : confirmPasswordField.type = 'password'"
+                                                matSuffix>remove_red_eye</mat-icon>
+
+                                            <mat-error>
+                                                {{'Confirm Password' | transloco}} {{'Translation.is required' |
+                                                transloco}}
+                                            </mat-error>
+                                        </mat-form-field>
+
+                                        <div class="inline-flex items-end w-full mt-1.5">
+                                            <mat-checkbox [color]="'primary'" [formControlName]="'agreements'">
+                                                <span class="text-accent-100">{{'I agree to the' | transloco}}</span>
+                                                <a class="ml-1 text-accent-100 hover:underline"
+                                                    [routerLink]="['./']">{{'Terms of Service' | transloco}}
+                                                </a>
+                                                <span class="text-accent-100">{{'and' | transloco}}</span>
+                                                <a class="ml-1 text-accent-100 hover:underline"
+                                                    [routerLink]="['./']">{{'Privacy Policy' | transloco}}
+                                                </a>
+                                            </mat-checkbox>
+                                        </div>
+
+                                        <button style="background-color: #193c5d; color: #E2E8F0"
+                                            class="fuse-mat-button-large w-full mt-6" mat-flat-button
+                                            [color]="'primary'" [disabled]="signUpForm.disabled" (click)="signUp()">
+                                            <span *ngIf="!signUpForm.disabled">
+                                                {{'Create Account' | transloco}}
+                                            </span>
+                                            <mat-progress-spinner *ngIf="signUpForm.disabled" [diameter]="24"
+                                                [mode]="'indeterminate'"></mat-progress-spinner>
+                                        </button>
+                                        <div class="flex items-center mt-4 font-medium">
+                                            <div class="text-accent-100">{{'Already Have an Account' | transloco}}?
+                                            </div>
+                                            <a class="cursor-pointer text-accent-100 ml-1 hover:underline"
+                                                (click)="formType = 'signIn'; signInForm.reset()">
+                                                <u>{{'Login'| transloco}}</u>
+                                            </a>
+                                        </div>
+                                    </form>
+                                </div>
+                            </fuse-card>
+                        </ng-container>
+
+                        <ng-container *ngIf="formType === 'forgotPassword'">
+                            <fuse-card
+                                style="background-image: url('assets/images/marlin-dashboard/sign-in.png'); background-size: cover;background-repeat: no-repeat;"
+                                class="mx-auto flex flex-col max-w-100 w-100 mt-5 px-8 pt-6 pb-4 filter-list">
+                                <div class="w-full sm:w-full sm:mx-0">
+
+                                    <div class="text-4xl  tracking-tight leading-tight text-accent-100">
+                                        {{'Forgot Password' | transloco}}
+                                    </div>
+
+                                    <form [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}" class="mt-8"
+                                        [formGroup]="forgotPasswordForm" #forgotPasswordNgForm="ngForm">
+
+                                        <mat-form-field class="w-full">
+                                            <mat-label>{{'Email address' | transloco}}</mat-label>
+                                            <input id="email" matInput [formControlName]="'userName'">
+                                            <mat-error *ngIf="forgotPasswordForm.get('userName').hasError('required')">
+                                                {{'Email address is required' | transloco}}
+                                            </mat-error>
+                                            <mat-error *ngIf="forgotPasswordForm.get('userName').hasError('email')">
+                                                {{'Please enter a valid email address' | transloco}}
+                                            </mat-error>
+                                        </mat-form-field>
+
+                                        <button class="fuse-mat-button-large w-full mt-3"
+                                            style="background-color: #193c5d; color: #E2E8F0" mat-flat-button
+                                            [color]="'primary'" [disabled]="forgotPasswordForm.disabled"
+                                            (click)="sendResetLink()">
+                                            <span *ngIf="!forgotPasswordForm.disabled">
+                                                {{'Send reset link' | transloco}}
+                                            </span>
+                                            <mat-progress-spinner *ngIf="forgotPasswordForm.disabled" [diameter]="24"
+                                                [mode]="'indeterminate'"></mat-progress-spinner>
+                                        </button>
+
+                                        <div class="flex items-center mt-4 font-medium">
+                                            <div class="text-accent-100">{{'Return to' | transloco}}</div>
+                                            <a (click)="formType = 'signIn'; signInForm.reset()"
+                                                class="cursor-pointer ml-1 text-accent-100 hover:underline">
+                                                <u>{{'Login'| transloco}}</u>
+                                            </a>
+                                        </div>
+
+                                    </form>
+                                </div>
+                            </fuse-card>
+                        </ng-container>
+
+                    </div>
+
+
+                </div>
+            </div>
+
+        </div>
+        <!-- Content -->
+
+        <!-- Child Component -->
+        <auth-shared class="-mt-10 static bottom-0" (outPutProp)="recieveMessageFromAuthShared($event)"
+            [dashboard]="false">
+        </auth-shared>
+        <!-- Child Component -->
+    </div>
+
+    <div *ngIf="mainPage == 'aboutUS'">
+        <about-us [parentLang]="activelang"></about-us>
+    </div>
+
+    <div *ngIf="mainPage == 'contactUs'">
+        <contact-us></contact-us>
+    </div>
+
+    <div *ngIf="mainPage == 'FAQs'">
+        <faqs (pageRouteValue)="nevigate($event)" [parentLang]="activelang"></faqs>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- .......................................................................MODELS........................................................................................ -->
+<!-- Modal Portfolio Management-->
+<div class="modal fade" id="portfolioManagement" tabindex="-1" role="dialog" aria-labelledby="portfolioManagement"
+    aria-hidden="true">
+    <div class="modal-dialog portfolioManagement" role="document" style="max-width: 900px;"
+        [ngStyle]="{'top': modelPostionY,'left': modelPostionX}">
+        <div class="signinModel">
+            <div class="h-9 border-b-2 border-black" style="background:#19314b;">
+                <h5 class="ml-3  text-primary font-bold text-lg" style="line-height: 1.7;">Portfolio Management</h5>
+                <button style="float: right;margin-top: -39px;" mat-icon-button data-dismiss="modal">
+                    <mat-icon class="text-current mt-2 icon-display" [svgIcon]="'heroicons_outline:x'"></mat-icon>
+                </button>
+            </div>
+            <div class="row mt-4 ml-6 mr-6">
+                <div class="col-sm-7">
+                    <span class="font-light">Marlin® has asset class wise portfolio management. Investor can visualize
+                        his/her complete portfolio including holding positions among configured asset classes like
+                        Equities, Bonds, ETFs etc.: </span>
+                    <span class="block mt-8 font-light"><img style="display:inline;width: 29px;margin-right: 18px;"
+                            src="assets/images/marlin-popup-icon/portfolio-managment-1.jpg" />Total investment</span>
+                    <span class="block mt-3 font-light"><img style="display:inline;width: 29px;margin-right: 18px;"
+                            src="assets/images/marlin-popup-icon/portfolio-managment-2.jpg" />Current market value of
+                        all asset classes</span>
+                    <span class="block mt-3 font-light"><img style="display:inline;width: 29px;margin-right: 18px;"
+                            src="assets/images/marlin-popup-icon/portfolio-managment-3.jpg" />Current market value of
+                        Equities, Bonds, ETFs separately</span>
+                    <span class="block mt-3 font-light"><img style="display:inline;width: 29px;margin-right: 18px;"
+                            src="assets/images/marlin-popup-icon/portfolio-managment-4.jpg" />Accumulative
+                        profit/loss</span>
+                    <span class="block mt-3 font-light"><img style="display:inline;width: 29px;margin-right: 18px;"
+                            src="assets/images/marlin-popup-icon/portfolio-managment-5.jpg" />Asset class wise
+                        profit/loss </span>
+                    <span class="block mt-3 mb-4 font-light"><img style="display:inline;width: 29px;margin-right: 18px;"
+                            src="assets/images/marlin-popup-icon/portfolio-managment-6.jpg" />Total volume traded in
+                        Equities, Bonds, ETFs separately</span>
+                </div>
+                <div class="col-sm-5">
+                    <div class="mt-10 border-2 border-primary">
+                        <img src="assets/images/marlin-dashboard/portfolio.jpg" width="800" height="900">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Interacting Graph-->
+<div class="modal fade" id="interactingGraph" tabindex="-1" role="dialog" aria-labelledby="interactingGraph"
+    aria-hidden="true">
+    <div class="modal-dialog interactingGraph" role="document" [ngStyle]="{'top': modelPostionY,'left': modelPostionX}">
+        <div class="h-60 signinModel">
+            <div class="h-9 border-b-2 border-black" style="background:#19314b;">
+                <h5 class="ml-3  text-primary font-bold text-lg" style="line-height: 1.7;">Interactive Graph</h5>
+                <button style="float: right;margin-top: -39px;" mat-icon-button data-dismiss="modal">
+                    <mat-icon class="text-current mt-2 icon-display" [svgIcon]="'heroicons_outline:x'"></mat-icon>
+                </button>
+            </div>
+            <div class="mt-4 ml-6 mr-6">
+                <span class="font-light"><img style="display:inline;width: 27px;margin-right: 18px;"
+                        src="assets/images/marlin-popup-icon/interactive-1.jpg" />Live & historical graph of desired
+                    security</span>
+                <span class="block mt-3 font-light"><img style="display:inline;width: 27px;margin-right: 18px;"
+                        src="assets/images/marlin-popup-icon/interactive-2.jpg" />Investor can view historical graph as
+                    per desired time frequency</span>
+                <span class="block mt-3 font-light"><img style="display:inline;width: 27px;margin-right: 18px;"
+                        src="assets/images/marlin-popup-icon/interactive-3.jpg" />Historical data provides up to 5 years
+                    of daily prices and volumes fro each security </span>
+                <span class="block mt-3 font-light"><img style="display:inline;width: 27px;margin-right: 18px;"
+                        src="assets/images/marlin-popup-icon/interactive-4.jpg" />Real time security stats</span>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Real Market-->
+<div class="modal fade" id="realMarket" tabindex="-1" role="dialog" aria-labelledby="realMarket" aria-hidden="true">
+    <div class="modal-dialog realMarket" role="document" [ngStyle]="{'top': modelPostionY,'left': modelPostionX}">
+        <div class="h-40 signinModel">
+            <div class="h-9 border-b-2 border-black" style="background:#19314b;">
+                <h5 class="ml-3  text-primary font-bold text-lg" style="line-height: 1.7;">Real Market Information</h5>
+                <button style="float: right;margin-top: -39px;" mat-icon-button data-dismiss="modal">
+                    <mat-icon class="text-current mt-2 icon-display" [svgIcon]="'heroicons_outline:x'"></mat-icon>
+                </button>
+            </div>
+            <div class="mt-4 ml-6 mr-6">
+                <span class="font-light">Marlin® is integrated with exchange and all market feed is being updated on
+                    real time basis. Investors can get place orders and do trading on live feed. </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Personalized Watch List-->
+<div class="modal fade" id="watchList" tabindex="-1" role="dialog" aria-labelledby="watchList" aria-hidden="true">
+    <div class="modal-dialog watchList" role="document" [ngStyle]="{'top': modelPostionY,'left': modelPostionX}">
+        <div class="h-44 signinModel">
+            <div class="h-9 border-b-2 border-black" style="background:#19314b;">
+                <h5 class="ml-3  text-primary font-bold text-lg" style="line-height: 1.7;">Personalized Watch List</h5>
+                <button style="float: right;margin-top: -39px;" mat-icon-button data-dismiss="modal">
+                    <mat-icon class="text-current mt-2 icon-display" [svgIcon]="'heroicons_outline:x'"></mat-icon>
+                </button>
+            </div>
+            <div class="row mt-4 ml-6 mr-6">
+                <div class="col-sm-2">
+                    <img style="width: 71px;margin-right: 18px;"
+                        src="assets/images/marlin-popup-icon/personalized-watch-1.jpg" />
+                </div>
+                <div class="col-sm-10">
+                    <span class=" font-light">Marlin® offers comprehensive Market Watch for quick & easy tracking of
+                        asset class wise securities. Investors can maintain a personalized list of favorite securities.
+                        A quick watchlist is also available on header which can be accessed just by clicking +
+                        icon.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Asset Class-->
+<div class="modal fade" id="assetClass" tabindex="-1" role="dialog" aria-labelledby="assetClass" aria-hidden="true">
+    <div class="modal-dialog assetClass" role="document" [ngStyle]="{'top': modelPostionY,'left': modelPostionX}">
+        <div style="height:245px;" class="signinModel">
+            <div class="h-9 border-b-2 border-black" style="background:#19314b;">
+                <h5 class="ml-3  text-primary font-bold text-lg" style="line-height: 1.7;">Multi Asset Class</h5>
+                <button style="float: right;margin-top: -39px;" mat-icon-button data-dismiss="modal">
+                    <mat-icon class="text-current mt-2 icon-display" [svgIcon]="'heroicons_outline:x'"></mat-icon>
+                </button>
+            </div>
+            <div class="row mt-4 ml-6 mr-6">
+                <div class="col-sm-2">
+                    <img style="display:inline;width: 50px;"
+                        src="assets/images/marlin-popup-icon/multi-asset-class-1.jpg" />
+                    <img class="mt-1" style="display:inline;width: 50px;"
+                        src="assets/images/marlin-popup-icon/multi-asset-class-2.jpg" />
+                    <!-- <img class="mt-1" style="display:inline;width: 35px; margin-right: 4px;margin-left: 8px;"
+                        src="assets/images/marlin-popup-icon/multi-asset-class-3.jpg" /> -->
+                    <img style="display:inline;width: 35px;margin-left: 7px;"
+                        src="assets/images/marlin-popup-icon/multi-asset-class-4.jpg" />
+                </div>
+                <div class="col-sm-10">
+                    <span class="font-light -ml-7">Marlin® offers trading in multiple asset classes like</span>
+                    <span class="block mt-2 font-light -ml-7">Equities</span>
+                    <span class="block mt-2 font-light -ml-7">Bonds</span>
+                    <span class="block mt-2 font-light -ml-7">ETFs</span>
+                    <!-- <span class="block mt-2 font-light -ml-7">Cryptos</span> -->
+                    <!-- <span class="block mt-2 font-light -ml-7">Commodities and Derivatives. User can trade in all types
+                        of asset classes configured in an integrated exchange.</span> -->
+                    <span class="block mt-2 font-light -ml-7">User can trade in all types
+                        of asset classes configured in an integrated exchange.</span>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Virtual Trading-->
+<div class="modal fade" id="virtualTrading" tabindex="-1" role="dialog" aria-labelledby="virtualTrading"
+    aria-hidden="true">
+    <div class="modal-dialog virtualTrading" role="document" [ngStyle]="{'top': modelPostionY,'left': modelPostionX}"
+        style="max-width: 690px;">
+        <div class="h-60 signinModel">
+            <div class="h-9 border-b-2 border-black" style="background:#19314b;">
+                <h5 class="ml-3  text-primary font-bold text-lg" style="line-height: 1.7;">Virtual Trading</h5>
+                <button style="float: right;margin-top: -39px;" mat-icon-button data-dismiss="modal">
+                    <mat-icon class="text-current mt-2 icon-display" [svgIcon]="'heroicons_outline:x'"></mat-icon>
+                </button>
+            </div>
+            <div class="mt-4 ml-6 mr-6">
+                <span class="font-light"><img style="display:inline;width: 32px;margin-right: 18px;"
+                        src="assets/images/marlin-popup-icon/virtual-trading-1.jpg" />Marlin® has a virtual trading
+                    platform where user can practice trading without having money.</span>
+                <span class="block mt-2 font-light"><img style="display:inline;width: 32px;margin-right: 18px;"
+                        src="assets/images/marlin-popup-icon/virtual-trading-2.jpg" />This trading simulator will give
+                    virtual trading experience on real time public market information.</span>
+                <span class="block mt-2 font-light"><img style="display:inline;width: 32px;margin-right: 18px;"
+                        src="assets/images/marlin-popup-icon/virtual-trading-3.jpg" />Investors can open a demo trading
+                    account for free without being registered with a broker.</span>
+                <span class="block mt-2 font-light"><img style="display:inline;width: 32px;margin-right: 18px;"
+                        src="assets/images/marlin-popup-icon/virtual-trading-4.jpg" />It is being provided to create
+                    awareness among potential investors.</span>
+
+            </div>
+        </div>
+    </div>
+</div>

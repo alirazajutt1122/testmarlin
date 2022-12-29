@@ -1,0 +1,185 @@
+
+<div class="row" style="width: 100%;">
+    <div class="col-lg-12 col-xs-12">
+      <section class="widget" widget>
+        <header>
+          <h6>{{ 'Translation.Client Margin Details' | translate }}</h6>
+          <div class="other_btns">
+            <button data-toggle="collapse" data-target="#filter_box" class="filter_btn"><i class="fa fa-filter" aria-hidden="true"></i> </button>
+            <div class="btn-group ml-2">
+                <button class="dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <i class="fa fa-download" title="{{ 'Translation.Export' | translate }}" aria-hidden="true"></i>
+                </button>
+                <div class="dropdown-menu">
+                    <button class="Iconfilter_btn mx-1" (click)="exportExcel()">
+                        <i class="fa fa-file-excel-o" title="{{ 'Translation.Export' | translate }} Excel" aria-hidden="true"></i>
+                      </button>
+                      <button class="Iconfilter_btn" (click)="exportPDF()">
+                        <i class="fa fa-file-pdf-o" title="{{ 'Translation.Export' | translate }} PDF" aria-hidden="true"></i>
+                      </button>
+                      <!-- <button class="Iconfilter_btn" (click)="exportPDF()">
+                        <i class="fa fa-file-word-o" title="{{ 'Translation.Export' | translate }} Word" aria-hidden="true"></i>
+                      </button> -->
+                </div>
+              </div>
+          </div>
+
+          <div id="filter_box" class="collapse in mt-2">
+            <form role="form" [formGroup]="myForm" novalidate>
+              <div class="row pt-2">
+                <div class="col-sm-2">
+                  <div class="form-group">
+                    <label for="search-input">{{ 'Translation.Exchange' | translate }} <span class="validation">*</span></label>
+                    <div class="input-group">
+                      <wj-combo-box id="exchange" formControlName="exchange" class="form-control form-control-sm" #cmbExchange [itemsSource]="exchanges"
+                        [(ngModel)]="exchangeId" (ngModelChange)="onExchangeChange($event)" displayMemberPath="exchangeCode"
+                        selectedValuePath="exchangeId" required [isEditable]="true">
+                      </wj-combo-box>
+                    </div>
+                    <div *ngIf="myForm.controls['exchange'].hasError('pattern')" [hidden]="myForm.controls.exchange.valid || !isSubmitted" class="text-danger">{{ 'Translation.Exchange' | translate }} {{ 'Translation.is required' | translate }}.</div>
+                  </div>
+                </div>
+                <div class="col-sm-3">
+                  <div class="form-group">
+                    <label for="search-input">{{ 'Translation.Custodian' | translate }}</label>
+                    <div class="input-group">
+                      <wj-combo-box id="custodian" formControlName="custodian" class="form-control form-control-sm" #cmbCustodian [itemsSource]="custodians"
+                        [(ngModel)]="participantCode" displayMemberPath="participantCode" selectedValuePath="participantCode"
+                        [isEditable]="true">
+                      </wj-combo-box>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-3">
+                  <div class="form-group">
+                    <label for="search-input">{{ 'Translation.Client Code' | translate }} <span class="validation">*</span></label>
+                    <div class="input-group">
+                      <wj-auto-complete #account id="clientCode1" class="wijmo_style" formControlName="clientCode1" [isRequired]="true" [itemsSource]="fromClientList"
+                        displayMemberPath="displayValue_" selectedValuePath="clientCode" [(ngModel)]="clientCode1"></wj-auto-complete>
+                    </div>
+                    <div *ngIf="myForm.controls['clientCode1'].hasError('required')" [hidden]="myForm.controls.clientCode1.valid || !isSubmitted"
+                      class="text-danger">{{ 'Translation.Client Code' | translate }} {{ 'Translation.is required' | translate }}.</div>
+                  </div>
+                </div>
+                <div class="col-sm-1">
+                  <div class="form_search">
+                    <button class="btn btn-success btn-sm" title="{{ 'Translation.Search' | translate }}" data-toggle="collapse in" data-target="#filter_box" (click)="onSubmit(myForm.value, myForm.valid)"><span class="fa fa-search"></span> </button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <!-- <div class="widget-controls">
+            <a data-widgster="expand" title="{{ 'Translation.Expand' | translate }}" href="#"><i class="fa fa-chevron-up"></i></a>
+            <a data-widgster="collapse" title="{{ 'Translation.Collapse' | translate }}" href="#"><i class="fa fa-chevron-down"></i></a>
+          </div> -->
+        </header>
+
+        <div>
+          <div class="row full_container mt-2">
+            <div class="col-sm-2">
+              <div class="form-group">
+                <label for="search-input">{{ 'Translation.Client Code' | translate }}</label>
+                <div class="input-group">
+                  <wj-input-mask id="clientCode2" name="clientCode2" [(ngModel)]="clientCode2" [isDisabled]="true"></wj-input-mask>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-2">
+              <div class="form-group">
+                <label for="search-input">{{ 'Translation.Cash' | translate }}</label>
+                <div class="input-group">
+                  <wj-input-number id="cash" name="cash" [(ngModel)]="cash" [format]="'n4'" [isDisabled]="true"></wj-input-number>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-2">
+              <div class="form-group">
+                <label for="search-input">{{ 'Translation.Margin' | translate }} (%)</label>
+                <div class="input-group">
+                  <wj-input-number id="margin" name="margin" [(ngModel)]="margin" [format]="'n2'" [isDisabled]="true"></wj-input-number>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-2">
+              <div class="form-group">
+                <label for="search-input">{{ 'Translation.Buying Power' | translate }}</label>
+                <div class="input-group">
+                  <wj-input-number id="buyingPower" name="buyingPower" [(ngModel)]="buyingPower" [format]="'n4'" [isDisabled]="true"></wj-input-number>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-2">
+              <div class="form-group">
+                <label for="search-input">{{ 'Translation.Open Position' | translate }}</label>
+                <div class="input-group">
+                  <wj-input-number id="openPosition" name="openPosition" [(ngModel)]="openPosition" [format]="'n4'" [isDisabled]="true"></wj-input-number>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-2">
+              <div class="form-group">
+                <label for="search-input">{{ 'Translation.Remaining Buying Power' | translate }}</label>
+                <div class="input-group">
+                  <wj-input-number id="remainingBuyingPower" name="remainingBuyingPower" [(ngModel)]="remainingBuyingPower" [format]="'n4'"
+                    [isDisabled]="true"></wj-input-number>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row full_container">
+            <div class="col-sm-2 form-group">
+              <div class="abc-checkbox-primary abc-checkbox">
+                <input type="checkbox" [(ngModel)]="active" id="active" disabled="disabled">
+                <label for="active">{{ 'Common.Active' | translate }}</label>
+              </div>
+
+            </div>
+            <div class="col-sm-2">
+              <div class="abc-checkbox abc-checkbox-primary form-group">
+                <input type="checkbox" [(ngModel)]="allowShortSell" id="shortSell" disabled="disabled">
+                <label for="shortSell">{{ 'Translation.Short Sell' | translate }}</label>
+              </div>
+            </div>
+            <div class="col-sm-2">
+              <div class="abc-checkbox abc-checkbox-primary form-group">
+                <input type="checkbox" [(ngModel)]="riskAssessment" id="bypassCRS" disabled="disabled">
+                <label for="bypassCRS">{{ 'Translation.Bypass CRS' | translate }}</label>
+              </div>
+            </div>
+            <div class="col-sm-2">
+              <div class="abc-checkbox abc-checkbox-primary form-group">
+                <input type="checkbox" [(ngModel)]="useOpenPosition" id="useOpenPosition" disabled="disabled">
+                <label for="useOpenPosition">{{ 'Translation.Use Open Position' | translate }}</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="form-group">
+                <div class="input-group">
+                  <wj-flex-grid class="grid" [isReadOnly]="true" [itemsSource]="cmddata" [selectionMode]="'Row'" [autoSizeMode]="'Headers'"
+                    [headersVisibility]="'Column'" style="height: 450px;" #flexGrid>
+                    <wj-flex-grid-filter [filterColumns]="['security', 'holding','purchase_volume','sell_volume','queued_sell_volume','net','market_rate','market_value','haircut','assess_value']"></wj-flex-grid-filter>
+                    <wj-flex-grid-column [header]="'Translation.Security' | translate" align="left" [binding]="'security'" [width]="'0.5*'" [minWidth]="30"></wj-flex-grid-column>
+                    <wj-flex-grid-column [header]="'Translation.Depository Holding' | translate" align="left" [binding]="'holding'" [width]="'0.5*'" [minWidth]="30"></wj-flex-grid-column>
+                    <wj-flex-grid-column [header]="'Translation.Buy' | translate" align="left" [binding]="'purchase_volume'" [width]="'0.5*'" [minWidth]="30"></wj-flex-grid-column>
+                    <wj-flex-grid-column [header]="'Translation.Sell' | translate" align="left" [binding]="'sell_volume'" [width]="'0.5*'" [minWidth]="30"></wj-flex-grid-column>
+                    <wj-flex-grid-column [header]="'Translation.Queued Orders (Sell)' | translate" align="left" [binding]="'queued_sell_volume'" [width]="'0.5*'" [minWidth]="30"></wj-flex-grid-column>
+                    <wj-flex-grid-column [header]="'Translation.Net' | translate" align="left" [binding]="'net'" [width]="'0.5*'" [minWidth]="30"></wj-flex-grid-column>
+                    <wj-flex-grid-column [header]="'Translation.Market Price' | translate" align="left" [binding]="'market_rate'" [width]="'0.5*'" [minWidth]="30" [format]="'n4'"></wj-flex-grid-column>
+                    <wj-flex-grid-column [header]="'Translation.Market Value' | translate" align="left" [binding]="'market_value'" [width]="'0.5*'" [minWidth]="30" [format]="'n4'"></wj-flex-grid-column>
+                    <wj-flex-grid-column [header]="'Translation.Haircut(%)' | translate" align="left" [binding]="'haircut'" [width]="'0.5*'" [minWidth]="30" [format]="'n2'"></wj-flex-grid-column>
+                    <wj-flex-grid-column [header]="'Translation.Assess Value' | translate" align="left" [binding]="'assess_value'" [width]="'0.5*'" [minWidth]="30" [format]="'n4'"></wj-flex-grid-column>
+                  </wj-flex-grid>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+  <dialog-cmp-reports #dialogCmp (btnClick)="getNotification($event)"> </dialog-cmp-reports>

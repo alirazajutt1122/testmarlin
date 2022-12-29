@@ -1,0 +1,53 @@
+<div class="w-full max-w-4xl" style="margin: auto;">
+
+    <!-- Form -->
+    <form [formGroup]="alreadyHaveOtp" (ngSubmit)="verifyOtp()">
+
+        <!-- Section -->
+        <div class="w-full">
+            <div class="text-xl">OTP Verification</div>
+            <div class="text-secondary">OTP will be verified from NCCPL!</div>
+        </div>
+        <div class="grid sm:grid-cols-4 gap-6 w-full mt-8" style="height: 100%; overflow-y: hidden; padding-top: 10px;">
+            <!--UIN -->
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>UIN</mat-label>
+                    <input
+                        [formControlName]="'uin'"
+                        type="text"
+                        matInput>
+                </mat-form-field>
+            </div>
+            <!--OTP -->
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>OTP</mat-label>
+                    <input
+                        [formControlName]="'otp'"
+                        type="password"
+                        matInput>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <!-- Divider -->
+        <div class="mt-4 mb-4 border-t"></div>
+
+        <!-- Actions -->
+        <div class="flex items-center justify-end">
+            <!-- <button
+                mat-stroked-button
+                type="button">
+                Cancel
+            </button> -->
+            <button
+                class="ml-4"
+                mat-flat-button
+                type="submit"
+                [color]="'primary'">Proceed
+            </button>
+        </div>
+    </form>
+
+</div>

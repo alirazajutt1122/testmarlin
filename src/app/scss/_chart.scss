@@ -1,0 +1,148 @@
+/* set default chart style */
+.wj-flexchart {
+    //background: gre
+    border: none;
+    display: block;
+}
+
+/* customize appearance of chart selection */
+.wj-flexchart .wj-state-selected {
+    stroke-width: 6px;
+}
+
+.panel-heading .stock-info {
+    display: block;
+    border-top: 1px solid #ddd;
+    margin-top: 5px;
+}
+
+.stock-info > div {
+    display: inline-block;
+    margin: 5px 5px 0px 0px;
+}
+
+.panel-default > .panel-heading {
+    border-color: transparent;
+}
+
+.rschart {
+    height: 100px;
+}
+
+.overlap {
+    position: absolute;
+    z-index: 999;
+    background: url('../../../src/assets/select2/select2-spinner.gif') no-repeat center center rgba(225, 225, 225, 0.1);
+}
+
+.wj-flexchart .wj-chart-linemarker {
+  background: rgba(42, 42, 42, 0.8);
+  color: #aaa;
+}
+
+.wj-flexchart .wj-chart-linemarker .wj-chart-linemarker-hline {
+    height: 1px;
+    margin-top: -3px;
+}
+
+.wj-flexchart .wj-chart-linemarker .wj-chart-linemarker-vline {
+    width: 1px;
+    margin-left: -3px;
+}
+
+#djiinfo {
+    margin-top: 5px;
+}
+
+.stock-info > span {
+    margin-top: 5px;
+}
+
+.volchart {
+    margin: 0;
+    padding: 0;
+    height: 80px;
+    border: 0;
+}
+
+.stchart {
+    margin: 0;
+    padding: 0;
+    border-bottom: 0;
+    -ms-touch-action: none;
+}
+
+input.wj-form-control {
+    line-height: 20px;
+}
+
+.col-md-3, .col-md-6, .col-md-5, .col-md-4 {
+    padding-left: 5px;
+    padding-right: 0;
+}
+
+.panel-heading .portfolio-search input {
+    font-size: 14px !important;
+    font-family: 'Segoe UI', sans-serif !important;
+    width: 170px;
+}
+
+.wj-listbox .wj-listbox-item {
+    font-size: 14px !important;
+    font-family: 'Segoe UI', sans-serif !important;
+}
+
+.panel-heading .row .portfolio-search {
+    padding-left: 12px;
+}
+
+.row .pull-right {
+    padding-right: 15px;
+}
+
+.volchart .wj-chart-linemarker-vline {
+    margin-top: -380px;
+}
+
+.panel-heading .moving-average {
+    border-top: 1px solid #ddd;
+    margin-top: 5px;
+}
+
+    .panel-heading .moving-average > div {
+        margin-top: 5px;
+    }
+
+    .panel-heading .moving-average .desc {
+        margin-right: 15px;
+    }
+
+    .panel-heading .moving-average .wj-dropdown {
+        margin: 0 15px;
+        width: 200px;
+    }
+
+    .panel-heading .moving-average .wj-inputnumber {
+        width: 100px;
+    }
+
+footer.container {
+    margin-top: 60px;
+    border-top: 1px solid #444;
+    padding-top: 20px;
+}
+
+footer.container p {
+    font-size: 12px;
+    color: #555;
+    line-height: 10px;
+}
+
+footer {
+    margin-bottom: 100px;
+}
+
+.pull-right label {
+    margin-right: 2px;
+    margin-left: 10px;
+}

@@ -1,0 +1,37 @@
+.cardContainer {
+    display: flex;
+    position: relative;
+    max-width: 60.7%;
+}
+
+.card_ {
+    display: flex;
+    left: 0;
+    background-color: #193c5d;
+    border-radius: 10px;
+    position: relative;
+    transition: 0.3s ease-out;
+
+
+}
+.card_:nth-child(n+9):nth-child(-n+100){
+    margin-left: -131.3px;
+}
+.card_:nth-child(n+1):nth-child(-n+11){
+    box-shadow:  -0.5rem 0 4rem #000000f7;
+}
+
+.card_:not(:first-child) {
+    margin-left: -30px;
+}
+
+.card_:hover ~ .card_ {
+    transform: translateX(29px);
+    position: relative;
+    transition: 0.4s ease-out;
+}
+.hvr:hover {
+    // background-color: #949eaa;
+    background-image: linear-gradient(to right, #9aa2ad, #a9aeb7);
+} 
+

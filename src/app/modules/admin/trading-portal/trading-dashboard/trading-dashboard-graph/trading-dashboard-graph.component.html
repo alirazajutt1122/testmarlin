@@ -1,0 +1,134 @@
+<order-new-all #newOrderAll [modalId]="'new-order-all-market'"></order-new-all>
+
+<div class="w-full" cdkScrollable>
+
+    <div id="mobile-graph-view" class="flex flex-auto  min-h-full">
+        <!-- .......................Symbol Detail.......................... -->
+        <div class="graphPagetheme mr-2 mt-4 ml-2 overflow-y-auto" style="flex: 0 1 30%;">
+            <div class="text-center">
+                <img class="mb-2 w-12 h-12 mx-auto block rounded-lg mt-10 " [src]='securityImage | async'>
+                <h1 class="mt-2 font-bold text-2xl">{{this.symbolCode}}</h1>
+                <h1 class="mt-4 mb-4 text-2xl">{{currentMarketPrice | async}}</h1>
+                <h1 class="mt-4 mb-0 text-xl text-lime-500" [ngStyle]="{'color': (colorOnChange | async)}">{{change |
+                    async}}({{changePercent | async}}%)</h1>
+
+                <div class="text-l">
+                    <hr class="mb-2">
+                    Instrument : {{assetClass | async}}
+                    <hr class="mt-2">
+                </div>
+
+                <div class="mt-8">
+                    <button class="transformHover graphbtnstyle mr-5" [ngStyle]="{'background-color': buyColor }"
+                        (click)="showModalForOrder('B')">Buy</button>
+                    <button class="transformHover graphbtnstyle" [ngStyle]="{'background-color': sellColor }"
+                        (click)="showModalForOrder('S')">Sell</button>
+                </div>
+
+                <div class="text-left ml-2 mt-6 flex">
+
+                    <!-- <span class="font-bold">Status:</span>  -->
+                    <div [ngStyle]="{'background-color': activeColor}" class="ml-1 mr-2 mt-1 circle"></div>
+                    {{marketStatus | async}}
+
+                </div>
+
+                <div class="flex mt-8 h-5   w-auto">
+                    <div class="mt-1 text-right " style="width:68% ;"> Trader's Sentiment</div>
+                    <div class="text-left h-4" style="width:32% ;">
+                        <mat-icon style="font-size: 18px;"> help_outline</mat-icon>
+                    </div>
+                </div>
+
+                <div class="flex mt-6  w-auto h-6 mr-6 ml-6 ">
+                    <div class="text-left mr-1 text-sm" style="width: 50%;" [ngStyle]="{'color': buyColor}">
+                        {{symbolBoughtPercent | async}}</div>
+                    <div class="text-right text-sm" style="width: 50%;" [ngStyle]="{'color': sellColor}">
+                        {{symbolSoldPercent | async}}</div>
+                </div>
+
+                <div class="flex  w-auto h-2 mr-6 ml-6">
+                    <div class="mr-1"
+                        [ngStyle]="{'width': (symbolBoughtPercentBar | async),'background-color': buyColorBar}">
+                    </div>
+                    <div [ngStyle]="{'width': (symbolSoldPercentBar | async),'background-color': sellColorBar}"></div>
+                </div>
+
+                <h1 class="mt-12 text-sm">Trading Hours Today 11:00 am - 3:00 pm </h1>
+            </div>
+        </div>
+        <!-- .......................Graph.................................. -->
+        <div class="flex flex-col flex-auto w-full  max-w-fit sm:max-w-full graphPagetheme mt-4
+        overflow-y-auto">
+            <div class="flex flex-0 flex-wrap items-center p-2 mb-2 border-b ">
+
+                <div class="flex items-center pl-2 ml-auto space-x-0.5 sm:space-x-2">
+
+                    <div class="hidden md:block ml-auto">
+                        <mat-label>Chart Type</mat-label>
+                        <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript w-30 ml-2">
+                            <mat-select (selectionChange)="setChartType(viewChanger.value)" [value]="view"
+                                #viewChanger="matSelect">
+                                <mat-option *ngFor="let type of chartTypes" [value]="type.key">{{type.text}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+
+                </div>
+
+                <div class="md:hidden ml-auto">
+                    <button class="" [matMenuTriggerFor]="actionsMenu" mat-icon-button>
+                        <mat-icon [svgIcon]="'heroicons_outline:dots-vertical'"></mat-icon>
+
+                        <mat-menu #actionsMenu="matMenu">
+                            <button [matMenuTriggerFor]="actionsViewsChartMenu" mat-menu-item>
+                                <span>Chart Type</span>
+                            </button>
+
+                        </mat-menu>
+
+                        <mat-menu #actionsViewsChartMenu="matMenu">
+                            <button mat-menu-item *ngFor="let type of chartTypes" (click)="setChartType(type.key)">
+                                <span>{{type.text}}</span>
+                            </button>
+                        </mat-menu>
+                        <mat-menu #actionsViewsIndicatorsMenu="matMenu">
+                            <button mat-menu-item *ngFor="let type of subTechnicalIndicatorTypes"
+                                (click)="setSubTechnicalIndicator(type)">
+                                <span>{{type}}</span>
+                            </button>
+                        </mat-menu>
+                        <mat-menu #actionsViewsDrawingMenu="matMenu">
+                            <button mat-menu-item *ngFor="let shape of shapes" (click)="setShapeType(shape.key)">
+                                <span>{{shape.text}}</span>
+                            </button>
+                            <button mat-menu-item (click)="removeAllShape()">
+                                <span>Remove All Shapes</span>
+                            </button>
+                        </mat-menu>
+                    </button>
+                </div>
+            </div>
+            <div id="technical-indicator-k-line" class="k-line-chart m-4 max-h-140 lg:h-100"></div>
+
+        </div>
+        <!-- .......................OrderBook & Recent News.......................... -->
+        <div style="flex: 0 1 35%;" class=" ml-2 -mr-2 mt-4 graphPagetheme max-w-80 overflow-y-auto">
+            <order-book-shared></order-book-shared>
+            <div class="flex">
+                <div class="containerrr">
+                    <div class="box1"></div>
+                    <div class="text-lg   tracking-tighter box2 pt-1">News & Advertisements</div>
+                </div>
+            </div>
+            <div class="graphPagetheme " style="margin-top: 5px;">
+                <div class="mr-4">
+                    <recent-news></recent-news>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>

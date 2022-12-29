@@ -1,0 +1,41 @@
+<div class="signInRouterImg">
+    <div class=" w-full h-40" style="padding-top: 80px;">
+        <span class="flex justify-center text-primary text-5xl font-medium font-serif">FAQs</span>
+        <span class="flex justify-center"> <img class="w-auto h-auto" src="assets/images/auth/Underline.png"> </span>
+        <span class="flex justify-center text-xl font-sans mt-6"> {{'FAQsHeader' | transloco}}.</span>
+    </div>
+
+    <!-- <div class="w-full mt-9">
+        <input 
+            class="searchBar mr-8" type="text" placeholder="Search FAQs"
+            (input)="search($event)" [maxLength]="50">
+    </div> -->
+
+
+    <div class="ml-40 mr-40 mt-10 mb-20  p-5">
+        <mat-accordion>
+            <div *ngFor="let data of textArr">
+                <mat-expansion-panel style="margin-top: 10px;" (opened)="panelOpenState = true"
+                    (closed)="panelOpenState = false">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            {{data?.faqsQuestion}}
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <p>{{data?.faqsAnswer}}</p>
+                </mat-expansion-panel>
+            </div>
+
+        </mat-accordion>
+
+        <span class="flex justify-center text-lg italic font-sans mt-4"> {{'faqBottom' | transloco}} <a
+                (click)="nevigate('contactUs')" class="ml-1 underline" style="color: #bebebe;">contact
+                details</a>.</span>
+
+
+    </div>
+
+
+
+
+</div>

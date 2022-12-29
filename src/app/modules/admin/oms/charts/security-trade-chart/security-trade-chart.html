@@ -1,0 +1,72 @@
+<div>
+
+    <div class="col-md-12">
+      <!--<div class="pull-left" style="color:#e4c351; font-size: 12px; font-weight: bold; padding-left: 25px;
+      padding-top: 10px;">
+        {{ security }} Performance
+      </div>-->
+      <div class="pull-right">
+        <div *ngIf="showPeriodSelector" class="btn-group btn-group-xs">
+          <button type="button" class="btn btn-default" (click)="refresh(1)">1d</button>
+          <button type="button" class="btn btn-default" (click)="refresh(5)">5d</button>
+          <button type="button" class="btn btn-default" (click)="refresh(30)">1m</button>
+          <button type="button" class="btn btn-default" (click)="refresh(90)">3m</button>
+          <button type="button" class="btn btn-default" (click)="refresh(180)">6m</button>
+          <button type="button" class="btn btn-default" (click)="refresh(365)">1y</button>
+        </div>
+        <button *ngIf="showQuantityChartButton" type="button" class="btn btn-default" title="Show Quantity" [class.active]="showVolumeChart"
+          (click)="onshowQuantityChartClick()"><span class="glyphicon glyphicon-stats"></span></button>
+        <wj-menu *ngIf="showChartType" [(value)]="chartType" header="Chart Type" (itemClicked)="itemClicked()">
+          <wj-menu-item value="Area">Area</wj-menu-item>
+          <wj-menu-item value="LineSymbols">LineSymbols</wj-menu-item>
+          <wj-menu-item value="Line">Line</wj-menu-item>
+          <wj-menu-item value="Scatter">Scatter</wj-menu-item>
+          <wj-menu-item value="Spline">Spline</wj-menu-item>
+          <wj-menu-item value="SplineSymbols">SplineSymbols</wj-menu-item>
+          <wj-menu-item value="SplineArea">SplineArea</wj-menu-item>
+          <wj-menu-item *ngIf="showCSOHLC" value="Candlestick">Candlestick</wj-menu-item>
+          <wj-menu-item *ngIf="showCSOHLC" value="HighLowOpenClose">HighLowOpenClose</wj-menu-item>
+        </wj-menu>
+      </div>
+    </div>
+  <!--plotMargin="NaN 65 NaN 30"-->
+    <wj-flex-chart #stChart style="display: block; background: transparent; margin: 0; padding: 0; border-bottom: 0;" [style.height.px]="priceChartHeight"
+       chartType="Area" (rendered)="stChartRendered()" [symbolSize]="4" binding="last_trade_price"
+      bindingX="last_trade_time" selectionMode="None">
+      <wj-flex-chart-axis [wjProperty]="'axisX'" format="H:mm" [min]="minDate" [max]="maxDate" [labels]="false" [axisLine]="false"></wj-flex-chart-axis>
+      <wj-flex-chart-axis [wjProperty]="'axisY'" format="n4" [axisLine]="false" position="Right"></wj-flex-chart-axis>
+      <wj-flex-chart-series *ngIf="trades && trades.length > 0" [itemsSource]="trades" [binding]="chartType === 'Candlestick' || chartType === 'HighLowOpenClose' ? 'high,low,open,close' : 'last_trade_price'"
+        name="Price" [style]="{ stroke: '#FFA500', fill: '#FFA500', 'fill-opacity': 0.25 }">
+      </wj-flex-chart-series>
+      <wj-flex-chart-legend position="None"></wj-flex-chart-legend>
+      <wj-flex-chart-annotation-layer #al>
+        <wj-flex-chart-annotation-text name="waterMarker" attachment="Relative" [point]="{x: 0.5, y: 1.0}" text="NO DATA" [isVisible]="!hasData"
+          [style]="{fill: '#B45F04', 'fill-opacity': 0.1, 'stroke': 'rgba(124,240,10,0.2)', 'font-size': '100px'}">
+        </wj-flex-chart-annotation-text>
+      </wj-flex-chart-annotation-layer>
+    </wj-flex-chart>
+    <div *ngIf="showQuantityChartButton"><br /></div>
+    <!--plotMargin="NaN 65 NaN 30"-->
+    <wj-flex-chart #volChart style="background: transparent;margin: 0;padding: 0;border-bottom: 0;" [style.height.px]="volumeChartHeight"
+      [style.display]=" showVolumeChart === true ? 'block': 'none'"  chartType="Column" [symbolSize]="4"
+      binding="last_trade_size" bindingX="last_trade_time" selectionMode="None">
+      <wj-flex-chart-axis [wjProperty]="'axisX'" format="H:mm" [min]="minDate" [max]="maxDate" [labels]="trades && trades.length > 0 ? true: false"
+        [axisLine]="false"></wj-flex-chart-axis>
+      <wj-flex-chart-axis [wjProperty]="'axisY'" [axisLine]="false" position="Right"></wj-flex-chart-axis>
+      <wj-flex-chart-series *ngIf="trades && trades.length > 0" [itemsSource]="trades" binding="last_trade_size" name="Quantity"
+        [style]="{ stroke: '#FFA500', fill: '#FFA500' }">
+      </wj-flex-chart-series>
+      <wj-flex-chart-legend position="None"></wj-flex-chart-legend>
+    </wj-flex-chart>
+    <br />
+    <wj-flex-chart #rsChart *ngIf="showRangeSelector" style="display:block;background: transparent;height: 100px;" plotMargin="NaN NaN NaN NaN"
+      binding="last_trade_price" chartType="Line" (rendered)="rsChartRendered()" bindingX="last_trade_time">
+      <wj-flex-chart-axis wjProperty="axisX" [min]="minDate" [max]="maxDate" [labels]="trades && trades.length > 0 ? true: false"></wj-flex-chart-axis>
+      <wj-flex-chart-axis wjProperty="axisY" [labels]="false" [majorGrid]="false"></wj-flex-chart-axis>
+      <wj-flex-chart-series *ngIf="trades && trades.length > 0" [itemsSource]="trades" [style]="{ stroke: '#FFA500' }">
+      </wj-flex-chart-series>
+      <wj-flex-chart-range-selector #rangeSelector [seamless]="true" (rangeChanged)="rangeChanged()">
+      </wj-flex-chart-range-selector>
+    </wj-flex-chart>
+
+  </div>

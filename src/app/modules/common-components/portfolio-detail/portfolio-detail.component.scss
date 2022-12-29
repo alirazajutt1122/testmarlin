@@ -1,0 +1,86 @@
+.percentageBar{
+    width: 93.3%;
+    margin-left: 32px;
+    margin-top: 8px;
+    height: 35px;
+}
+.textStyle{
+    font-size: medium;
+    color: white !important;
+}
+#chart_ {
+  padding: 0;
+  max-width: 650px;
+  margin: 0px auto;
+  margin-right: 19px;
+  }
+  #barchart {
+    max-width: 350px;
+  }
+  #apexcharts-radialbarTrack-0{
+    stroke:rgb(30 41 59)!important;
+  }
+  #apexcharts-radialbarTrack-1{
+    stroke:rgb(30 41 59)!important;
+  }
+  #apexcharts-radialbarTrack-2{
+    stroke:rgb(30 41 59)!important;
+  }
+  #apexcharts-radialbarTrack-3{
+    stroke:rgb(30 41 59)!important;
+  }
+//   #SvgjsPath2105{
+//     stroke: rgba(37, 197, 33, 0.836) !important;
+//   }
+//   #SvgjsPath2103{
+//     stroke: rgba(217, 119, 6, 0.911) !important;
+//   }
+
+//   #SvgjsPath2101{
+//     stroke: rgba(57,126,238,0.85) !important;
+//   }
+//   #SvgjsPath2099{
+//     stroke: rgba(252, 211, 57, 0.85) !important;
+//   }
+.apexcharts-menu-icon{
+  color:#1e293b ;
+  visibility: hidden;
+}
+.apexcharts-gridlines-horizontal{
+  visibility: hidden;
+  stroke:rgb(30 41 59)!important;
+}
+.apexcharts-gridlines-vertical{
+  visibility: hidden;
+  stroke:rgb(30 41 59)!important;
+}
+.apexcharts-xaxis apexcharts-yaxis-inversed{
+  visibility: hidden;
+}
+.apexcharts-yaxis apexcharts-xaxis-inversed{
+  visibility: hidden;
+}
+
+
+
+.globe_ {
+  width: 165px;
+  margin-top: -248px;
+  margin-left: 61px;
+  }
+
+  // .animation{
+  // animation-name: example;
+  // animation-duration: 3s;
+  // }
+
+  // @keyframes example {
+  //   from {width:0%;}
+  //   to {width:93.3%;}
+  // }
+
+  .barStyle{
+    margin-top: 8px;
+    font-weight: 700;
+    color:black !important;
+  }

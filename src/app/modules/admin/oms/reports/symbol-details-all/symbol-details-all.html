@@ -1,0 +1,30 @@
+<div class="row">
+    <div class="col-lg-12 col-md-offset-0 col-xs-12 widget-container">
+
+                        <ul class="mb-0 ml-5 mt-3" style="display: flex;">
+                            <li  class="tabsBtns" style="margin-left: 9%;" (click)="selectedAssetClass='equities'" *ngIf="authService.isAuhtorized(authService.OM_REPORTS_SECURITY_DETAILS_VIEW)" [class.tabsBtnsActive]="selectedAssetClass === 'equities'"><a  ><span [class.tabsBtnsTextActive]="selectedAssetClass === 'equities'" class="tabsBtnsText">{{'Equities' | translate }}</span></a></li>
+                            <li  class="tabsBtns" (click)="selectedAssetClass='bonds'"  [class.tabsBtnsActive]="selectedAssetClass === 'bonds'"><a   ><span [class.tabsBtnsTextActive]="selectedAssetClass === 'bonds'" class="tabsBtnsText">{{'Bonds' | translate }}</span></a></li>
+                           
+                        </ul>
+
+                    <ng-container *ngIf="selectedAssetClass === 'equities'">
+                              <symbol-details></symbol-details>
+                    </ng-container>
+
+                    <ng-container *ngIf="selectedAssetClass === 'bonds'">
+                         <bond-symbol-details></bond-symbol-details>
+                    </ng-container>
+
+
+                   
+
+
+
+
+
+
+
+
+        </div>
+
+    </div>

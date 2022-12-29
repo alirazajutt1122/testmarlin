@@ -1,0 +1,280 @@
+
+<section class="widget" widget="">
+	<header>
+		<h3><span class="fw-semi-bold">{{'Translation.Securities' | translate}} </span></h3>
+		<div class="other_btns">
+			<button *ngIf="userService.isAuhtorized(userService.EB_COMPANY_NEW)" class="add_new_btn" id="btnNew" data-toggle="modal"
+			 (click)="onNewAction()" data-target="#add_new" type="button" data-backdrop="static" title="{{'Translation.Add' | translate}}" ><i class="fa fa-plus" aria-hidden="true"></i>  </button>
+		</div>
+	</header>
+	<div class="table_container">
+		<wj-flex-grid [itemsSource]="itemsList" [isReadOnly]="true" [selectionMode]="'Row'" [autoSizeMode]="'Headers'" [headersVisibility]="'Column'"
+		 style="height: 300px;" #flex>
+			<wj-flex-grid-filter [filterColumns]="['symbol', 'securityName','securityType.securityType','isin','sector.sectorName','registrar.name','active']"></wj-flex-grid-filter>
+			<wj-flex-grid-column [header]="'Translation.Code' | translate" [align]="'left'" [binding]="'symbol'" [width]="'0.3*'" [minWidth]="30"></wj-flex-grid-column>
+			<wj-flex-grid-column [header]="'Translation.Name' | translate" [align]="'left'" [binding]="'securityName'" [width]="'0.3*'" [minWidth]="30"></wj-flex-grid-column>
+			<wj-flex-grid-column [header]="'Translation.Type' | translate" [align]="'left'" [binding]="'securityType.securityType'" [width]="'0.3*'" [minWidth]="30"></wj-flex-grid-column>
+			<wj-flex-grid-column [header]="'ISIN'" [align]="'left'" [binding]="'isin'" [width]="'0.3*'" [minWidth]="30"></wj-flex-grid-column>
+			<wj-flex-grid-column [header]="'Translation.Sector' | translate" [align]="'left'" [binding]="'sector.sectorName'" [width]="'0.3*'" [minWidth]="30"></wj-flex-grid-column>
+			<wj-flex-grid-column [header]="'Translation.Registrar' | translate" [align]="'left'" [binding]="'registrar.name'" [width]="'0.3*'" [minWidth]="30"></wj-flex-grid-column>
+			<wj-flex-grid-column [header]="'Common.Active' | translate" [binding]="'active'" [width]="'0.2*'" [minWidth]="30"></wj-flex-grid-column>
+			<wj-flex-grid-column [header]="'Common.Action' | translate" [width]="'0.2*'" [align]="'center'" [minWidth]="30" *ngIf="userService.isAuhtorized(userService.EB_COMPANY_UPDATE)">
+				<ng-template wjFlexGridCellTemplate [cellType]="'Cell'">
+					<!--<button id="btnEdit" class="on_edit_button" role="button"
+                                (click)="onEditAction()" title="Edit"  data-target="#add_new" data-toggle="modal"
+                                data-backdrop="static"> <img src="assets/img/edit_orange.png"/> </button>-->
+								<img src="assets/img/edit_orange.png"  style="width: fit-content;" title="{{'Translation.Edit' | translate}}" (click)="onEditAction()" data-target="#add_new" data-toggle="modal" data-backdrop="static"/>
+				</ng-template>
+			</wj-flex-grid-column>
+		</wj-flex-grid>
+	</div>
+	<div class="row"></div>
+	<div class="btn-group col-xs-12 align-right">
+		<!-- Paginator -->
+		<wj-collection-view-pager [cv]="flex?.collectionView"></wj-collection-view-pager>
+		<!-- page size -->
+		<wj-menu [(value)]="pageSize" [header]= "'Common.Page Size' | translate">
+			<wj-menu-item [value]="0">{{ 'Common.No Paging' | translate }}</wj-menu-item>
+			<wj-menu-item [value]="5">5 {{ 'Common.items' | translate }}</wj-menu-item>
+			<wj-menu-item [value]="10">10 {{ 'Common.items' | translate }}</wj-menu-item>
+			<wj-menu-item [value]="20">20 {{ 'Common.items' | translate }}</wj-menu-item>
+			<wj-menu-item [value]="30">30 {{ 'Common.items' | translate }}</wj-menu-item>
+			<wj-menu-item [value]="50">50 {{ 'Common.items' | translate }}</wj-menu-item>
+			<wj-menu-item [value]="100">100 {{ 'Common.items' | translate }}</wj-menu-item>
+		</wj-menu>
+	</div>
+</section>
+
+<div id="add_new" class="modal fade" role="dialog" data-keyboard="true">
+	<div class="modal-dialog modal-lg">
+
+		<!-- Modal content-->
+		<div class="modal-content">
+			<form class="form-horizontal form-label-left parsleyjs" data-parsley-priority-enabled="false" role="form" [formGroup]="myForm"
+			 novalidate (ngSubmit)="onSaveAction(myForm.value, myForm.valid)">
+				<div class="modal-body modal-no-border">
+					<div class="row setup_box_container">
+						<div class="col-md-3 col-sm-5 modal_left">
+							<div class="wizard_Logo">
+								<img src="assets/img/Security.png" class="formImg"/>
+								<h4>{{'Translation.Securities' | translate}}</h4>
+								<p>{{'Translation.Management of financial securities & configurations' | translate}}</p>
+							</div>
+						</div>
+						<div class="col-md-9 col-sm-7 modal_center">
+							<div class="row" style="margin: 40px 40px 0px 40px">
+
+								<div class="col-sm-6 fields_box">
+                                    <label for="code"> {{'Translation.Exchange' | translate}} <span class="validation">*</span></label>
+                                    <wj-combo-box  autofocus="autofocus" tabindex="1" id="exchangeId" formControlName="exchangeId" class="wijmo_style"
+                                        [isEditable]="true" [itemsSource]="exchangeList" displayMemberPath="exchangeCode" selectedValuePath="exchangeId"
+										[(ngModel)]="exchangeId"
+                                        [isRequired]="true"></wj-combo-box>
+
+                                    <div *ngIf="myForm.controls['exchangeId'].hasError('required') || myForm.controls['exchangeId'].hasError('pattern')" [hidden]="myForm.controls['exchangeId'].valid || (myForm.controls['exchangeId'].pristine && !isSubmitted)"
+                                        class="text-danger">{{'Translation.Exchange' | translate}} {{'Translation.is required' | translate}}.</div>
+                                </div>
+
+								<div class="col-sm-6 fields_box">
+									<label for="securityCode">{{'Translation.Code' | translate}} <span class="validation">*</span></label>
+									<wj-input-mask #securityCode id="securityCode" class="wijmo_style" formControlName="securityCode" maxlength="40" [(ngModel)]="selectedItem.symbol"
+									 myForm required [isRequired]="true"> </wj-input-mask>
+									<div *ngIf="myForm.controls['securityCode'].hasError('required')" [hidden]="myForm.controls.securityCode.valid || (myForm.controls.securityCode.pristine && !isSubmitted)"
+									 class="text-danger">{{'Translation.Code' | translate}} {{'Translation.is required' | translate}}.</div>
+									<div *ngIf="myForm.controls['securityCode'].hasError('pattern')" class="text-danger">{{'Translation.Invalid' | translate}} {{'Translation.Code' | translate}}</div>
+								</div>
+
+								<div class="col-sm-6 fields_box">
+									<label for="securityName">{{'Translation.Name' | translate}} <span class="validation">*</span></label>
+									<wj-input-mask id="securityName" class="wijmo_style" formControlName="securityName" maxlength="250" [(ngModel)]="selectedItem.securityName"
+									 myForm required [isRequired]="true"> </wj-input-mask>
+									<div *ngIf="myForm.controls['securityName'].hasError('required')" [hidden]="myForm.controls.securityName.valid || (myForm.controls.securityName.pristine && !isSubmitted)"
+									 class="text-danger">{{'Translation.Name' | translate}} {{'Translation.is required' | translate}}.</div>
+									<div *ngIf="myForm.controls['securityName'].hasError('pattern')" class="text-danger">{{'Translation.Invalid' | translate}} {{'Translation.Name' | translate}}</div>
+								</div>
+
+								<div class="col-sm-6 fields_box">
+									<label for="isin">ISIN <span class="validation">*</span></label>
+									<wj-input-mask id="isin" class="wijmo_style" formControlName="isin" maxlength="12" [(ngModel)]="selectedItem.isin" myForm
+									 required [isRequired]="true"> </wj-input-mask>
+									<div *ngIf="myForm.controls['isin'].hasError('required')" [hidden]="myForm.controls.isin.valid || (myForm.controls.isin.pristine && !isSubmitted)"
+									 class="text-danger">ISIN {{'Translation.is required' | translate}}.</div>
+									<div *ngIf="myForm.controls['isin'].hasError('pattern')" class="text-danger">{{'Translation.Invalid' | translate}} ISIN</div>
+								</div>
+
+								<div class="col-sm-6 fields_box">
+									<label for="faceValue">{{'Translation.Face Value' | translate}} <span class="validation">*</span></label>
+									<wj-input-number tabindex="4" id="faceValue" formControlName="faceValue" [max]="9999999999.9999" [min]="0.0001" [format]="'n4'" class="wijmo_style"
+									 [(ngModel)]="selectedItem.faceValue" required></wj-input-number>
+									<div *ngIf="myForm.controls['faceValue'].hasError('required')" [hidden]="myForm.controls.faceValue.valid || (myForm.controls.faceValue.pristine && !isSubmitted)"
+									 class="text-danger">{{'Translation.Face Value' | translate}} {{'Translation.is required' | translate}}.</div>
+									<div *ngIf="myForm.controls['faceValue'].hasError('pattern')" class="text-danger">{{'Translation.Invalid' | translate}} {{'Translation.Face Value' | translate}}</div>
+								</div>
+
+
+								<div class="col-sm-6 fields_box">
+									<label for="outstandingShares">{{'Translation.Outstanding Shares' | translate}} <span class="validation">*</span></label>
+									<wj-input-number tabindex="5" id="outstandingShares" formControlName="outstandingShares" maxlength="12" [min]="1" [format]="'n0'"
+									 class="wijmo_style" [(ngModel)]="selectedItem.outstandingShares" required></wj-input-number>
+									<div *ngIf="myForm.controls['outstandingShares'].hasError('required')" [hidden]="myForm.controls.outstandingShares.valid || (myForm.controls.outstandingShares.pristine && !isSubmitted)"
+									 class="text-danger">{{'Translation.Outstanding Shares' | translate}} {{'Translation.is required' | translate}}.</div>
+									<div *ngIf="myForm.controls['outstandingShares'].hasError('pattern')" class="text-danger">{{'Translation.Invalid' | translate}} {{'Translation.Outstanding Shares' | translate}}</div>
+								</div>
+
+								<div class="col-sm-6 fields_box">
+									<label for="issuePrice">{{'Translation.Issue Price' | translate}} <span class="validation">*</span></label>
+									<wj-input-number tabindex="6" id="issuePrice" formControlName="issuePrice"[max]="9999999999.9999"  [min]="0.0001" [format]="'n4'"
+									 class="wijmo_style" [(ngModel)]="selectedItem.issuePrice" required></wj-input-number>
+									<div *ngIf="myForm.controls['issuePrice'].hasError('required')" [hidden]="myForm.controls.issuePrice.valid || (myForm.controls.issuePrice.pristine && !isSubmitted)"
+									 class="text-danger">{{'Translation.Issue Price' | translate}} {{'Translation.is required' | translate}}.</div>
+									<div *ngIf="myForm.controls['issuePrice'].hasError('pattern')" class="text-danger">{{'Translation.Invalid' | translate}} {{'Translation.Issue Price' | translate}}</div>
+								</div>
+
+								<div class="col-sm-6 fields_box">
+									<label for="registrarId">{{'Translation.Registrar' | translate}} <span class="validation">*</span></label>
+									<wj-combo-box tabindex="7" id="registrarId" formControlName="registrarId" class="wijmo_style" [isEditable]="true" [itemsSource]="registrarList"
+									 displayMemberPath="displayName_" selectedValuePath="registrarId" [(ngModel)]="selectedItem.registrar.registrarId"></wj-combo-box>
+									<div *ngIf="myForm.controls['registrarId'].hasError('required')" [hidden]="myForm.controls.registrarId.valid || (myForm.controls.registrarId.pristine && !isSubmitted)"
+									 class="text-danger">{{'Translation.Registrar' | translate}} {{'Translation.is required' | translate}}.</div>
+								</div>
+
+								<div class="col-sm-6 fields_box">
+									<label for="sectorId">{{'Translation.Sector' | translate}} <span class="validation">*</span></label>
+									<wj-combo-box tabindex="8" id="sectorId" formControlName="sectorId" class="wijmo_style" [isEditable]="true" [itemsSource]="sectorList"
+									 displayMemberPath="displayName_" selectedValuePath="sectorId" [(ngModel)]="selectedItem.sector.sectorId"></wj-combo-box>
+									<div *ngIf="myForm.controls['sectorId'].hasError('required')" [hidden]="myForm.controls.sectorId.valid || (myForm.controls.sectorId.pristine && !isSubmitted)"
+									 class="text-danger">{{'Translation.Sector' | translate}} {{'Translation.is required' | translate}}.</div>
+								</div>
+
+								<div class="col-sm-6 fields_box">
+									<label for="currency">{{"Translation.Currency" | translate}} <span class="validation">*</span></label>
+									<wj-combo-box tabindex="18" id="currency" formControlName="currency"
+										class="wijmo_style" [isEditable]="true" [itemsSource]="currencyList"
+										displayMemberPath="currencyCode" selectedValuePath="currencyId"
+										[(ngModel)]="selectedItem.securityFisDetail.currency.currencyId"></wj-combo-box>
+									<div *ngIf="myForm.controls['currency'].hasError('required')"
+										[hidden]="myForm.controls.currency.valid || (myForm.controls.currency.pristine && !isSubmitted)"
+										class="text-danger">{{"Translation.Currency" | translate}} {{"Translation.is required" | translate}}.</div>
+									
+								</div>
+
+
+								<div class="col-sm-6 fields_box">
+									<label for="securityTypeId">{{'Translation.Security Type' | translate}} <span class="validation">*</span></label>
+									<wj-combo-box tabindex="9" id="securityTypeId" formControlName="securityTypeId" class="wijmo_style" [isEditable]="true"
+									 [itemsSource]="securityTypeList" displayMemberPath="securityType" selectedValuePath="securityTypeId" [(ngModel)]="securityTypeId_"
+									 (ngModelChange)="onSecurityTypeChangeEvent($event)" [isDisabled]="true"></wj-combo-box>
+									<div *ngIf="myForm.controls['securityTypeId'].hasError('required')" [hidden]="myForm.controls.securityTypeId.valid || (myForm.controls.securityTypeId.pristine && !isSubmitted)"
+									 class="text-danger">{{'Translation.Security Type' | translate}} {{'Translation.is required' | translate}}.</div>
+								</div>
+
+								<div class="col-sm-6 fields_box" *ngIf="showBondDetail">
+									<label for="bondTypeId">{{'Translation.Bond Type' | translate}} <span class="validation">*</span></label>
+									<wj-combo-box tabindex="10" id="bondTypeId" formControlName="bondTypeId" class="wijmo_style" [isEditable]="true" [itemsSource]="bondTypeList"
+									 displayMemberPath="bondType" selectedValuePath="bondTypeId" [(ngModel)]="selectedItem.securityFisDetail.bondType.bondTypeId"></wj-combo-box>
+									<div *ngIf="myForm.controls['bondTypeId'].hasError('required')" [hidden]="myForm.controls.bondTypeId.valid || (myForm.controls.bondTypeId.pristine && !isSubmitted)"
+									 class="text-danger">{{'Translation.Bond Type' | translate}} {{'Translation.is required' | translate}}.</div>
+								</div>
+
+								<div class="col-sm-6 fields_box" *ngIf="showBondDetail">
+									<label for="bondCategoryId">{{'Translation.Bond Category' | translate}} <span class="validation">*</span></label>
+									<wj-combo-box tabindex="11" id="bondCategoryId" formControlName="bondCategoryId" class="wijmo_style" [isEditable]="true"
+									 [itemsSource]="bondCategoryList" displayMemberPath="category" selectedValuePath="categoryId" [(ngModel)]="selectedItem.securityFisDetail.bondCategory.categoryId"></wj-combo-box>
+									<div *ngIf="myForm.controls['bondCategoryId'].hasError('required')" [hidden]="myForm.controls.bondCategoryId.valid || (myForm.controls.bondCategoryId.pristine && !isSubmitted)"
+									 class="text-danger">{{'Translation.Bond Category' | translate}} {{'Translation.is required' | translate}}.</div>
+								</div>
+
+								<div class="col-sm-6 fields_box" *ngIf="showBondDetail">
+									<label for="couponRate">{{'Translation.Coupon Rate' | translate}} (%) <span class="validation">*</span></label>
+									<wj-input-number tabindex="12" id="couponRate" formControlName="couponRate" [max]="100.0000" [min]="0.0001" [format]="'n4'"
+									 class="wijmo_style" [(ngModel)]="selectedItem.securityFisDetail.couponRate" required></wj-input-number>
+									<div *ngIf="myForm.controls['couponRate'].hasError('required')" [hidden]="myForm.controls.couponRate.valid || (myForm.controls.couponRate.pristine && !isSubmitted)"
+									 class="text-danger">{{'Translation.Coupon Rate' | translate}} {{'Translation.is required' | translate}}.</div>
+									<div *ngIf="myForm.controls['couponRate'].hasError('pattern')" class="text-danger">{{'Translation.Invalid' | translate}} {{'Translation.Coupon Rate Value' | translate}}</div>
+								</div>
+
+
+								<div class="col-sm-6 fields_box" *ngIf="showBondDetail">
+									<label for="issueDate">{{'Translation.Issue Date' | translate}}</label>
+									<wj-input-date tabindex="13" [(value)]="selectedItem.securityFisDetail.issueDate" [format]="'yyyy-MM-dd'" (valueChanged)="calculateNoOfCouponsAction($event)"
+									 class="wijmo_style" #issueDate required [showYearPicker]="false">
+									</wj-input-date>
+								</div>
+
+								<div class="col-sm-6 fields_box" *ngIf="showBondDetail">
+									<label for="maturityDate">{{'Translation.Maturity Date' | translate}}</label>
+									<wj-input-date tabindex="14" [(value)]="selectedItem.securityFisDetail.maturityDate" [format]="'yyyy-MM-dd'" (valueChanged)="calculateNoOfCouponsAction($event)"
+									 class="wijmo_style" #maturityDate required [showYearPicker]="false">
+									</wj-input-date>
+								</div>
+
+								<div class="col-sm-6 fields_box" *ngIf="showBondDetail">
+									<label for="couponFrequency">{{'Translation.Coupon Frequency' | translate}} <span class="validation">*</span></label>
+									<wj-combo-box tabindex="15" id="couponFrequency" formControlName="couponFrequency" class="wijmo_style" [isEditable]="true"
+									 [itemsSource]="couponFrequencyList" displayMemberPath="frequencyDesc" selectedValuePath="frequencyCode" [(ngModel)]="selectedItem.securityFisDetail.couponFrequency.frequencyCode"
+									 (ngModelChange)="calculateNoOfCouponsAction($event)"></wj-combo-box>
+									<div *ngIf="myForm.controls['couponFrequency'].hasError('required')" [hidden]="myForm.controls.couponFrequency.valid || (myForm.controls.couponFrequency.pristine && !isSubmitted)"
+									 class="text-danger">{{'Translation.Coupon Frequency' | translate}} {{'Translation.is required' | translate}}.</div>
+								</div>
+
+								<div class="col-sm-6 fields_box" *ngIf="showBondDetail">
+									<label for="numberOfCoupons">{{'Translation.Number of Coupons' | translate}}</label>
+									<wj-input-number tabindex="16" id="numberOfCoupons" formControlName="numberOfCoupons" [max]="9999999" [min]="0" class="wijmo_style"
+									 [(ngModel)]="numberOfCoupons" [isDisabled]="showBondDetail"></wj-input-number>
+								</div>
+
+								<div class="col-sm-6 fields_box" *ngIf="showBondDetail">
+									<label for="dayCountConvention">{{'Translation.Day Count Convention' | translate}} <span class="validation">*</span></label>
+									<wj-combo-box tabindex="17" id="dayCountConvention" formControlName="dayCountConvention" class="wijmo_style" [isEditable]="true"
+									 [itemsSource]="dayCountConventionList" displayMemberPath="convention" selectedValuePath="conventionId" [(ngModel)]="selectedItem.securityFisDetail.dayCountConvention"></wj-combo-box>
+									<div *ngIf="myForm.controls['dayCountConvention'].hasError('required')" [hidden]="myForm.controls.dayCountConvention.valid || (myForm.controls.dayCountConvention.pristine && !isSubmitted)"
+									 class="text-danger">{{'Translation.Day Count Convention' | translate}} {{'Translation.is required' | translate}}.</div>
+								</div>
+
+								<!-- <div class="col-sm-6 fields_box" >
+									<label for="symbolImage">Upload Image <span class="validation">*</span></label>
+									<wj-combo-box tabindex="17" id="symbolImage" formControlName="symbolImage" class="wijmo_style"></wj-combo-box>
+									<div *ngIf="myForm.controls['symbolImage'].hasError('required')" [hidden]="myForm.controls.symbolImage.valid || (myForm.controls.symbolImage.pristine && !isSubmitted)"
+									 class="text-danger">Symbol Image {{'Translation.is required' | translate}}.</div>
+								</div> -->
+
+								<div class="col-sm-6 fields_box" style="left:35px;top:29px">
+									<button class="px-3" type="button" mat-stroked-button (click)="onUpload.click()">
+										{{'Translation.Upload Image' | translate}}
+									</button>
+									<input hidden #onUpload (change)="onFileSelected($event.target)" type="file"
+										accept="image/*" formControlName="image" id="image" />
+										<div class="w-20 h-20 relative" style="left:172px;top: -63px;"><img src={{attachedImg}} alt=""></div>
+								</div>
+								<div class="col-sm-6 fields_box" >
+									<div class="abc-checkbox abc-checkbox-primary" style="float: left;padding-top: 0px;margin-left: 0px;">
+										<input id="active" type="checkbox" [(ngModel)]='selectedItem.active' formControlName="active">
+										<label for="active">{{'Common.Active' | translate}}</label>
+									</div>
+								</div>
+								<div class="col-sm-6 fields_box" >
+									<div class="abc-checkbox abc-checkbox-primary" style="float: left;padding-top: 0px;margin-left: 0px;">
+										<input id="etf" type="checkbox" [(ngModel)]='selectedItem.etf' formControlName="etf">
+										<label for="etf">{{'ETF' | translate}}</label>
+									</div>
+								</div>
+								
+
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="orange_footer">
+					<button id="btnSave" type="submit" class="save_btn" *ngIf="!isEditing && userService.isAuhtorized(userService.EB_COMPANY_NEW)"
+					 >{{'Common.Save' | translate}}</button>
+					<button id="btnSave1" type="submit" class="save_btn" *ngIf="isEditing && userService.isAuhtorized(userService.EB_COMPANY_UPDATE)"
+					 >{{'Common.Update' | translate}}</button>
+					<button id="btnCancel" type="button" data-dismiss="modal" class="cancel_btn" (click)="onCancelAction()" >{{'Common.Cancel' | translate}}</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<dialog-cmp #dialogCmp (btnClick)="getNotification($event)"> </dialog-cmp>

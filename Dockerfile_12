@@ -1,0 +1,41 @@
+# Stage 1: Compile and Build angular codebase
+
+# Use official node image as the base image
+FROM node:16.15.0-alpine
+
+# Set the working directory
+WORKDIR /usr/local/app
+
+# Add the source code to app
+COPY ./ /usr/local/app/
+
+# Install all the dependencies
+RUN npm install
+
+# Generate the build of the application
+RUN npm run build
+
+
+# Stage 2: Serve app with nginx server
+
+# Use official nginx image as the base image
+#FROM tomcat:latest
+
+# Copy the build output to replace the default nginx contents.
+#OPY --from=build /usr/local/app/dist/fuse/ /usr/local/tomcat/webapps/ROOT/
+
+FROM centos
+MAINTAINER raza
+RUN mkdir /opt/tomcat/
+WORKDIR /opt/tomcat
+RUN curl -O https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.70/bin/apache-tomcat-9.0.70.tar.gz
+RUN tar xvfz apache*.tar.gz
+RUN mv apache-tomcat-9.0.70/* /opt/tomcat/.
+RUN yum -y install java
+RUN java -version
+COPY --from=build /usr/local/app/dist/fuse/ /opt/tomcat/webapps/ROOT/
+
+#WORKDIR /opt/tomcat/webapps
+
+# Expose port 8087
+EXPOSE 8087

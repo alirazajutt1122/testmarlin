@@ -1,0 +1,251 @@
+<div class="row  boxRepo " style="background: #193c5d47;">
+    <div class="col-sm-4">
+        <div class="form-group ">
+            <label>{{ 'Translation.Intra Participant Repo' | translate }}</label>
+            <div class="input-group">
+                <input type="radio" id="intra" name="repo" value="intra" (change)="radioClicked('intra')" checked>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <div class="form-group ">
+            <label>{{ 'Translation.Inter Participant Repo' | translate }}</label>
+            <div class="input-group">
+                <input type="radio" id="inter" name="repo" value="inter" (change)="radioClicked('inter')">
+            </div>
+        </div>
+    </div>
+</div>
+
+<form role="form" [formGroup]="myForm" class="form-horizontal form-label-left parsleyjs" method="post"
+    data-parsley-priority-enabled="false" novalidate (ngSubmit)="onSubmit(myForm.value, myForm.valid)">
+    <div class="modal-body" style="padding: 10px 0px;">
+
+        <div class="row   boxRepo">
+            <div class="row  ">
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>{{ 'Translation.Collateral' | translate }}<span class="validation">*</span></label>
+                        <div class="input-group">
+                            <wj-auto-complete id="collateral" formControlName="collateral" [isEditable]="true"
+                                #collateral [(ngModel)]="repo.collateral" [itemsSource]="collateralList"
+                                (selectedIndexChanged)="onSymbolChange()" displayMemberPath="displayName_"
+                                selectedValuePath="value" [isRequired]="true">
+                            </wj-auto-complete>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>{{ 'Translation.Clean Price' | translate }}<span class="validation">*</span></label>
+                        <div class="input-group">
+                            <wj-input-mask #cleanPrice type="text" id="cleanPrice" formControlName="cleanPrice"
+                                [(ngModel)]="repo.cleanPrice">
+                            </wj-input-mask>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="search-input">{{ 'Translation.Dirty Price' | translate }}<span
+                                class="validation">*</span></label>
+                        <div class="input-group">
+                            <wj-input-mask #dirtyPrice type="text" id="dirtyPrice" formControlName="dirtyPrice" readonly [isDisabled]="true"
+                                [(ngModel)]="repo.dirtyPrice">
+                            </wj-input-mask>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="search-input">{{ 'Translation.Quantity' | translate }}<span
+                                class="validation">*</span></label>
+                        <div class="input-group">
+                            <wj-input-mask #quantity type="text" id="quantity" formControlName="quantity"
+                                [(ngModel)]="repo.quantity">
+                            </wj-input-mask>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="search-input">{{ 'Translation.Nominal Value' | translate }}<span
+                                class="validation">*</span></label>
+                        <div class="input-group">
+                            <wj-input-mask #nominalValue type="text" id="nominalValue" formControlName="nominalValue" readonly [isDisabled]="true"
+                                [(ngModel)]="repo.nominalValue">
+                            </wj-input-mask>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="search-input">{{ 'Translation.Market Value' | translate }}<span
+                                class="validation">*</span></label>
+                        <div class="input-group">
+                            <wj-input-mask #marketValue type="text" id="marketValue" formControlName="marketValue" readonly [isDisabled]="true"
+                                [(ngModel)]="repo.marketValue">
+                            </wj-input-mask>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="search-input">{{ 'Translation.Repo Type' | translate }}<span
+                                class="validation">*</span></label>
+                        <div class="input-group">
+                            <wj-auto-complete id="repoType" formControlName="repoType" 
+                            #repoType [(ngModel)]="repo.repoType" [itemsSource]="repoTypeList" 
+                            displayMemberPath="displayName_" selectedValuePath="value" 
+                            [isEditable]="true" [isRequired]="true">
+                        </wj-auto-complete>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="search-input">{{ 'Translation.Haircut' | translate }}%<span
+                                class="validation">*</span></label>
+                        <div class="input-group">
+                            <wj-input-mask #haircut type="text" id="haircut" formControlName="haircut"
+                                [(ngModel)]="repo.haircut">
+                            </wj-input-mask>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="search-input">{{ 'Translation.Purchase Price' | translate }}<span
+                                class="validation">*</span></label>
+                        <div class="input-group">
+                            <wj-input-mask #purchasePrice type="text" id="purchasePrice" formControlName="purchasePrice" readonly [isDisabled]="true"
+                                [(ngModel)]="repo.purchasePrice">
+                            </wj-input-mask>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="search-input">{{ 'Translation.Initial Date' | translate }}<span
+                                class="validation">*</span></label>
+                        <div class="input-group">
+                            <wj-input-date  #initialDate id="initialDate" formControlName="initialDate" class="wijmo_style" [(ngModel)]="repo.initialDate" readonly [isDisabled]="true"
+                            [format]="dateFormat" [mask]="dateMask" [isRequired]="true" [showYearPicker]="false"> </wj-input-date>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="search-input">{{ 'Translation.Repurchase Date' | translate }}<span
+                                class="validation">*</span></label>
+                        <div class="input-group">
+                            <wj-input-date  #repurchaseDate id="repurchaseDate" formControlName="repurchaseDate" class="wijmo_style" [(ngModel)]="repo.repurchaseDate" 
+                            [format]="dateFormat" [mask]="dateMask" [isRequired]="true" [showYearPicker]="false"> </wj-input-date>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="search-input">{{ 'Translation.Repo Interest Rate' | translate }}<span
+                                class="validation">*</span></label>
+                        <div class="input-group">
+                            <wj-input-mask #repoInterestRate type="text" id="repoInterestRate"
+                                formControlName="repoInterestRate" [(ngModel)]="repo.repoInterestRate">
+                            </wj-input-mask>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-sm-5">
+                    <div class="form-group">
+                        <label for="search-input">{{ 'Translation.Repurchase Price' | translate }}<span
+                                class="validation">*</span></label>
+                        <div class="input-group">
+                            <wj-input-mask #repurchasePrice type="text" id="repurchasePrice" readonly  [isDisabled]="true"
+                                formControlName="repurchasePrice" [(ngModel)]="repo.repurchasePrice">
+                            </wj-input-mask>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-5">
+                    <div class="form-group">
+                        <label for="search-input">{{ 'Translation.Account' | translate }}<span
+                                class="validation">*</span></label>
+                        <div class="input-group">
+                            <wj-auto-complete #account id="account" class="wijmo_style" formControlName="account"
+                                [headerPath]="'clientCode'" [isRequired]="true" [itemsSource]="clientList"
+                                displayMemberPath="displayValue_" selectedValuePath="clientCode"
+                                [(ngModel)]="repo.account"></wj-auto-complete>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row   boxRepo" style="background: #193c5d47;">
+            <div class="row ">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="search-input">{{ 'Translation.Borker' | translate }}<span
+                                class="validation">*</span></label>
+                        <div class="input-group">
+                            <wj-input-mask #borker type="text" id="borker" formControlName="borker" readonly [isDisabled]="true"
+                                [(ngModel)]="repo.borker">
+                            </wj-input-mask>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="intra" class="col-sm-4">
+                    <div class="form-group">
+                        <label for="search-input">{{ 'Translation.Counter Borker' | translate }}<span
+                                class="validation">*</span></label>
+                        <div class="input-group">
+                            <wj-input-mask #counterBroker type="text" id="counterBroker" formControlName="counterBroker" readonly [isDisabled]="true"
+                                [(ngModel)]="repo.counterBroker">
+                            </wj-input-mask>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="!intra" class="col-sm-6">
+                    <div class="form-group">
+                        <label for="search-input">{{ 'Translation.Counter Borker' | translate }}<span
+                                class="validation">*</span></label>
+                        <div class="input-group">
+                            <wj-auto-complete id="counterBroker" formControlName="counterBroker" [isEditable]="true" 
+                            #counterBroker [(ngModel)]="repo.counterBroker" [itemsSource]="counterBorkerList" displayMemberPath="displayName_"
+                            selectedValuePath="value" [isRequired]="true">
+                        </wj-auto-complete>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="intra" class="col-sm-4">
+                    <div class="form-group">
+                        <label for="search-input">{{ 'Translation.Counter Account' | translate }}<span
+                                class="validation">*</span></label>
+                        <div class="input-group">
+                            <wj-input-mask #counterAccount type="text" id="counterAccount" 
+                                formControlName="counterAccount" [(ngModel)]="repo.counterAccount">
+                            </wj-input-mask>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer" style=" margin-left: -25px; margin-right: -25px; width: 107.4%;">
+        <button type="submit"
+            *ngIf="authService.isAuhtorized(authService.OM_EQUITY_ORDER_NEW)  || loggedInUserType=== userType.CLIENT"
+            class="mx-3 btn stock_box_sell-btn-close">{{ 'Translation.Submit' | translate }} <i class="fa fa-check"
+                aria-hidden="true"></i></button>
+        <button type="button" class="btn stock_box_sell-btn-close" (click)="onClose()">{{ 'Translation.Close' |
+            translate
+            }} <i class="fa fa-times" aria-hidden="true"></i></button>
+    </div>
+
+</form>

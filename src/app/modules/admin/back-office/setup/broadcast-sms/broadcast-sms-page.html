@@ -1,0 +1,53 @@
+
+    <section class="widget" widget="">
+      <header>
+        <h3>{{"Menu.Broadcast" | translate}} <span class="fw-semi-bold">SMS</span></h3>
+      </header>
+      <div class="widget-body">
+        <form class="form-horizontal form-label-left" method="post" data-parsley-priority-enabled="false" novalidate role="form"
+          name="myForm" [formGroup]="myForm" (ngSubmit)="sendSMS(myForm.value, myForm.valid)">
+          <div class="row">
+            <div class="col-sm-4 fields_box">
+              <label for="code"> {{'Translation.Exchange' | translate}} <span class="validation">*</span></label>
+              <wj-combo-box autofocus="autofocus" tabindex="1" id="exchangeId" formControlName="exchangeId" class="wijmo_style" [isEditable]="true"
+                [itemsSource]="exchangeList" displayMemberPath="exchangeName" selectedValuePath="exchangeId" [(ngModel)]="params.EXCHANGE_ID"
+                (ngModelChange)="onExchangeChange($event)" [isRequired]="true" #cmbExchange></wj-combo-box>
+              <div *ngIf="myForm.controls['exchangeId'].hasError('required') || myForm.controls['exchangeId'].hasError('pattern')" [hidden]="myForm.controls['exchangeId'].valid || (myForm.controls['exchangeId'].pristine && !isSubmitted)"
+                class="text-danger">{{'Translation.Exchange' | translate}} {{'Translation.is required' | translate}}.</div>
+            </div>
+            <div class="col-sm-4 fields_box">
+              <label for="endDate"> {{'Translation.From Client' | translate}} <span class="validation">*</span></label>
+              <wj-auto-complete tabindex="2" id="fromClientId" class="wijmo_style" formControlName="fromClientId" [isRequired]="true" [itemsSource]="fromClientList"
+                displayMemberPath="displayName" selectedValuePath="code" [(ngModel)]="params.FROM_ACCOUNT" [isEditable]="false" [maxItems]="50"></wj-auto-complete>
+              <div *ngIf="myForm.controls['fromClientId'].hasError('required')" [hidden]="myForm.controls['fromClientId'].valid || (myForm.controls['fromClientId'].pristine && !isSubmitted)"
+                class="text-danger">{{'Translation.Client' | translate}} {{'Translation.is required' | translate}}.</div>
+              <!-- <button id="btnPopupFrom" style="float:left;" type="button" (click)="onSearch()" class="btn btn-primary btn-xs mb-xs"><i class="fa fa-calendar"> Search</i></button> -->
+            </div>
+            <div class="col-sm-4 fields_box">
+              <label for="endDate"> {{'Translation.To Client' | translate}} <span class="validation">*</span></label>
+              <wj-auto-complete tabindex="3" id="toClientId" class="wijmo_style" formControlName="toClientId" [isRequired]="true" [itemsSource]="toClientList"
+                displayMemberPath="displayName" selectedValuePath="code" [(ngModel)]="params.TO_ACCOUNT" [isEditable]="false" [maxItems]="50"></wj-auto-complete>
+              <div *ngIf="myForm.controls['toClientId'].hasError('required')" [hidden]="myForm.controls['toClientId'].valid || (myForm.controls['toClientId'].pristine && !isSubmitted)"
+                class="text-danger">{{'Translation.Client' | translate}} {{'Translation.is required' | translate}}.</div>
+              <!-- <button id="btnPopupTo" style="float:left;" type="button" (click)="onSearch()" class="btn btn-primary btn-xs mb-xs"><i class="fa fa-calendar"> Search</i></button> -->
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-10 fields_box">              
+              <label for="search-input">{{'Translation.Text' | translate}} <span class="validation"> * </span> ({{'Translation.Max 800 characters allowed' | translate}})</label>
+              <textarea #smsText maxlength="800" id="smsText" rows="2" cols="50" formControlName="smsText" 
+                [(ngModel)]="params.TYPE" class="wijmo_style" required></textarea>
+              <div *ngIf="myForm.controls['smsText'].hasError('required')" [hidden]="myForm.controls['smsText'].valid || (myForm.controls['smsText'].pristine && !isSubmitted)"
+                class="text-danger">{{'Translation.Text' | translate}} {{'Translation.is required' | translate}}.</div>
+            </div>
+            <div class="col-sm-2 fields_box">
+              <label for="status"> &nbsp; </label>
+              <button type="submit"  class="btn btn-success"> {{'Translation.Send SMS' | translate}} </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </section>
+
+
+<dialog-cmp #dialogCmp (btnClick)="getNotification($event)"> </dialog-cmp>

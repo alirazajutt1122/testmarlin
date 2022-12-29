@@ -1,0 +1,44 @@
+<div class="flex-auto p-6 sm:p-10">
+    <div class="flex flex-wrap justify-between w-full max-w-400 -m-4">
+
+        <div class="flex items-center justify-between w-full">
+            <div>
+                <div class="text-3xl font-semibold tracking-tight leading-8">TRENDING</div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-8 w-full mt-8">
+
+            <fuse-card *ngFor="let item of cardData" class="flex flex-col max-w-80 w-full filter-listing">
+                <div class="flex justify-between m-4 mb-4">
+                    <div class="text-2xl font-semibold leading-tight">{{item.title}}</div>
+                    <div class="-mr-3">
+                        <button
+                            mat-icon-button>
+                            <mat-icon
+                                class="icon-size-5"
+                                [svgIcon]="'heroicons_solid:chevron-double-right'"></mat-icon>
+                        </button>
+                    </div>
+                </div>
+                <img class="object-cover"
+                     [src]="item.pic"
+                     alt="Trending">
+                <div class="flex items-center justify-between m-4">
+                    <div *ngIf="item?.description"
+                         class="text-2xl font-semibold leading-tight">{{item?.description}}</div>
+                </div>
+                <div class="flex items-center justify-between m-4 mb-4">
+                    <div *ngIf="item?.percentage" class="text-2xl font-semibold leading-tight">
+                        <mat-icon
+                            class="mr-1 pt-1 icon-size-5 text-green-500"
+                            [svgIcon]="'heroicons_solid:trending-down'"></mat-icon>
+                        <span *ngIf="item?.percentage" class="text-green-500">{{item?.percentage}}%</span>
+                        <span *ngIf="item?.description" class="text-green-500">{{item?.description}}%</span>
+                    </div>
+                </div>
+            </fuse-card>
+        </div>
+    </div>
+
+</div>

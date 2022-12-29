@@ -1,0 +1,53 @@
+<div class="w-full max-w-4xl">
+    <div [formGroup]="financialInfoFormGroup ">
+        <div class="w-full">
+            <div class="text-xl">Financial Information</div>
+            <div class="text-secondary">Financial Information of Corporate Form</div>
+        </div>
+
+        <div class="grid sm:grid-cols-6 gap-6 w-full mt-8">
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Company’s Total Assets</mat-label>
+                    <input matInput name="companyTotalAssets" formControlName="companyTotalAssets">
+                </mat-form-field>
+            </div>
+
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Annual Net Income</mat-label>
+                    <input matInput name="annualNetIncome" formControlName="annualNetIncome">
+                </mat-form-field>
+            </div>
+
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Company’s Total Liabilities</mat-label>
+                    <input matInput name="companyTotalLiablilites" formControlName="companyTotalLiablilites">
+                </mat-form-field>
+            </div>
+
+            <div class="sm:col-span-2">
+                <mat-label class="mb-2 font-medium leading-4">Have you ever filed for bankruptcy?</mat-label>
+                <mat-radio-group class="flex flex-row" name="everBankrupted" formControlName="everBankrupted"
+                                 aria-label="everBankrupted">
+
+                    <mat-radio-button [color]="'primary'" class="ml-2 justify-between" value="yes">Yes
+                    </mat-radio-button>
+                    <mat-radio-button [color]="'primary'" class="ml-2 justify-between" value="no">No</mat-radio-button>
+                </mat-radio-group>
+            </div>
+
+            <div class="sm:col-span-2">
+                <mat-label class="mb-2 font-medium leading-4">Is your company subject to any litigation?</mat-label>
+                <mat-radio-group class="flex flex-row" name="subjectedToLitigation"
+                                 formControlName="subjectedToLitigation"
+                                 aria-label="subjectedToLitigation">
+                    <mat-radio-button [color]="'primary'" class="ml-2 justify-between" value="yes">Yes
+                    </mat-radio-button>
+                    <mat-radio-button [color]="'primary'" class="ml-2 justify-between" value="no">No</mat-radio-button>
+                </mat-radio-group>
+            </div>
+        </div>
+    </div>
+</div>

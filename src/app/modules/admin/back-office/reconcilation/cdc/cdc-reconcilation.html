@@ -1,0 +1,94 @@
+<form class="widget form-horizontal form-label-left" method="post" data-parsley-priority-enabled="false" novalidate="novalidate"  role="form" [formGroup]="myForm">
+
+		<section class=" m-0 p-b-0" widget="">
+			<header class="d-flex justify-content-between">
+				<h3>CDC <span class="fw-semi-bold">{{'Translation.Reconcilation' | translate}}</span></h3>
+                <div class="other_btns">
+					<div class="btn-group mt-2">
+						<button class="dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						  <i class="fa fa-download" title="{{ 'Translation.Export' | translate }}" aria-hidden="true"></i>
+						</button>
+						<div class="dropdown-menu">
+							<button class="Iconfilter_btn mx-1" (click)="exportExcel()">
+								<i class="fa fa-file-excel-o" title="{{ 'Translation.Export' | translate }} Excel" aria-hidden="true"></i>
+							  </button>
+							  <button class="Iconfilter_btn" (click)="exportPDF()">
+								<i class="fa fa-file-pdf-o" title="{{ 'Translation.Export' | translate }} PDF" aria-hidden="true"></i>
+							  </button>
+						</div>
+					  </div>
+				</div>
+			</header>
+
+			<div class="widget-body">	
+					<div class="row wizard_data p-3">
+						<div class="col-sm-3 fields_box"> 
+								<label for="status">{{'Translation.Trading Date' | translate}}<span class="validation">*</span></label>
+								<wj-input-date id="transDate" formControlName="transDate" class="wijmo_style" [(ngModel)]="transDate"  [isRequired]="true"  [showYearPicker]="false"> </wj-input-date>
+				
+							<div *ngIf="myForm.controls['transDate'].hasError('required')" [hidden]="myForm.controls['transDate'].valid || (myForm.controls['transDate'].pristine && !isSubmitted)"
+									class="text-danger"> {{'Translation.Date' | translate}} {{'Translation.is required' | translate}}.</div>
+							</div>
+
+						<div class="col-sm-3 fields_box">
+							<button class="mt-5 btn btn-success btn-rounded pull-left" (click)="btnUpload(myForm.value, myForm.valid)" type="submit"> {{'Translation.Reconcilation' | translate}} </button>
+						</div>
+					</div>
+				
+					<!-- <div class="row wizard_data">
+						<div class="col-sm-3 fields_box"> </div>
+						<div class="col-sm-6 fields_box">
+							<b><label>{{'Translation.Note' | translate}}:</label> </b> <label>
+                				{{'Translation.The uploaded file should not contain any comma' | translate}}(,).
+               				 </label>
+						</div>
+						<div class="col-sm-3 fields_box"> </div>
+					</div> -->
+			
+			</div>
+		</section>
+
+<div class="widget p-t-0 m-0">
+	<div class="table_container">
+
+		<wj-flex-grid style="height: 400px;" id="abc" [itemsSource]="CdcReconcilationArray" [isReadOnly]="true" [selectionMode]="'Row'"
+		[autoSizeMode]="'Headers'"  #flexDetail (initialized)="initGrid(flexDetail)">
+
+		<wj-flex-grid-filter [filterColumns]="['security', 'cdc_code','clientCode','full_name', 'cdc_holding','bbo_holding','difference','Reason']"></wj-flex-grid-filter>
+
+			<wj-flex-grid-column [header]="'Translation.Security' | translate" [binding]="'security'" [align]="'left'" [allowSorting]="true" [isRequired]="false"
+			[width]="'0.25*'" [minWidth]="30"></wj-flex-grid-column>
+
+			<wj-flex-grid-column [header]="'Translation.CDC Code' | translate" [align]="'left'" [allowSorting]="true" [isRequired]="false" [binding]="'cdc_code'"
+			[width]="'0.25*'" [minWidth]="30"></wj-flex-grid-column>
+
+			<wj-flex-grid-column [header]="'Translation.Client Code' | translate" [align]="'left'" [allowSorting]="true" [isRequired]="false" [binding]="'clientCode'"
+			[width]="'0.25*'" [minWidth]="30"></wj-flex-grid-column>
+
+			<wj-flex-grid-column [header]="'Translation.Name' | translate" [align]="'left'" [allowSorting]="true" [isRequired]="false" [binding]="'full_name'"
+			[width]="'0.25*'" [minWidth]="30"></wj-flex-grid-column>
+
+			<wj-flex-grid-column [header]="'Translation.CDC Holding' | translate" [align]="'right'" [allowSorting]="true" [isRequired]="false" [binding]="'cdc_holding'"
+			[width]="'0.25*'" [minWidth]="30" [aggregate]='"Sum"'  [format]="'n0'"></wj-flex-grid-column>			
+			
+			<wj-flex-grid-column [header]="'Translation.BBO Holding' | translate" [align]="'right'" [allowSorting]="true" [isRequired]="false" [binding]="'bbo_holding'"
+			[width]="'0.25*'" [minWidth]="30" [aggregate]='"Sum"'  [format]="'n0'"></wj-flex-grid-column>
+
+			<wj-flex-grid-column [header]="'Translation.Difference' | translate" [align]="'right'" [allowSorting]="true" [isRequired]="false" [binding]="'difference'"
+			[width]="'0.25*'" [minWidth]="30" [aggregate]='"Sum"'  [format]="'n0'"></wj-flex-grid-column>
+
+			<wj-flex-grid-column [header]="'Translation.Reason' | translate" [align]="'left'" [allowSorting]="true" [isRequired]="false" [binding]="'Reason'"
+			[width]="'0.5*'" [minWidth]="30"></wj-flex-grid-column>
+
+		</wj-flex-grid>
+	
+		<wj-menu [(value)]="groupBy" [header]="'Group by'">
+			<wj-menu-item [value]="''">(no grouping)</wj-menu-item>
+			<wj-menu-item [value]="'security'">{{'Translation.Security' | translate}}</wj-menu-item>			
+			<wj-menu-item [value]="'cdc_code'">{{'Translation.CDC Code' | translate}}</wj-menu-item>
+			<wj-menu-item [value]="'security,cdc_code'">{{'Translation.Security and CDC Code' | translate}}</wj-menu-item>			
+		</wj-menu>
+	</div>	
+</div>
+</form>
+<dialog-cmp #dialogCmp (btnClick)="getNotification($event)"> </dialog-cmp>

@@ -1,0 +1,30 @@
+img{
+    height: 15px;
+    width: 15px;
+    display: inline;
+}
+
+.top_nav nav li ul{
+
+    min-width: 190px;
+
+}
+
+
+
+@media(max-width : 1400px)
+{
+    .top_nav nav li ul{
+
+        min-width: 170px;
+
+    }
+}
+
+
+
+.tree-drop-ul
+{
+    left: 100%;
+    top: 0;
+}

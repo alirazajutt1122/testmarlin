@@ -1,0 +1,129 @@
+.BSWindow {
+  position: relative;
+  width: 114%;
+  min-height: max-content;
+  background-color: #0f172a;
+  margin-left: -25px;
+  margin-top: -23px;
+  margin-bottom: -24px;
+
+}
+
+.input {
+  width: 75%;
+  height: 50px;
+}
+.mat-form-field.mat-form-field-appearance-fill .mat-form-field-wrapper .mat-form-field-flex {
+  border-radius: 4px;
+}
+
+.btnstyle {
+  // width: 22%;
+  // height: 30px;
+  // margin-bottom: 25px;
+  width: 80%;
+  height: 40px;
+  margin-bottom: 25px;
+}
+
+.dark .mat-form-field.mat-form-field-appearance-fill .mat-form-field-wrapper .mat-form-field-flex {
+  // background-color: rgba(128, 128, 128, var(--tw-bg-opacity)) !important;
+  // --tw-bg-opacity: 0.9 !important;
+  --tw-bg-opacity: 0.3 !important;
+  background-color: #0303037d !important;
+}
+
+body.dark .mat-dialog-container, body .dark .mat-dialog-container {
+  border-radius: 4px ! important;
+}
+
+.mat-input-element {
+  font: inherit;
+  font-size: 15px;
+  color: white;
+}
+
+.orderBook {
+  text-align: inherit;
+  font-size: large;
+  margin-right: 2px;
+}
+
+.orderBook {
+  min-height: 40.3rem !important;
+  max-height: 50.3rem !important;
+}
+.boxfix {
+  margin-top: -9px;
+}
+.error {
+  margin-left: 20%;
+  margin-top: -10px;
+}
+
+.graphPagetheme {
+  background-color: #0f172a;
+}
+.graphbtnstyle {
+  width: 20%;
+  height: 20px;
+  margin-bottom: 25px;
+}
+// .heightFix{
+// height:100%;
+// }
+
+.circle {
+  border-radius: 50%;
+  width: 10.5px;
+  height: 10.5px;
+}
+.transformHover:hover{
+  transform: scale(1.04);
+}
+
+.transformHoverBuySell:hover{
+  transform: scale(1.01);
+}
+
+
+.column_ {
+  float: left;
+  width: 23%;
+  padding: 4px;
+}
+
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+
+
+.containerrr {
+  width: 296px;
+  height: 41px;
+  position: relative;
+  margin: 8px;
+  margin-left: 16px;
+}
+.box1 {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0.7;
+  background: #0f172a;
+  background-image: linear-gradient(to left, #f59e0b , #0f172a);
+}
+.box2 {
+  width: 97.9%;
+  height: 86%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 3px;
+  background: #0f172a;
+}

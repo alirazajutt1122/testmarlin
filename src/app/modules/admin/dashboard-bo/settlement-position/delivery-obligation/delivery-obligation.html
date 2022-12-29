@@ -1,0 +1,72 @@
+<div class="theme">
+    <div class="row header">
+        <span class="font-bold text-xl ml-2 mt-1 text-primary">{{'Translation.DELIVERY OBLIGATION' | translate }}</span>
+        <span class="ml-3 text-md" style="margin-top:9px ;">As on {{date}}</span>
+    </div>
+
+    <div class="row mt-1 ml-1">
+        <div class="col-sm-3 ">
+            <wj-combo-box tabindex="2" id="marketId" class="wijmo_style" [itemsSource]="marketList" [(ngModel)]="selectedMarketCode"
+                displayMemberPath="marketCode" selectedValuePath="marketCode" (ngModelChange)="onMarketChange()"></wj-combo-box>
+        </div>
+    </div>
+    <div class="row">
+        <table id="dashboardBo" class="w-full bg-transparent overflow-y-auto topTables" mat-table [dataSource]="data">
+
+            <ng-container matColumnDef="security">
+                <th class="col-sm-4" mat-header-cell *matHeaderCellDef>
+                    {{'Translation.Security' | translate}}
+                </th>
+                <td [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}" mat-cell *matCellDef="let element">
+                    <div class="flex items-center pt-2 pb-2">
+                        <img class="w-10 mr-4" [src]=element.imageUrl>
+                        <div class="flex flex-col">
+                            <span
+                                class="text-primary-500 pr-6 whitespace-nowrap text-lg xl:text-lg lg:text-md md:text-md sm:text-sm">
+                                {{element.symbol}}
+                            </span>
+                        </div>
+                    </div>
+                </td>
+
+            </ng-container>
+
+            <ng-container matColumnDef="buy_volume">
+                <th class="col-sm-4" mat-header-cell *matHeaderCellDef>
+                    {{'Translation.Buy Volume' | translate}}
+                </th>
+                <td [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}" mat-cell *matCellDef="let element">
+                    <span class="pr-6 whitespace-nowrap text-lg xl:text-lg lg:text-md md:text-md sm:text-sm">
+                        {{element.buyVol}}
+                    </span>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="sell_volume">
+                <th class="col-sm-4" mat-header-cell *matHeaderCellDef>
+                    {{'Translation.Sell Volume' | translate}}
+                </th>
+                <td [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}" mat-cell *matCellDef="let element">
+                    <span class="pr-6 whitespace-nowrap text-lg xl:text-lg lg:text-md md:text-md sm:text-sm">
+                        {{element.sellVol}}
+                    </span>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="net_volume">
+                <th class="col-sm-4" mat-header-cell *matHeaderCellDef>
+                    {{'Translation.Net Volume' | translate}}
+                </th>
+                <td [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}" mat-cell *matCellDef="let element">
+                    <span class="pr-6 whitespace-nowrap text-lg xl:text-lg lg:text-md md:text-md sm:text-sm">
+                        {{element.netVol}}
+                    </span>
+                </td>
+            </ng-container>
+
+
+            <tr mat-header-row *matHeaderRowDef="tableColumns; sticky: true"></tr>
+            <tr class="order-row h-10" mat-row *matRowDef="let row; columns: tableColumns;"></tr>
+        </table>
+    </div>
+</div>

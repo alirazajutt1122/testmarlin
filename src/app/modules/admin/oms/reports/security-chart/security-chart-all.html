@@ -1,0 +1,84 @@
+<div class="row" style="width: 100%;">
+    <div class="col-lg-12">
+      <section class="widget">
+        <header>
+          <h3> <span class="fw-semi-bold">{{ 'Translation.Security Chart' | translate }}</span></h3>
+          <!--<div class="action_group">
+              <button class="btn btn-danger" type="button"><span class="glyphicon glyphicon-print"></span></button>
+              <button class="btn btn-success" type="button"><i class="fa fa-file-excel-o" aria-hidden="true"></i></button>
+          </div>-->
+          <div class="other_btns">
+            <!--<button class="Iconfilter_btn"  (click)="print()" tooltip="Print" ><i class="fa fa-print" aria-hidden="true"></i></button>-->
+            <button data-toggle="collapse" data-target="#filter_box" class="filter_btn"><i class="fa fa-filter" aria-hidden="true"></i> </button>
+          </div>
+          <div id="filter_box" class="collapse in">
+            <form role="form" [formGroup]="myForm" novalidate (ngSubmit)="onSubmit(myForm.value, myForm.valid)">
+              <div class="row mt-2">
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label for="search-input">{{ 'Translation.Exchange' | translate }} <span class="validation">*</span></label>
+                    <div class="input-group">
+                      <wj-combo-box id="exchangeId" formControlName="exchangeId" class="form-control form-control-sm" #cmbExchange [itemsSource]="exchanges"
+                        [(ngModel)]="exchangeId" (ngModelChange)="onExchangeChange($event)" displayMemberPath="exchangeCode"
+                        selectedValuePath="exchangeId" required [isEditable]="true">
+                        </wj-combo-box>
+                    </div>
+                    <div *ngIf="myForm.controls['exchangeId'].hasError('pattern')" [hidden]="myForm.controls.exchangeId.valid || !isSubmitted"
+                      class="text-danger">{{ 'Translation.Exchange' | translate }} {{ 'Translation.is required' | translate }}.
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label for="search-input">{{ 'Translation.Market' | translate }} <span class="validation">*</span></label>
+                    <div class="input-group">
+                      <wj-combo-box id="marketId" formControlName="marketId" class="form-control form-control-sm" #cmbMarket [isDisabled]="isMarketDisabled"
+                        [itemsSource]="markets" [(ngModel)]="marketId" (ngModelChange)="onMarketChange($event)" displayMemberPath="marketCode" selectedValuePath="marketId"
+                        required [isEditable]="true">
+                        </wj-combo-box>
+                    </div>
+                    <div *ngIf="myForm.controls['marketId'].hasError('pattern')" [hidden]="myForm.controls.marketId.valid || !isSubmitted" class="text-danger">{{ 'Translation.Market' | translate }} {{ 'Translation.is required' | translate }}.
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-4">
+                  <div class="row">
+                    <div class="col-sm-8">
+                      <div class="form-group">
+                        <label for="search-input">{{ 'Translation.Security' | translate }} <span class="validation">*</span></label>
+                        <div class="input-group">
+                            <wj-combo-box id="securityCode" formControlName="securityCode" #cmbSymbol   [itemsSource]="symbols" [(ngModel)]="securityCode" (lostFocus)="onSymbolFocusOut()"
+                            displayMemberPath="symbol" selectedValuePath="symbol"
+                           [isEditable]="true"  required>
+                         </wj-combo-box>
+                        </div>
+                        <div *ngIf="myForm.controls['securityCode'].hasError('required')" [hidden]="myForm.controls.securityCode.valid || !isSubmitted"
+                          class="text-danger">{{ 'Translation.Security' | translate }} {{ 'Translation.is required' | translate }}.
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-sm-4">
+                      <div class="form_search">
+                        <button class="btn btn-success btn-sm" title="{{ 'Translation.Search' | translate }}"  title="{{ 'Translation.Search' | translate }}" data-toggle="collapse in" data-target="#filter_box"
+                          (click)="onSubmit(myForm.value, myForm.valid)"><span class="fa fa-search"></span> </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="widget-controls">
+            <a data-widgster="expand" title="{{ 'Translation.Expand' | translate }}" href="#"><i class="glyphicon glyphicon-chevron-up"></i></a>
+            <a data-widgster="collapse" title="{{ 'Translation.Collapse' | translate }}" href="#"><i class="glyphicon glyphicon-chevron-down"></i></a>
+          </div>
+        </header>
+
+
+
+                    <trading-dashboard-graph #chart [item]="item"></trading-dashboard-graph>
+
+
+      </section>
+    </div>
+  </div>

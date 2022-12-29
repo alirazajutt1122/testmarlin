@@ -1,0 +1,58 @@
+
+    <section class="widget" widget="">
+      <header>
+        <h3>{{'Translation.Voucher Migrator'| translate}} </h3>
+      </header>
+      <div class="widget-body">
+        <form class="form-horizontal form-label-left" method="post" data-parsley-priority-enabled="false" novalidate="novalidate"
+          role="form" [formGroup]="myForm">        
+
+          <div class="row wizard_data">
+            <div class="col-sm-4 fields_box"> </div>
+            <div class="col-sm-4 fields_box">
+              <label for="fileUpload">{{'Translation.Document'| translate}}  <span class="validation">*</span> ( *.csv )</label>
+              <!--<div class="fileinput fileinput-new" data-provides="fileinput">-->
+              <input type="file" style="color:#f3b170" (change)="fileChangeEvent(input)" #input id="fileUpload" name="fileUpload" formControlName="fileUpload"
+                accept="application/csv"  />
+              <div *ngIf="fileSizeExceed" class="text-danger">{{'Translation.File size exceed. Maximum allowed size is 50MB'| translate}} .</div>
+              <div *ngIf="IsFileAttached" class="text-danger">{{'Translation.Please attach a file before uploading'| translate}} .</div>
+              <!--</div>-->
+            </div>
+            <div class="col-sm-4 fields_box"> </div>
+          </div>
+          <div class="row wizard_data">
+            <div class="col-sm-4 fields_box"> </div>
+            <div class="col-sm-4 fields_box">
+              <label for="loadedRecords">{{'Translation.Loaded Record'| translate}}(s): {{loaded_records}}</label>
+            </div>
+            <div class="col-sm-4 fields_box"></div>
+          </div>
+          <div class="row wizard_data">
+            <div class="col-sm-4 fields_box"> </div>
+            <div class="col-sm-4  fields_box">
+              <label for="errorRecords">{{'Translation.Error Record'| translate}}(s): {{error_records}}</label>
+            </div>
+            <div class="col-sm-4 fields_box"> </div>
+          </div>
+          <div class="row wizard_data">
+            <div class="col-sm-4 fields_box"> </div>
+            <div class="col-sm-4  fields_box">
+              <!--*ngIf="userService.isAuhtorized(userService.EB_MIGRATORS_CL_HOLDING_NEW)"-->
+              <button class="btn btn-success btn-rounded pull-right" (click)="btnUpload(myForm.value, myForm.valid)" type="submit"> {{'Translation.Upload'| translate}} </button>
+            </div>
+            <div class="col-sm-4 fields_box"> </div>
+          </div>
+          <div class="row wizard_data">
+            <div class="col-sm-4 fields_box"> </div>
+            <div class="col-sm-4 fields_box">
+              <b><label> {{'Translation.Note'| translate}}:</label> </b> <label>
+                {{'Translation.Note1'| translate}}.
+                </label>
+            </div>
+            <div class="col-sm-4 fields_box"> </div>
+          </div>
+        </form>
+      </div>
+    </section>
+
+<dialog-cmp #dialogCmp (btnClick)="getNotification($event)"> </dialog-cmp>

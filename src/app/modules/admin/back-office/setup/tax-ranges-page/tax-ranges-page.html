@@ -1,0 +1,114 @@
+<section class="widget" widget="">
+      <header>
+        <h3><span class="fw-semi-bold">Tax Ranges </span></h3>
+        <div class="other_btns">
+          <button class="add_new_btn" id="btnNew" data-toggle="modal"
+            (click)="onNewAction()" data-target="#add_new" type="button" data-backdrop="static" title="Add"><i class="fa fa-plus" aria-hidden="true"></i> </button>
+        </div>
+      </header>
+      <div class="table_container">
+        <wj-flex-grid [itemsSource]="itemsList" [isReadOnly]="true" [selectionMode]="'Row'" [autoSizeMode]="'Headers'" [headersVisibility]="'Column'"
+          style="height: 320px;" #flex>
+          <wj-flex-grid-filter [filterColumns]="['Exchange','From Year','To Year','Percent']"></wj-flex-grid-filter>
+          <wj-flex-grid-column [header]="'Exchange'" [align]="'left'" [binding]="'exchange.exchangeCode'" [width]="'0.5*'" [minWidth]="30"></wj-flex-grid-column>
+          <wj-flex-grid-column [header]="'From Year'" [align]="'left'" [binding]="'fromYear'" [width]="'0.5*'" [minWidth]="30"></wj-flex-grid-column>
+          <wj-flex-grid-column [header]="'To Year'" [align]="'left'" [binding]="'toYear'" [width]="'0.5*'" [minWidth]="30"></wj-flex-grid-column>
+          <wj-flex-grid-column [header]="'Percent%'"  [align]="'left'" [binding]="'percentage'" [width]="'0.5*'" [minWidth]="30"></wj-flex-grid-column>
+            <wj-flex-grid-column [header]="'Action'" [width]="'0.2*'" [minWidth]="30" [align]="'center'" *ngIf="userService.isAuhtorized(userService.EB_CONF_BANKS_UPDATE)">
+            <ng-template wjFlexGridCellTemplate [cellType]="'Cell'">
+              <img src="assets/img/edit_orange.png" class="gridImg" title="Edit" (click)="onEditAction()" data-target="#add_new" data-toggle="modal" data-backdrop="static"
+              />
+            </ng-template>
+          </wj-flex-grid-column>
+        </wj-flex-grid>
+      </div>
+      <div class="row"></div>
+      <div class="btn-group col-xs-12 align-right">
+        <!-- Paginator -->
+        <wj-collection-view-pager [cv]="flex?.collectionView"></wj-collection-view-pager>
+        <!-- page size -->
+        <wj-menu [(value)]="pageSize" [header]="'Page Size'">
+          <wj-menu-item [value]="0">No Paging</wj-menu-item>
+          <wj-menu-item [value]="5">5 items</wj-menu-item>
+          <wj-menu-item [value]="10">10 items</wj-menu-item>
+          <wj-menu-item [value]="20">20 items</wj-menu-item>
+          <wj-menu-item [value]="30">30 items</wj-menu-item>
+          <wj-menu-item [value]="50">50 items</wj-menu-item>
+          <wj-menu-item [value]="100">100 items</wj-menu-item>
+        </wj-menu>
+      </div>
+</section>
+
+
+<!-- Add New Range Modal -->
+<div id="add_new" class="modal fade" role="dialog" data-keyboard="true">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <form class="form-horizontal form-label-left" method="post" data-parsley-priority-enabled="false" novalidate="novalidate"
+        role="form" [formGroup]="myForm" (ngSubmit)="onSaveAction(myForm.value, myForm.valid)">
+        <div class="modal-body modal-no-border">
+
+          <div class="row setup_box_container">
+            <div class="col-md-3 col-sm-5 modal_left">
+              <div class="wizard_Logo">
+                <img src="assets/img/Banks.png" class="formImg" />
+                <h4>Tax Range</h4>
+                <p>Tax range configurations</p>
+              </div>
+            </div>
+            <div class="col-md-9 col-sm-7 modal_center">
+              <div class="row" style="margin: 40px 40px 0px 40px">
+              
+                <div class="col-sm-12 fields_box">
+                  <label for="exchangeId">{{ 'Translation.Exchange' | translate }} <span class="validation">*</span></label>
+                  <wj-combo-box  id="exchangeId" class="wijmo_style" formControlName="exchangeId"
+                    [itemsSource]="exchangeNameList" [(ngModel)]="selectedItem.exchange.exchangeId" displayMemberPath="exchangeCode"
+                    selectedValuePath="exchangeId" [isRequired]="true" [isEditable]="true" >
+                  </wj-combo-box>
+                  <div *ngIf="myForm.controls['exchangeId'].hasError('required')" [hidden]="myForm.controls.exchangeId.valid || (myForm.controls.exchangeId.pristine && !isSubmitted)"
+                  class="text-danger">Exchange is required.</div>
+                </div>
+
+                <div class="col-sm-11 fields_box">
+                  <label for="fromYear">From Year <span class="validation">*</span></label>
+                  <wj-input-mask id="fromYear" class="wijmo_style" id="fromYear" formControlName="fromYear" min="0" max="100" maxlength="3" [(ngModel)]="selectedItem.fromYear"
+                    myForm required [isRequired]="true"> </wj-input-mask>
+                  <div *ngIf="myForm.controls['fromYear'].hasError('required')" [hidden]="myForm.controls.fromYear.valid || (myForm.controls.fromYear.pristine && !isSubmitted)"
+                    class="text-danger">Year is required.</div>
+                  <div *ngIf="myForm.controls['fromYear'].hasError('pattern')" class="text-danger">Invalid From Year.</div>
+                </div>
+
+                <div class="col-sm-11 fields_box">
+                  <label for="toYear">To Year <span class="validation">*</span></label>
+                  <wj-input-mask id="toYear" class="wijmo_style" id="toYear" formControlName="toYear" maxlength="3" [(ngModel)]="selectedItem.toYear"
+                    myForm required [isRequired]="true"> </wj-input-mask>
+                  <div *ngIf="myForm.controls['toYear'].hasError('required')" [hidden]="myForm.controls.toYear.valid || (myForm.controls.toYear.pristine && !isSubmitted)"
+                    class="text-danger">Year is required.</div>
+                  <div *ngIf="myForm.controls['toYear'].hasError('pattern')" class="text-danger">Invalid To Year.</div>
+                </div>
+
+                <div class="col-sm-11 fields_box">
+                  <label for="percentage">Percentage % <span class="validation">*</span></label>
+                  <wj-input-mask id="percentage" class="wijmo_style" id="percentage" formControlName="percentage" maxlength="3" [(ngModel)]="selectedItem.percentage"
+                    myForm required [isRequired]="true"> </wj-input-mask>
+                  <div *ngIf="myForm.controls['percentage'].hasError('required')" [hidden]="myForm.controls.percentage.valid || (myForm.controls.percentage.pristine && !isSubmitted)"
+                    class="text-danger">Percentage is required.</div>
+                  <div *ngIf="myForm.controls['percentage'].hasError('pattern')" class="text-danger">Invalid Percentage.</div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="orange_footer_small">
+          <button id="btnSave" type="submit" class="save_btn" *ngIf="!isEditing" >Save</button>
+          <button id="btnEdit" type="submit" class="save_btn" *ngIf="isEditing" >Update</button>
+          <button type="button" data-dismiss="modal" class="cancel_btn" (click)="onCancelAction()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<dialog-cmp #dialogCmp (btnClick)="getNotification($event)"> </dialog-cmp>

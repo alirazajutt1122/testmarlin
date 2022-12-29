@@ -1,0 +1,157 @@
+<section class="widget " widget="">
+    <header>
+        <h3>Trade <span class="fw-semi-bold"> {{ 'Translation.Confirmation' | translate }}</span></h3>
+    </header>
+    <div class="widget-body">
+        <form class="form-horizontal form-label-left" method="post" data-parsley-priority-enabled="false" novalidate
+            role="form" name="myForm" [formGroup]="myForm" (ngSubmit)="printReport(myForm.value, myForm.valid)">
+
+            <div class="row">
+                <div class="col-sm-4 fields_box">
+                    <label for="code"> {{ 'Translation.Exchange' | translate }} <span
+                            class="validation">*</span></label>
+                    <wj-combo-box autofocus="autofocus" tabindex="1" id="exchangeId" formControlName="exchangeId"
+                        class="wijmo_style" [isEditable]="true" [itemsSource]="exchangeList"
+                        displayMemberPath="exchangeName" selectedValuePath="exchangeId" [(ngModel)]="params.EXCHANGE_ID"
+                        (ngModelChange)="onExchangeChange($event)" [isRequired]="true"></wj-combo-box>
+
+                    <div *ngIf="myForm.controls['exchangeId'].hasError('required') || myForm.controls['exchangeId'].hasError('pattern')"
+                        [hidden]="myForm.controls['exchangeId'].valid || (myForm.controls['exchangeId'].pristine && !isSubmitted)"
+                        class="text-danger">{{ 'Translation.Exchange is required' | translate }}.</div>
+                </div>
+
+                <div class="col-sm-4 fields_box my-input-styles">
+                    <label for="endDate"> {{ 'Translation.From Client' | translate }} <span
+                            class="validation">*</span></label>
+                    <wj-auto-complete tabindex="3" id="fromClientId" class="wijmo_style" formControlName="fromClientId"
+                        [isRequired]="true" [itemsSource]="fromClientList" displayMemberPath="displayName"
+                        selectedValuePath="code" [(ngModel)]="params.FROM_ACCOUNT" [isEditable]="false" [maxItems]="50">
+                    </wj-auto-complete>
+                    <div *ngIf="myForm.controls['fromClientId'].hasError('required')"
+                        [hidden]="myForm.controls['fromClientId'].valid || (myForm.controls['fromClientId'].pristine && !isSubmitted)"
+                        class="text-danger">{{ 'Translation.Client is required' | translate }}.</div>
+                    <!-- <button id="btnPopupFrom" style="float:left;" type="button" (click)="onSearch()" class="btn btn-primary btn-xs mb-xs"><i class="fa fa-calendar"></i> Search</button> -->
+                </div>
+                <div class="col-sm-4 fields_box my-input-styles">
+                    <label for="endDate"> {{ 'Translation.To Client' | translate }} <span
+                            class="validation">*</span></label>
+                    <wj-auto-complete tabindex="3" id="toClientId" class="wijmo_style" formControlName="toClientId"
+                        [isRequired]="true" [itemsSource]="toClientList" displayMemberPath="displayName"
+                        selectedValuePath="code" [(ngModel)]="params.TO_ACCOUNT" [isEditable]="false" [maxItems]="50">
+                    </wj-auto-complete>
+
+                    <div *ngIf="myForm.controls['toClientId'].hasError('required')"
+                        [hidden]="myForm.controls['toClientId'].valid || (myForm.controls['toClientId'].pristine && !isSubmitted)"
+                        class="text-danger">{{ 'Translation.Client is required' | translate }}.</div>
+                    <!-- <button id="btnPopupTo" style="float:left;" type="button" (click)="onSearch()" class="btn btn-primary btn-xs mb-xs"><i class="fa fa-calendar"></i> Search</button> -->
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4 fields_box">
+                    <label for="status">{{ 'Translation.From Date' | translate }} <span
+                            class="validation">*</span></label>
+                    <wj-input-date id="fromDate" formControlName="fromDate" class="wijmo_style"
+                        [(ngModel)]="params.START_DATE" [format]="dateFormat" [mask]="dateMask" [isRequired]="true" [showYearPicker]="false"></wj-input-date>
+
+                    <div *ngIf="myForm.controls['fromDate'].hasError('required')"
+                        [hidden]="myForm.controls['fromDate'].valid || (myForm.controls['fromDate'].pristine && !isSubmitted)"
+                        class="text-danger"> {{ 'Translation.Date is required' | translate }}.</div>
+                    <div *ngIf="!isValidStartDate" class="text-danger"> {{ 'Translation.From date should be less or
+                        equal than To date' | translate }}.
+                    </div>
+                </div>
+
+                <div class="col-sm-4 fields_box">
+                    <label for="status">{{ 'Translation.To Date' | translate }} <span
+                            class="validation">*</span></label>
+                    <wj-input-date id="toDate" formControlName="toDate" class="wijmo_style"
+                        [(ngModel)]="params.END_DATE" [format]="dateFormat" [mask]="dateMask" [isRequired]="true" [showYearPicker]="false">
+                    </wj-input-date>
+
+                    <div *ngIf="myForm.controls['toDate'].hasError('required')"
+                        [hidden]="myForm.controls['toDate'].valid || (myForm.controls['toDate'].pristine && !isSubmitted)"
+                        class="text-danger"> {{ 'Translation.Date is required' | translate }}.</div>
+
+                </div>
+
+
+                <div class="col-sm-3 fields_box">
+                    <label for="status"> &nbsp; </label>
+                    <button type="submit" class="btn btn-success">{{ 'Common.View Report' | translate }}</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div *ngIf="pdf" class="flex justify-center m-4 mt-4">
+        <ngx-extended-pdf-viewer [base64Src]="pdfSrc" theme="dark" backgroundColor="#151922a8" [useBrowserLocale]="true"  [showOpenFileButton]="false" filenameForDownload="{{fileNameForDownload}}"
+            class="w-full" style="display: block;height: 775px;"></ngx-extended-pdf-viewer>
+   </div>
+    
+</section>
+<wj-popup owner="#btnPopupFrom" [modal]="true" #clCodePopupFrom style="width:620px;background:#333333;padding:10px;">
+    <div class="row client-filter">
+        <div class="col-md-4">
+            <label class="control-label" for="clCode">{{ 'Translation.Client Code' | translate }}:</label>
+            <wj-input-mask #clCodeFrom tabindex="1" maxlength="25" [isRequired]="false">
+            </wj-input-mask>
+        </div>
+        <div class="col-md-7">
+            <label class="control-label" for="clDesc">{{ 'Translation.Client Name' | translate }}:</label>
+            <wj-input-mask #clDescFrom tabindex="2" maxlength="50" [isRequired]="false">
+            </wj-input-mask>
+        </div>
+        <div class="col-md-1">
+            <button type="button" class="add_btn" (click)="populateItemGrid(clCodeFrom.value, clDescFrom.value)">
+                <i class="fa fa-filter"></i></button>
+        </div>
+    </div>
+    <div style="background:#333333; width:100%;">
+        <wj-flex-grid [itemsSource]="itemsList" [isReadOnly]="true" [selectionMode]="'Row'" [autoSizeMode]="'Headers'"
+            [headersVisibility]="'Column'" #GridFrom class="grid" style="height: 350px;width:100%;">
+            <wj-flex-grid-column [header]="'Translation.Client Code' | translate" [binding]="'clientCode'" [align]="'left'" [minWidth]="75" [width]="150"></wj-flex-grid-column>
+            <wj-flex-grid-column [header]="'Translation.Client Name' | translate" [binding]="'displayName_'" [align]="'left'" [minWidth]="150" [width]="450"></wj-flex-grid-column>
+        </wj-flex-grid>
+        <div class="modal-footer">
+            <button class="add_btn" *ngIf="recExist" (click)="updateControlsFrom()">OK</button>
+            <button class="cancel_btn_small wj-hide-cancel" (click)="clearControls()">{{ 'Common.Cancel' | translate
+                }}</button>
+        </div>
+    </div>
+</wj-popup>
+
+<wj-popup owner="#btnPopupTo" [modal]="true" #clCodePopupTo style="width:620px;background:#333333;padding:10px;">
+    <div class="row client-filter">
+        <div class="col-md-4">
+            <label class="control-label" for="clCode">{{ 'Translation.Client Code' | translate }}:</label>
+            <wj-input-mask #clCodeTo tabindex="1" maxlength="25" [isRequired]="false">
+            </wj-input-mask>
+        </div>
+        <div class="col-md-7">
+            <label class="control-label" for="clDesc">{{ 'Translation.Client Name' | translate }}:</label>
+            <wj-input-mask #clDescTo tabindex="2" maxlength="50" [isRequired]="false">
+            </wj-input-mask>
+        </div>
+        <div class="col-md-1">
+            <button type="button" class="add_btn" (click)="populateItemGrid(clCodeTo.value, clDescTo.value)">
+                <i class="fa fa-filter"></i></button>
+        </div>
+    </div>
+    <div>
+        <wj-flex-grid [itemsSource]="itemsList" [isReadOnly]="true" [selectionMode]="'Row'" [autoSizeMode]="'Headers'"
+            [headersVisibility]="'Column'" #GridTo class="grid" style="height: 350px;width:100%;">
+            <wj-flex-grid-column [header]="'Translation.Client Code' | translate" [binding]="'clientCode'" [align]="'left'" [minWidth]="75" [width]="150"></wj-flex-grid-column>
+            <wj-flex-grid-column [header]="'Translation.Client Name' | translate" [binding]="'displayName_'" [align]="'left'" [minWidth]="150" [width]="450"></wj-flex-grid-column>
+        </wj-flex-grid>
+        <div class="row"></div>
+
+        <div class="modal-footer">
+            <button class="add_btn" *ngIf="recExist" (click)="updateControlsTo()">OK</button>
+            <button class="cancel_btn_small wj-hide-cancel" (click)="clearControls()">{{ 'Common.Cancel' | translate
+                }}</button>
+        </div>
+    </div>
+    <!--</div>-->
+</wj-popup>
+
+<dialog-cmp #dialogCmp (btnClick)="getNotification($event)"> </dialog-cmp>

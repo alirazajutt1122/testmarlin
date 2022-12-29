@@ -1,0 +1,170 @@
+<div class="w-full max-w-4xl">
+    <div [formGroup]="attorneyFormGroup">
+
+
+        <div class="w-full">
+            <div class="text-xl">Attorney Information</div>
+            <div class="text-secondary">Attorney Information of Main Applicant</div>
+        </div>
+        <div class="grid sm:grid-cols-6 gap-6 w-full mt-8">
+
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Attorney UIN</mat-label>
+                    <input [readOnly]="isApprovedByNCCPL" (keyup)="onUINKeyUp($event)" matInput
+                           name="CNIC_ATR" formControlName="CNIC_ATR"/>
+                </mat-form-field>
+            </div>
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Attorney CNIC Life Time Token Paid</mat-label>
+                    <mat-select [disabled]="isApprovedByNCCPL" name="CNIC_LIFETIME_ATR"
+                                formControlName="CNIC_LIFETIME_ATR">
+                        <mat-option *ngFor="let token of lttStatusArr" [value]="token.value">
+                            {{ token.label }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>CNIC/SNIC/NICOP/ARC/ Expiry Date</mat-label>
+                    <input [disabled]="isApprovedByNCCPL" matInput [matDatepicker]="picker1"
+                           name="CNIC_EXPIRY_DATE_ATR" formControlName="CNIC_EXPIRY_DATE_ATR"/>
+                    <mat-datepicker-toggle matSuffix [for]="picker1">
+                        <!-- <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon> -->
+                    </mat-datepicker-toggle>
+                    <mat-datepicker #picker1></mat-datepicker>
+                </mat-form-field>
+            </div>
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Salutation</mat-label>
+                    <mat-select [disabled]="isApprovedByNCCPL" name="Salutation_ATR"
+                                formControlName="Salutation_ATR">
+                        <mat-option *ngFor="let salutate of salutationArr" [value]="salutate.value">
+                            {{ salutate.label }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Name of Contact Person</mat-label>
+                    <input [readOnly]="isApprovedByNCCPL" matInput name="CLIENT_NAME_ATR"
+                           formControlName="CLIENT_NAME_ATR"/>
+                </mat-form-field>
+            </div>
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Attorney Identification Type</mat-label>
+                    <mat-select [disabled]="isApprovedByNCCPL" name="IDENTIFICATION_ATR"
+                                formControlName="IDENTIFICATION_ATR">
+                        <mat-option *ngFor="let identity of identificationArr" [value]="identity.uinId">
+                            {{ identity.uinDesc }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Attorney Mobile</mat-label>
+                    <input [readOnly]="isApprovedByNCCPL" matInput name="Mobile_ATR"
+                           formControlName="Mobile_ATR"/>
+                </mat-form-field>
+            </div>
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Attorney Email</mat-label>
+                    <input [readOnly]="isApprovedByNCCPL" matInput name="Email_ATR"
+                           formControlName="Email_ATR"/>
+                </mat-form-field>
+            </div>
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Mailing Address Line 1</mat-label>
+                    <input [readOnly]="isApprovedByNCCPL" matInput name="Mailing_ADDRESS_ATR_1"
+                           formControlName="Mailing_ADDRESS_ATR_1"/>
+                </mat-form-field>
+            </div>
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Mailing Address Line 2</mat-label>
+                    <input [readOnly]="isApprovedByNCCPL" matInput name="Mailing_ADDRESS_ATR_2"
+                           formControlName="Mailing_ADDRESS_ATR_2"/>
+                </mat-form-field>
+            </div>
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Mailing Address Line 3</mat-label>
+                    <input [readOnly]="isApprovedByNCCPL" matInput name="Mailing_ADDRESS_ATR_3"
+                           formControlName="Mailing_ADDRESS_ATR_3"/>
+                </mat-form-field>
+            </div>
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Mailing Country</mat-label>
+                    <mat-select [disabled]="isApprovedByNCCPL"
+                                (selectionChange)="onCountryChange($event.value)"
+                                name="Mailing_Country_ATR"
+                                formControlName="Mailing_Country_ATR">
+                        <mat-option *ngFor="let country of countries" [value]="country.countryId">
+                            {{ country.countryName }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Mailing Province</mat-label>
+                    <mat-select [disabled]="isApprovedByNCCPL"
+                                (selectionChange)="onProvinceChange($event.value)"
+                                name="Mailing_Province_ATR" formControlName="Mailing_Province_ATR">
+                        <mat-option *ngFor="let province of provinces" [value]="province.provinceId">
+                            {{ province.provinceDesc }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Other Mailing Province</mat-label>
+                    <input [readOnly]="isApprovedByNCCPL" matInput name="Other_Mailing_Prov_ATR"
+                           formControlName="Other_Mailing_Prov_ATR"/>
+                </mat-form-field>
+            </div>
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Mailing City</mat-label>
+                    <mat-select [disabled]="isApprovedByNCCPL" name="Mailing_CITY_ATR"
+                                formControlName="Mailing_CITY_ATR">
+                        <mat-option *ngFor="let city of cities" [value]="city.cityId">
+                            {{ city.cityName }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Other Mailing City</mat-label>
+                    <input [readOnly]="isApprovedByNCCPL" matInput name="Other_Mailing_CITY_ATR"
+                           formControlName="Other_Mailing_CITY_ATR"/>
+                </mat-form-field>
+            </div>
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Land Line Number</mat-label>
+                    <input [readOnly]="isApprovedByNCCPL" matInput name="Landline_ATR"
+                           formControlName="Landline_ATR"/>
+                </mat-form-field>
+            </div>
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Attorney Fax</mat-label>
+                    <input [readOnly]="isApprovedByNCCPL" matInput name="FAX_ATR"
+                           formControlName="FAX_ATR"/>
+                </mat-form-field>
+            </div>
+        </div>
+    </div>
+</div>

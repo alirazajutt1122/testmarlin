@@ -1,0 +1,129 @@
+
+
+<section class="widget" widget="">
+	<header>
+		<h3><span class="fw-semi-bold">{{'Translation.Countries' | translate}}</span></h3>
+		<div class="other_btns">
+			<button *ngIf="userService.isAuhtorized(userService.EB_COUNTRY_NEW)" class="add_new_btn" id="btnNew" data-toggle="modal"
+			 (click)="onNewAction()" data-target="#add_new" type="button" data-backdrop="static" title="{{'Translation.Add' | translate}}" ><i class="fa fa-plus" aria-hidden="true"></i> </button>
+		</div>
+	</header>
+	<div class="table_container">
+		<wj-flex-grid [itemsSource]="itemsList" [isReadOnly]="true" [selectionMode]="'Row'" [autoSizeMode]="'Headers'" [headersVisibility]="'Column'"
+		 style="height: 320px;" #flex>
+			<wj-flex-grid-filter [filterColumns]="['countryCode', 'countryName','currencyCode','currencyName','currencySymbol']"></wj-flex-grid-filter>
+			<wj-flex-grid-column [header]="'Translation.Code' | translate" [align]="'left'" [binding]="'countryCode'" [width]="'0.5*'" [minWidth]="30"></wj-flex-grid-column>
+			<wj-flex-grid-column [header]="'Translation.Name' | translate" [align]="'left'" [binding]="'countryName'" [width]="'0.5*'" [minWidth]="30"></wj-flex-grid-column>
+			<wj-flex-grid-column [header]="'Translation.Currency Code' | translate" [align]="'left'" [binding]="'currencyCode'" [width]="'0.5*'" [minWidth]="30"></wj-flex-grid-column>
+			<wj-flex-grid-column [header]="'Translation.Currency Name' | translate" [align]="'left'" [binding]="'currencyName'" [width]="'0.5*'" [minWidth]="30"></wj-flex-grid-column>
+			<wj-flex-grid-column [header]="'Translation.Currency Symbol' | translate" [align]="'left'" [binding]="'currencySymbol'" [width]="'0.5*'" [minWidth]="30"></wj-flex-grid-column>
+			<wj-flex-grid-column [header]="'Translation.Dialing Code' | translate" [align]="'left'" [binding]="'dialingCode'" [width]="'0.5*'" [minWidth]="30"></wj-flex-grid-column>
+			<wj-flex-grid-column [header]="'Common.Action' | translate" [width]="'0.2*'" [align]="'center'" [minWidth]="30" *ngIf="userService.isAuhtorized(userService.EB_COUNTRY_UPDATE)">
+				<ng-template wjFlexGridCellTemplate [cellType]="'Cell'">
+					<!--<button  id="btnEdit" class="on_edit_button" role="button"
+                                (click)="onEditAction()" title="Edit"  data-target="#add_new" data-toggle="modal"
+                                data-backdrop="static"> <img src="assets/img/edit_orange.png"/> </button>-->
+								<img src="assets/img/edit_orange.png" class="gridImg" title="{{'Translation.Edit' | translate}}" (click)="onEditAction()" data-target="#add_new" data-toggle="modal" data-backdrop="static"/>
+				</ng-template>
+			</wj-flex-grid-column>
+		</wj-flex-grid>
+	</div>
+	<div class="row"></div>
+	<div class="btn-group col-xs-12 align-right">
+		<!-- Paginator -->
+		<wj-collection-view-pager [cv]="flex?.collectionView"></wj-collection-view-pager>
+		<!-- page size -->
+		<wj-menu [(value)]="pageSize" [header]= "'Common.Page Size' | translate">
+			<wj-menu-item [value]="0">{{ 'Common.No Paging' | translate }}</wj-menu-item>
+			<wj-menu-item [value]="5">5 {{ 'Common.items' | translate }}</wj-menu-item>
+			<wj-menu-item [value]="10">10 {{ 'Common.items' | translate }}</wj-menu-item>
+			<wj-menu-item [value]="20">20 {{ 'Common.items' | translate }}</wj-menu-item>
+			<wj-menu-item [value]="30">30 {{ 'Common.items' | translate }}</wj-menu-item>
+			<wj-menu-item [value]="50">50 {{ 'Common.items' | translate }}</wj-menu-item>
+			<wj-menu-item [value]="100">100 {{ 'Common.items' | translate }}</wj-menu-item>
+		</wj-menu>
+	</div>
+</section>
+<div id="add_new" class="modal fade" role="dialog" data-keyboard="true">
+	<div class="modal-dialog modal-lg">
+		<!-- Modal content-->
+		<div class="modal-content">
+			<form class="form-horizontal form-label-left parsleyjs" data-parsley-priority-enabled="false" role="form" [formGroup]="myForm"
+			 novalidate (ngSubmit)="onSaveAction(myForm.value, myForm.valid)">
+				<div class="modal-body modal-no-border">
+					<div class="row setup_box_container">
+						<div class="col-md-3 col-sm-5 modal_left">
+							<div class="wizard_Logo">
+								<img src="assets/img/Countries.png" class="formImg"/>
+								<h4>{{'Translation.Country' | translate}}</h4>
+								<p>{{'Translation.Management & configurations of countries' | translate}}</p>
+							</div>
+						</div>
+						<div class="col-md-9 col-sm-7 modal_center">
+							<div class="row" style="margin: 40px 40px 0px 40px">
+
+								<div class="col-sm-6 fields_box">
+									<label for="countryCode">{{'Translation.Code' | translate}} <span class="validation">*</span></label>
+									<wj-input-mask #countryCode tabindex="1" autofocus="autofocus" id="countryCode" class="wijmo_style" formControlName="countryCode"
+									 maxlength="20" [(ngModel)]="selectedItem.countryCode" myForm required [isRequired]="true"> </wj-input-mask>
+									<div *ngIf="myForm.controls['countryCode'].hasError('required')" [hidden]="myForm.controls.countryCode.valid || (myForm.controls.countryCode.pristine && !isSubmitted)"
+									 class="text-danger">{{'Translation.Code' | translate}} {{'Translation.is required' | translate}}.</div>
+									<div *ngIf="myForm.controls['countryCode'].hasError('pattern')" class="text-danger">{{'Translation.Invalid' | translate}} {{'Translation.Code' | translate}}.</div>
+								</div>
+								<div class="col-sm-6 fields_box">
+									<label for="countryName">{{'Translation.Name' | translate}} <span class="validation">*</span></label>
+									<wj-input-mask tabindex="2" id="countryName" class="wijmo_style" formControlName="countryName" maxlength="250" [(ngModel)]="selectedItem.countryName"
+									 myForm required [isRequired]="true"> </wj-input-mask>
+									<div *ngIf="myForm.controls['countryName'].hasError('required')" [hidden]="myForm.controls.countryName.valid || (myForm.controls.countryName.pristine && !isSubmitted)"
+									 class="text-danger">{{'Translation.Name' | translate}} {{'Translation.is required' | translate}}.</div>
+									<div *ngIf="myForm.controls['countryName'].hasError('pattern')" class="text-danger">{{'Translation.Invalid' | translate}} {{'Translation.Name' | translate}}.</div>
+								</div>
+								<div class="col-sm-6 fields_box">
+									<label for="currencyCode">{{'Translation.Currency Code' | translate}} <span class="validation">*</span></label>
+									<wj-input-mask tabindex="3" id="currencyCode" class="wijmo_style" formControlName="currencyCode" maxlength="10" [(ngModel)]="selectedItem.currencyCode"
+									 myForm required [isRequired]="true"> </wj-input-mask>
+									<div *ngIf="myForm.controls['currencyCode'].hasError('required')" [hidden]="myForm.controls.currencyCode.valid || (myForm.controls.currencyCode.pristine && !isSubmitted)"
+									 class="text-danger">{{'Translation.Currency Code' | translate}} {{'Translation.is required' | translate}}.</div>
+									<div *ngIf="myForm.controls['currencyCode'].hasError('pattern')" class="text-danger">{{'Translation.Invalid' | translate}} {{'Translation.Currency Code' | translate}}.</div>
+								</div>
+								<div class="col-sm-6 fields_box">
+									<label for="currencyName">{{'Translation.Currency Name' | translate}} <span class="validation">*</span></label>
+									<wj-input-mask tabindex="4" id="currencyName" class="wijmo_style" formControlName="currencyName" maxlength="50" [(ngModel)]="selectedItem.currencyName"
+									 myForm required [isRequired]="true"> </wj-input-mask>
+									<div *ngIf="myForm.controls['currencyName'].hasError('required')" [hidden]="myForm.controls.currencyName.valid || (myForm.controls.currencyName.pristine && !isSubmitted)"
+									 class="text-danger">{{'Translation.Currency Name' | translate}} {{'Translation.is required' | translate}}.</div>
+									<div *ngIf="myForm.controls['currencyName'].hasError('pattern')" class="text-danger">{{'Translation.Invalid' | translate}} {{'Translation.Currency Name' | translate}}.</div>
+								</div>
+								<div class="col-sm-6 fields_box">
+									<label for="currencySymbol">{{'Translation.Currency Symbol' | translate}} <span class="validation">*</span></label>
+									<wj-input-mask tabindex="5" id="currencySymbol" class="wijmo_style" formControlName="currencySymbol" maxlength="10" [(ngModel)]="selectedItem.currencySymbol"
+									 myForm required [isRequired]="true"> </wj-input-mask>
+									<div *ngIf="myForm.controls['currencySymbol'].hasError('required')" [hidden]="myForm.controls.currencySymbol.valid || (myForm.controls.currencySymbol.pristine && !isSubmitted)"
+									 class="text-danger">{{'Translation.Currency Symbol' | translate}} {{'Translation.is required' | translate}}.</div>
+									<!--<div *ngIf="myForm.controls['currencySymbol'].hasError('pattern')" class="text-danger">{{'Translation.Invalid' | translate}} Currency Symbol.</div>-->
+								</div>
+								<div class="col-sm-6 fields_box">
+									<label for="dialingCode">{{'Translation.Dialing Code' | translate}} <span class="validation">*</span></label>
+									<wj-input-mask tabindex="6" id="dialingCode" class="wijmo_style" formControlName="dialingCode" maxlength="4" [(ngModel)]="selectedItem.dialingCode"
+									 myForm required [isRequired]="true"> </wj-input-mask>
+									<div *ngIf="myForm.controls['dialingCode'].hasError('required')" [hidden]="myForm.controls.dialingCode.valid || (myForm.controls.dialingCode.pristine && !isSubmitted)"
+									 class="text-danger">{{'Translation.Dialing Code' | translate}} {{'Translation.is required' | translate}}.</div>
+						
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="orange_footer_small">
+					<button id="btnSave"  type="submit" class="save_btn" *ngIf="!isEditing && userService.isAuhtorized(userService.EB_COUNTRY_UPDATE)">{{'Common.Save' | translate}}</button>
+					<button id="btnEdit"  type="submit" class="save_btn" *ngIf="isEditing && userService.isAuhtorized(userService.EB_COUNTRY_UPDATE)">{{'Common.Update' | translate}}</button>
+					<button id="btnCancel"  type="button" data-dismiss="modal" class="cancel_btn" (click)="onCancelAction()">{{'Common.Cancel' | translate}}</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+
+<dialog-cmp #dialogCmp (btnClick)="getNotification($event)"> </dialog-cmp>

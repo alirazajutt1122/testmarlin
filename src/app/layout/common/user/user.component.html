@@ -1,0 +1,166 @@
+<!-- Button -->
+<div class="flex flex-col justify-center">
+    <div class="flex justify-center items-center">
+        <div class="flex-auto leading-none justify-center p-2">
+
+            <div class="text-sm sm:text-base text-center mt-1">Total: <span class="text-primary">
+                    {{totalValue$ | async}}</span>
+            </div>
+            <div class="text-sm sm:text-base text-center mt-1">Current: <span class="text-primary">
+                    {{currentValue$ | async}} </span>
+            </div>
+
+
+            <div class="text-lg text-center font-bold">
+
+                <span *ngIf="loss" class="text-sm sm:text-lg font-bold" [ngStyle]="{'color':lossColor}">Net P/L :
+                    <span [ngStyle]="{'color':lossColor}"> {{netPL$ | async}} </span>
+
+                    <mat-icon [ngStyle]="{'color':lossColor}" class="icon-size-4"
+                        [svgIcon]="'heroicons_solid:arrow-narrow-down'">
+                    </mat-icon>
+                </span>
+
+                <span *ngIf="profit" class="text-lg font-bold" [ngStyle]="{'color':profitColor}">Net P/L :
+                    <span [ngStyle]="{'color':profitColor}"> {{netPL$ | async}} </span>
+
+                    <mat-icon [ngStyle]="{'color':profitColor}" class="icon-size-3.5"
+                        [svgIcon]="'heroicons_solid:arrow-narrow-up'">
+                    </mat-icon>
+                </span>
+
+                <!-- <button (click)="refresh()">
+                    <mat-icon style="font-size: 17px;margin-top: -4px; color: white;">refresh</mat-icon>
+                </button> -->
+                <button (click)="portfolioDetail()">
+                    <mat-icon style="font-size: 17px;margin-top: -4px; color: white;" class="iconHover">error_outline
+                    </mat-icon>
+                </button>
+            </div>
+        </div>
+        <div class="flex flex-col items-center">
+            <div class="flex items-center justify-center ml-2">
+                <button mat-icon-button [matMenuTriggerFor]="userActions">
+                    <span class="relative">
+                        <img class="w-8 h-8 rounded-full" *ngIf="showAvatar && user?.avatar" [src]="user.avatar">
+                        <mat-icon class="icon-size-8" *ngIf="!showAvatar || !user?.avatar"
+                            [svgIcon]="'heroicons_outline:user-circle'"></mat-icon>
+                        <span class="absolute right-0 bottom-0 w-2 h-2 rounded-full" [ngClass]="{'mr-px mb-px': !showAvatar || !user?.avatar,
+                                      'bg-green-500': user?.status === 'online',
+                                      'bg-amber-500': user?.status === 'away',
+                                      'bg-red-500': user?.status === 'busy',
+                                      'bg-gray-400': user?.status === 'not-visible'}"></span>
+                    </span>
+                </button>
+            </div>
+            <!-- <div class="pl-2 text-sm text-primary font-medium text-center mb-1">{{user?.name | uppercase}}</div> -->
+        </div>
+    </div>
+</div>
+
+<mat-menu [xPosition]="'before'" #userActions="matMenu" >
+    <button mat-menu-item>
+        <span class="flex flex-col leading-none">
+            <span>Signed in as</span>
+            <span class="mt-1.5 text-md font-medium">{{user?.email}}</span>
+        </span>
+    </button>
+    <mat-divider class="my-2"></mat-divider>
+    <button mat-menu-item>
+        
+    </button>
+    <mat-divider class="my-2"></mat-divider>
+    <button mat-menu-item [ngStyle]="{'height' : 'auto'}" class="p-0" type="button" [disableRipple]="true" (click)="$event.stopPropagation()">
+        <mat-expansion-panel  hideToggle>
+            <mat-expansion-panel-header >
+              <mat-panel-title [ngStyle]="{'justifyContent' : 'space-between','alignItems':'center','marginRight': '0'}">
+                <div >
+                    <i class="fa fa-user mr-4" aria-hidden="true"></i>
+                    <span>Profile</span>
+                    <i class="fa fa-caret-down ml-2" aria-hidden="true"></i>
+                </div>
+                <button>
+                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                </button>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            
+                <form action=""  [ngStyle]="{'marginLeft':'20px'}">
+                    <div class="form-group mb-0" >
+                        <label for="username" class="ml-2" [ngStyle]="{'color':'#fff'}"><small>Username</small></label>
+                        <input type="text" class="form-control form-control-sm" id="username" [ngStyle]="{'width':'fit-content','backgroundColor':'#364150','borderRadius':'15px'}" [disabled]="true">
+                    </div>
+                    <div class="form-group  mb-0" >
+                        <label for="email" class="ml-2" [ngStyle]="{'color':'#fff'}"> <small>Email</small></label>
+                        <input type="email" class="form-control form-control-sm" id="email" aria-describedby="emailHelp" [ngStyle]="{'width':'fit-content','backgroundColor':'#364150','borderRadius':'15px'}" [disabled]="true">
+                    </div>
+                      <div class="form-group  mb-0" >
+                        <label for="country" class="ml-2" [ngStyle]="{'color':'#fff'}"><small>Country</small></label>
+                        <input type="text" class="form-control form-control-sm" id="country" [ngStyle]="{'width':'fit-content','backgroundColor':'#364150','borderRadius':'15px'}" [disabled]="true">
+                      </div>
+                      <div class="form-group  mb-0" >
+                        <label for="exchange" class="ml-2" [ngStyle]="{'color':'#fff'}"><small>Exchange</small></label>
+                        <input type="text" class="form-control form-control-sm" id="exchange" [ngStyle]="{'width':'fit-content','backgroundColor':'#364150','borderRadius':'15px'}" [disabled]="true">
+                      </div>
+                    <div class="form-group  mb-0" [ngStyle]="{'width':'95%'}" >
+                        <label for="mobile-number" class="ml-2" [ngStyle]="{'color':'#fff'}"><small>Mobile Number</small></label>
+                        <div class="input-group " [ngStyle]="{'display':'flex','alignItems':'center','borderRadius':'15px','backgroundColor':'#364150'}">
+                                <div class="input-group-prepend mr-2 ">
+                                  <span class="input-group-text small p-2" id="basic-addon1" >+001 425</span>
+                                </div>
+                                <input type="text" class="form-control form-control-sm" aria-label="mobile number" aria-describedby="basic-addon1" id="mobile-number" [ngStyle]="{'borderRadius':'0 15px 15px 0','backgroundColor' : 'transparent','color':'#fff'}">
+                        </div>
+                    </div>
+                    <div class="row mr-2" [ngStyle]="{'justifyContent':'flex-end'}">
+                        <button class="btn btn-md mr-2" type="button" [ngStyle]="{'backgroundColor' : '#13406A'}">Update</button>
+                    </div>
+                </form>
+          </mat-expansion-panel>
+        </button>
+        <mat-divider class="my-2"></mat-divider>
+    <button mat-menu-item (click)="$event.stopPropagation()" class="px-6" type="button" [disableRipple]="true">
+        <div >
+            <i class="fa fa-key mr-4" aria-hidden="true"></i>
+            <span>Change Password</span>
+        </div>
+    </button>
+    <mat-divider class="my-2"></mat-divider>
+    <button mat-menu-item (click)="$event.stopPropagation()"  type="button" [disableRipple]="true" class="px-6">
+        <div >
+            <i class="fa fa-circle-o mr-4" aria-hidden="true"></i>
+            <span>User Status</span>
+        </div>
+    </button>
+  
+    <!-- <button mat-menu-item>
+        <span class="flex flex-col leading-none">
+            <span class="c-pill c-pill--warning">Pending</span>
+        </span>
+    </button> -->
+    <mat-divider class="my-2"></mat-divider>
+    <button mat-menu-item (click)="signOut()">
+        <div >
+            <mat-icon [svgIcon]="'heroicons_outline:logout'"></mat-icon>
+            <span>Sign out</span>
+        </div>
+    </button>
+</mat-menu>
+
+<mat-menu class="user-status-menu" #userStatus="matMenu">
+    <button mat-menu-item (click)="updateUserStatus('online')">
+        <span class="w-4 h-4 mr-3 rounded-full bg-green-500"></span>
+        <span>Online</span>
+    </button>
+    <button mat-menu-item (click)="updateUserStatus('away')">
+        <span class="w-4 h-4 mr-3 rounded-full bg-amber-500"></span>
+        <span>Away</span>
+    </button>
+    <button mat-menu-item (click)="updateUserStatus('busy')">
+        <span class="w-4 h-4 mr-3 rounded-full bg-red-500"></span>
+        <span>Busy</span>
+    </button>
+    <button mat-menu-item (click)="updateUserStatus('not-visible')">
+        <span class="w-4 h-4 mr-3 rounded-full bg-gray-400"></span>
+        <span>Invisible</span>
+    </button>
+</mat-menu>

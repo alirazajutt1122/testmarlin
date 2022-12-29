@@ -1,0 +1,27 @@
+<!-- Modal -->
+<div class="modal fade" id="{{modalId}}" tabindex="-1" role="dialog" aria-labelledby="new-order-all" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document" style="width: 730px; min-width : 730px;" >
+      <div class="modal-content ">
+        <div class="modal-header">
+          <button type="button" class="close" (click)="onClose()">&times;</button>
+          <h4 class="modal-title"><span class="fw-semi-bold">{{ 'Menu.Repo Order' | translate }}</span>
+            <span style="font-size: 11px;" class="text-success" *ngIf="tradeType === 'gTrade'"> - {{'Translation.Actual Trade' | translate}}</span>
+            <span style="font-size: 11px;" class="text-blue" *ngIf="tradeType === 'vTrade'"> - {{'Translation.Virtual Trade' | translate}}</span>
+          </h4>
+        </div>
+        <div class="modal-body" style="padding-top: 5px;max-height: min-content !important;">
+          <!------------------------Tabs Bar Start--------------------------->
+          <div class="row">
+            <div class="col-md-12">
+             
+              <ng-container *ngIf="(authService.isAuhtorized(authService.OM_EQUITY_ORDER_NEW) || loggedInUserType=== userType.CLIENT)">
+               <repo-bond-order></repo-bond-order>
+              </ng-container>
+  
+         
+  
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>

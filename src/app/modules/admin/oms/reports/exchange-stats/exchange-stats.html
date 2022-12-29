@@ -1,0 +1,57 @@
+
+<div class="row" style="width: 100%;">
+    <div class="col-lg-12 widget-container">
+      <section class="widget" widget>
+        <header>
+          <h3> <span class="fw-semi-bold">{{ 'Translation.Exchange Statistics' | translate }}</span></h3>
+          <div class="other_btns">
+            <button data-toggle="collapse" data-target="#filter_box" class="filter_btn"><i class="fa fa-filter" aria-hidden="true"></i>  </button>
+          </div>
+          <div class="widget-controls">
+            <a data-widgster="expand" title="{{ 'Translation.Expand' | translate }}" href="#"><i class="glyphicon glyphicon-chevron-up"></i></a>
+            <a data-widgster="collapse" title="{{ 'Translation.Collapse' | translate }}" href="#"><i class="glyphicon glyphicon-chevron-down"></i></a>
+          </div>
+        </header>
+        <div>
+          <div id="filter_box" class="collapse in pt-2">
+            <form role="form" [formGroup]="myForm" novalidate>
+              <div class="row">
+                <div class="col-sm-3">
+                  <div class="form-group">
+                    <label for="search-input">{{ 'Translation.Exchange' | translate }} <span class="validation">*</span></label>
+                    <div class="input-group">
+                      <wj-combo-box id="exchange" formControlName="exchange" class="form-control form-control-sm" #cmbExchange [itemsSource]="exchanges"
+                        [(ngModel)]="exchangeId" displayMemberPath="exchangeCode" selectedValuePath="exchangeId" required [isEditable]="true"></wj-combo-box>
+                    </div>
+                    <div *ngIf="myForm.controls['exchange'].hasError('pattern')" [hidden]="myForm.controls.exchange.valid || !isSubmitted" class="text-danger">{{ 'Translation.Exchange' | translate }} {{ 'Translation.is required' | translate }}.</div>
+                  </div>
+                </div>
+                <div class="col-sm-1">
+                  <div class="form_search">
+                    <button class="btn btn-success btn-sm" title="{{ 'Translation.Search' | translate }}" data-toggle="collapse in" data-target="#filter_box" (click)="onRefresh()"><span class="fa fa-search"></span> </button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+          <wj-flex-grid [isReadOnly]="true" [itemsSource]="statsdata" [selectionMode]="'Row'" [autoSizeMode]="'Headers'" [headersVisibility]="'Column'"
+            (selectionChanged)="OnIndexChange($event)" style="height: 120px;" #flexGrid>
+            <wj-flex-grid-filter [filterColumns]="['code', 'high','low','volume','value','current','change','last']"></wj-flex-grid-filter>
+            <wj-flex-grid-column [header]="'Translation.Index' | translate" align="left" [binding]="'code'" [width]="'0.5*'" [minWidth]="30"></wj-flex-grid-column>
+            <wj-flex-grid-column [header]="'Translation.High' | translate" align="right" [binding]="'high'" [width]="'0.5*'" [minWidth]="30" [format]="'n4'"></wj-flex-grid-column>
+            <wj-flex-grid-column [header]="'Translation.Low' | translate" align="right" [binding]="'low'" [width]="'0.5*'" [minWidth]="30" [format]="'n4'"></wj-flex-grid-column>
+            <wj-flex-grid-column [header]="'Translation.Quantity' | translate" align="right" [binding]="'volume'" [width]="'0.5*'" [minWidth]="30"></wj-flex-grid-column>
+            <wj-flex-grid-column [header]="'Translation.Value' | translate" align="right" [binding]="'value'" [width]="'0.5*'" [minWidth]="30" [format]="'n4'"></wj-flex-grid-column>
+            <wj-flex-grid-column [header]="'Translation.Current' | translate" align="right" [binding]="'current'" [width]="'0.5*'" [minWidth]="30" [format]="'n4'"></wj-flex-grid-column>
+            <wj-flex-grid-column [header]="'Translation.Change' | translate" align="right" [binding]="'change'" [width]="'0.5*'" [minWidth]="30" [format]="'n4'"></wj-flex-grid-column>
+            <wj-flex-grid-column [header]="'Translation.Last Day' | translate" align="right" [binding]="'last'" [width]="'0.5*'" [minWidth]="30" [format]="'n4'"></wj-flex-grid-column>
+          </wj-flex-grid>
+          <br><br>
+          <div class="table_container">
+            <index-chart #chartExchangeStats [showChartType]=true [showPeriodSelector]=false [showRangeSelector]=true></index-chart>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+  <dialog-cmp-reports #dialogCmp (btnClick)="getNotification($event)"> </dialog-cmp-reports>

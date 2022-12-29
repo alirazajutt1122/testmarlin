@@ -1,0 +1,253 @@
+<div class="flex-auto p-10">
+
+    <div class="flex flex-wrap justify-between w-full max-w-500 -m-4">
+
+        <!-- Title and action buttons -->
+        <div class="flex items-center justify-between w-full">
+            <div>
+                <div class="text-xl font-semibold text-primary-500 tracking-tight leading-8">{{'TRENDING'| transloco}}</div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 md:gap-6 lg:gap-8  w-full mt-6" style="height: fit-content;">
+
+            <div [@cardFlip]="stateIncCard"
+                 class="flex flex-col max-w-80 w-full filter-info border-l-4 border-r-4 border-b-4">
+                <div class="flex h-20 -mb-20">
+                    <img
+                        class="object-cover"
+                        src="assets/images/marlin-dashboard/trending-card-back.png"
+                        alt="Card cover image">
+                </div>
+                <div class="flex justify-between m-4">
+                    <div class="text-primary-500 text-3xl font-semibold leading-tight">{{incCardData?.title}}</div>
+                    <div class="-mr-3">
+                        <button
+                            mat-icon-button>
+                            <mat-icon
+                                class="icon-size-7 text-primary-500"
+                                [svgIcon]="'heroicons_solid:chevron-double-right'"></mat-icon>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex flex-col items-center max-w-80 w-full pb-2 filter-info">
+                    <img class="w-32 h-32 rounded-full"
+                         [src]="incCardData?.pic"
+                         [alt]="incCardData?.title">
+                </div>
+                <div class="flex flex-col px-2 pt-4">
+                    <div class="flex items-center justify-center">
+                        <div class="mr-4">
+                            <div  class="text-2xl font-semibold leading-tight">{{incCardData?.bidPrice}}
+                                <span class="text-md" *ngIf="incCardData?.percentage"
+                                      [ngClass]="(incCardData?.percentage.startsWith('-') ? 'text-red-500' : 'text-green-500')">{{incCardData?.percentage}}
+                                    %</span>
+                            </div>
+                            <div *ngIf="incCardData?.volume"
+                                 class="text-center text-secondary-100 leading-tight mt-1 italic">Vol
+                                {{incCardData?.volume}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between mt-4">
+                        <div class="text-md font-medium text-secondary mr-3">
+                            <apx-chart
+                                class="inline-flex items-center w-20 h-8"
+                                [chart]="watchlistChartOptions.chart"
+                                [colors]="incCardData.dir === 'up' ? ['#48BB78']: ['#F56565']"
+                                [series]="incCardData.series"
+                                [stroke]="watchlistChartOptions.stroke"
+                                [tooltip]="watchlistChartOptions.tooltip"
+                                [xaxis]="watchlistChartOptions.xaxis"></apx-chart>
+                        </div>
+                        <div class="flex items-end justify-end">
+                            <div class="">
+                                <div *ngIf="incCardData?.percentage" class="text-2xl font-semibold leading-tight">
+                                    <span [ngClass]="(incCardData?.percentage.startsWith('-') ? 'text-red-500' : 'text-green-500')" class="text-md">{{incCardData?.percentage}}   %</span>
+                                </div>
+                                <div
+                                     class="text-secondary-500 leading-tight mt-1 italic">1W
+                                    {{'Change'| transloco}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div [@cardFlip]="stateCommoditiesCard"
+                 class="flex flex-col max-w-80 w-full filter-info border-l-4 border-r-4 border-b-4">
+                <div class="flex h-20 -mb-20">
+                    <img
+                        class="object-cover"
+                        src="assets/images/marlin-dashboard/trending-card-back.png"
+                        alt="Card cover image">
+                </div>
+                <div class="flex justify-between m-4">
+                    <div
+                        class="text-primary-500 text-3xl font-semibold leading-tight">{{commoditiesCardData?.title}}</div>
+                    <div class="-mr-3">
+                        <button
+                            mat-icon-button>
+                            <mat-icon
+                                class="icon-size-7 text-primary-500"
+                                [svgIcon]="'heroicons_solid:chevron-double-right'"></mat-icon>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex flex-col items-center max-w-80 w-full pb-2 filter-info">
+                    <img class="w-32 h-32 rounded-full"
+                         [src]="commoditiesCardData?.pic"
+                         [alt]="commoditiesCardData?.title">
+                </div>
+                <div class="flex flex-col px-2 pt-4">
+                    <div class="flex items-center justify-center">
+                        <div class="mr-4">
+                            <div *ngIf="commoditiesCardData?.percentage" class="text-2xl font-semibold leading-tight">
+                                104.07
+                                <span class="text-md"
+                                      [ngClass]="(commoditiesCardData?.percentage.startsWith('-') ? 'text-red-500' : 'text-green-500')">{{incCardData?.percentage}}
+                                    %</span>
+                            </div>
+                            <div *ngIf="commoditiesCardData?.percentage"
+                                 class="text-center text-secondary-100 leading-tight mt-1 italic">Vol
+                                {{commoditiesCardData?.volume}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between mt-4">
+                        <div class="text-md font-medium text-secondary mr-3">
+                            <apx-chart
+                                class="inline-flex items-center w-20 h-8"
+                                [chart]="watchlistChartOptions.chart"
+                                [colors]="commoditiesCardData.dir === 'up' ? ['#48BB78']: ['#F56565']"
+                                [series]="commoditiesCardData.series"
+                                [stroke]="watchlistChartOptions.stroke"
+                                [tooltip]="watchlistChartOptions.tooltip"
+                                [xaxis]="watchlistChartOptions.xaxis"></apx-chart>
+                        </div>
+                        <div class="flex items-end justify-end">
+                            <div class="">
+                                <div *ngIf="commoditiesCardData?.percentage"
+                                     class="text-2xl font-semibold leading-tight">
+                                    <span class="text-md text-green-500">{{commoditiesCardData?.percentage}}
+                                        %</span>
+                                </div>
+                                <div *ngIf="commoditiesCardData?.percentage"
+                                     class="text-secondary-500 leading-tight mt-1 italic">1W
+                                    Change
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div [@cardFlip]="stateCryptoCard"
+                 class="flex flex-col max-w-80 w-full filter-info border-l-4 border-r-4 border-b-4">
+                <div class="flex h-20 -mb-20">
+                    <img
+                        class="object-cover"
+                        src="assets/images/marlin-dashboard/trending-card-back.png"
+                        alt="Card cover image">
+                </div>
+                <div class="flex justify-between m-4">
+                    <div class="text-primary-500 text-3xl font-semibold leading-tight">{{cryptoCardData?.title}}</div>
+                    <div class="-mr-3">
+                        <button
+                            mat-icon-button>
+                            <mat-icon
+                                class="icon-size-7 text-primary-500"
+                                [svgIcon]="'heroicons_solid:chevron-double-right'"></mat-icon>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex flex-col items-center max-w-80 w-full pb-2 filter-info">
+                    <img class="w-32 h-32 rounded-full"
+                         [src]="cryptoCardData?.pic"
+                         [alt]="cryptoCardData?.title">
+                </div>
+                <div class="flex flex-col px-2 pt-4">
+                    <div class="flex items-center justify-center">
+                        <div class="mr-4">
+                            <div *ngIf="cryptoCardData?.percentage" class="text-2xl font-semibold leading-tight">101.32
+                                <span class="text-md"
+                                      [ngClass]="(cryptoCardData?.percentage.startsWith('-') ? 'text-red-500' : 'text-green-500')">{{incCardData?.percentage}}
+                                    %</span>
+                            </div>
+                            <div *ngIf="cryptoCardData?.percentage"
+                                 class="text-center text-secondary-100 leading-tight mt-1 italic">Vol
+                                {{cryptoCardData?.volume}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between mt-4">
+                        <div class="text-md font-medium text-secondary mr-3">
+                            <apx-chart
+                                class="inline-flex items-center w-20 h-8"
+                                [chart]="watchlistChartOptions.chart"
+                                [colors]="cryptoCardData.dir === 'up' ? ['#48BB78']: ['#F56565']"
+                                [series]="cryptoCardData.series"
+                                [stroke]="watchlistChartOptions.stroke"
+                                [tooltip]="watchlistChartOptions.tooltip"
+                                [xaxis]="watchlistChartOptions.xaxis"></apx-chart>
+                        </div>
+                        <div class="flex items-end justify-end">
+                            <div class="">
+                                <div *ngIf="cryptoCardData?.percentage" class="text-2xl font-semibold leading-tight">
+                                    <span class="text-md text-green-500">{{cryptoCardData?.percentage}}
+                                        %</span>
+                                </div>
+                                <div *ngIf="cryptoCardData?.percentage"
+                                     class="text-secondary-500 leading-tight mt-1 italic">1W
+                                    Change
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex flex-col max-w-80 w-full filter-info border-l-4 border-r-4 border-b-4">
+                <div class="flex h-20 -mb-20">
+                    <img
+                        class="object-cover"
+                        src="assets/images/marlin-dashboard/trending-card-back.png"
+                        alt="Card cover image">
+                </div>
+                <div class="flex justify-between m-4">
+                    <div class="text-primary-500 text-3xl font-semibold leading-tight">ETF022A</div>
+                    <div class="-mr-3">
+                        <button
+                            mat-icon-button>
+                            <mat-icon
+                                class="icon-size-7 text-primary-500"
+                                [svgIcon]="'heroicons_solid:chevron-double-right'"></mat-icon>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex  w-full">
+                    <img class="h-40" src="assets/images/marlin-dashboard/ETF.png">
+                </div>
+                <div class="flex flex-col">
+                    <div class="flex items-center justify-center">
+                        <div class="mr-4">
+                            <div class="text-lg font-semibold text-primary leading-tight">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+    </div>
+
+</div>

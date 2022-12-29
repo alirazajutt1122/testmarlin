@@ -1,0 +1,151 @@
+<section class="widget" widget="">
+    <header>
+        <h3>{{ 'Translation.Client Pre-Settlement Delivery' | translate }} </h3>
+    </header>
+    <div class="widget-body">
+        <form class="form-horizontal form-label-left" method="post" data-parsley-priority-enabled="false" novalidate
+            role="form" name="myForm" [formGroup]="myForm" (ngSubmit)="printReport(myForm.value, myForm.valid)">
+            <div class="row">
+                <div class="col-sm-3 fields_box">
+                    <label for="search-input">{{ 'Translation.Trade Date' | translate }} <span
+                            class="validation">*</span></label>
+                    <wj-input-date class="wijmo_style" tabindex="1" [format]="'yyyy-MM-dd'" #tradeDate id="tradeDate"
+                        formControlName="tradeDate" (ngModelChange)="onDateChangeEvent($event)"
+                        [(ngModel)]="params.DATE" required [showYearPicker]="false"></wj-input-date>
+                    <button #btnPopup style="float:left;" type="button" class="btn btn-primary btn-xs mb-xs"
+                        (click)="onCalendarSelect()"><i class="fa fa-calendar"></i>{{ 'Translation.Settlement Calendar'
+                        | translate }}</button>
+                </div>
+                <div class="col-sm-3 fields_box">
+                    <label for="search-input">{{ 'Translation.Exchange' | translate }} <span
+                            class="validation">*</span></label>
+                    <wj-input-mask type="text" class="wijmo_style" id="exchangeCode" formControlName="exchangeCode"
+                        [(ngModel)]="selectedexchangeCode" required [isDisabled]="true"> </wj-input-mask>
+                    <div *ngIf="myForm.controls['exchangeCode'].hasError('required')"
+                        [hidden]="myForm.controls.exchangeCode.valid || (myForm.controls.exchangeCode.pristine && !isSubmitted)"
+                        class="text-danger">{{ 'Translation.Exchange is required' | translate }}.</div>
+                    <div *ngIf="myForm.controls['exchangeCode'].hasError('pattern')" class="text-danger">{{
+                        'Translation.Invalid Exchange' | translate }}.</div>
+                </div>
+                <div class="col-sm-3 fields_box">
+                    <label for="search-input">{{ 'Translation.Settlement Type' | translate }} <span
+                            class="validation">*</span></label>
+                    <wj-input-mask type="text" id="settlementType" formControlName="settlementType" class="wijmo_style"
+                        [(ngModel)]="params.SETTLEMENT_TYPE" required [isDisabled]="true"></wj-input-mask>
+                    <div *ngIf="myForm.controls['settlementType'].hasError('required')"
+                        [hidden]="myForm.controls.settlementType.valid || (myForm.controls.settlementType.pristine && !isSubmitted)"
+                        class="text-danger">{{ 'Translation.Settlement Type is required' | translate }}.</div>
+                    <div *ngIf="myForm.controls['settlementType'].hasError('pattern')" class="text-danger">{{
+                        'Translation.Invalid Settlement Type' | translate }}.</div>
+                </div>
+                <div class="col-sm-3 fields_box">
+                    <label for="search-input">{{ 'Translation.From Date' | translate }} <span
+                            class="validation">*</span></label>
+                    <wj-input-mask type="text" id="startDate" formControlName="startDate" class="wijmo_style"
+                        [(ngModel)]="startDate" [isDisabled]="true"></wj-input-mask>
+                    <!--<wj-input-date [(value)]="params.START_DATE" class="wijmo_style" [format]="'yyyy-MM-dd'" [isDisabled]="true"></wj-input-date>-->
+                    <div *ngIf="myForm.controls['startDate'].hasError('required')"
+                        [hidden]="myForm.controls.startDate.valid || (myForm.controls.startDate.pristine && !isSubmitted)"
+                        class="text-danger">{{ 'Translation.Date is required' | translate }}.</div>
+                    <div *ngIf="myForm.controls['startDate'].hasError('pattern')" class="text-danger">{{
+                        'Translation.From date should be less or equal than To date' | translate }}.
+                    </div>
+                </div>
+                <div class="col-sm-3 fields_box">
+                    <label for="search-input">{{ 'Translation.To Date' | translate }} <span
+                            class="validation">*</span></label>
+                    <wj-input-mask type="text" id="endDate" formControlName="endDate" class="wijmo_style"
+                        [(ngModel)]="endDate" [isDisabled]="true" required></wj-input-mask>
+                    <!--<wj-input-date [(value)]="params.END_DATE" class="wijmo_style" [format]="'yyyy-MM-dd'" [isDisabled]="true"></wj-input-date>-->
+                    <div *ngIf="myForm.controls['endDate'].hasError('required')"
+                        [hidden]="myForm.controls.endDate.valid || (myForm.controls.endDate.pristine && !isSubmitted)"
+                        class="text-danger">{{ 'Translation.Date is required' | translate }}.</div>
+                    <div *ngIf="myForm.controls['endDate'].hasError('pattern')" class="text-danger">{{
+                        'Translation.Invalid To Date' | translate }}.
+                    </div>
+                </div>
+                <div class="col-sm-3 fields_box">
+                    <label for="search-input">{{ 'Translation.Settlement Date' | translate }} <span
+                            class="validation">*</span></label>
+                    <wj-input-mask type="text" id="settlementDate" formControlName="settlementDate" class="wijmo_style"
+                        [(ngModel)]="settlementDate" [isDisabled]="true"></wj-input-mask>
+                    <!--<wj-input-date class="wijmo_style" [format]="'yyyy-MM-dd'" [(value)]="params.SETTLEMENT_DATE" [isDisabled]="true"></wj-input-date>-->
+                    <div *ngIf="myForm.controls['settlementDate'].hasError('required')"
+                        [hidden]="myForm.controls.settlementDate.valid || (myForm.controls.settlementDate.pristine && !isSubmitted)"
+                        class="text-danger">{{ 'Translation.Settlement Date is required' | translate }}.</div>
+                    <div *ngIf="myForm.controls['settlementDate'].hasError('pattern')" class="text-danger">{{
+                        'Translation.Invalid Settlement Date' | translate }}.</div>
+                </div>
+                <div class="col-sm-3 fields_box">
+                    <label for="status"> {{ 'Translation.Report Format' | translate }}
+                        <span class="validation">*</span>
+                    </label>
+                    <wj-combo-box tabindex="3" id="reportFormat" class="wijmo_style" formControlName="reportFormat"
+                        [isEditable]="true" [itemsSource]="reportFormatList" [isRequired]="true" #inputReportFormat
+                        displayMemberPath="label" selectedValuePath="value" [(ngModel)]="reportFormat"></wj-combo-box>
+
+                    <div *ngIf="myForm.controls['reportFormat'].hasError('required')"
+                        [hidden]="myForm.controls['reportFormat'].valid || (myForm.controls['reportFormat'].pristine && !isSubmitted)"
+                        class="text-danger">{{ 'Translation.Report Format' | translate }} {{ 'Translation.is required' |
+                        translate }}.</div>
+
+                </div>
+                <div class="col-sm-3 fields_box">
+                    <label for="status"> &nbsp; </label>
+                    <button type="submit" class="btn btn-success">{{ 'Common.View Report' | translate }}</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div *ngIf="pdf" class="flex justify-center m-4 mt-4">
+        <ngx-extended-pdf-viewer [base64Src]="pdfSrc" theme="dark" backgroundColor="#151922a8" [useBrowserLocale]="true"  [showOpenFileButton]="false" filenameForDownload="{{fileNameForDownload}}"
+            class="w-full" style="display: block;height: 775px;"></ngx-extended-pdf-viewer>
+   </div>
+</section>
+
+<wj-popup [owner]="btnPopup" [modal]="true" #settlementPopup style="width:630px;" class="SearchBox">
+    <div>
+        <wj-flex-grid [itemsSource]="settlementCalendarList" [isReadOnly]="true" [selectionMode]="'Row'"
+            [autoSizeMode]="'Headers'" [headersVisibility]="'Column'" #settlementGrid class="grid SearchBox"
+            style="height: 350px;width:100%;">
+            <wj-flex-grid-column [header]="'Translation.Exchange' | translate" [binding]="'exchange.exchangeCode'"
+                [minWidth]="30" [width]="'0.2*'">
+            </wj-flex-grid-column>
+            <wj-flex-grid-column [header]="'Translation.Settlement Type' | translate"
+                [binding]="'settlementType.settlementType'" [minWidth]="30" [width]="'0.3*'"></wj-flex-grid-column>
+            <wj-flex-grid-column [header]="'Translation.From Date' | translate" [binding]="'startDate'" [minWidth]="30"
+                [width]="'0.3*'">
+            </wj-flex-grid-column>
+            <wj-flex-grid-column [header]="'Translation.To Date' | translate" [binding]="'endDate'" [minWidth]="30"
+                [width]="'0.3*'">
+            </wj-flex-grid-column>
+            <wj-flex-grid-column [header]="'Translation.Settlement Date' | translate" [binding]="'settlementDate'"
+                [minWidth]="30" [width]="'0.3*'">
+            </wj-flex-grid-column>
+        </wj-flex-grid>
+        <div class="modal-footer SearchBox">
+            <button class="btn btn-success wj-hide-cancel" *ngIf="recExist"
+                (click)="updateControls(sgrid)">OK</button>&nbsp;&nbsp;
+            <button class="btn btn-default wj-hide-cancel">{{ 'Common.Cancel' | translate }}</button>
+        </div>
+    </div>
+</wj-popup>
+<!-- <wj-popup owner="#btnPopup" [modal]="true" #settlementPopup style="width:630px;">
+    <div style="background: rgb(51, 51, 51);">
+      <wj-flex-grid [itemsSource]="settlementCalendarList" [isReadOnly]="true" [selectionMode]="'Row'" [autoSizeMode]="'Headers'"
+        [headersVisibility]="'Column'" #settlementGrid class="grid" style="height: 350px;width:100%;">
+        <wj-flex-grid-column [header]="'Exchange'" [binding]="'exchange.exchangeCode'" [minWidth]="30" [width]="'0.2*'"></wj-flex-grid-column>
+        <wj-flex-grid-column [header]="'Settlement Type'" [binding]="'settlementType.settlementType'" [minWidth]="30" [width]="'0.3*'"></wj-flex-grid-column>
+        <wj-flex-grid-column [header]="'From Date'" [binding]="'startDate'" [minWidth]="30" [width]="'0.3*'"></wj-flex-grid-column>
+        <wj-flex-grid-column [header]="'To Date'" [binding]="'endDate'" [minWidth]="30" [width]="'0.3*'"></wj-flex-grid-column>
+        <wj-flex-grid-column [header]="'Settlement Date'" [binding]="'settlementDate'" [minWidth]="30" [width]="'0.3*'"></wj-flex-grid-column>
+      </wj-flex-grid>
+      <div class="modal-footer">
+        <button class="btn btn-success wj-hide-cancel" *ngIf="recExist" (click)="updateControls(sgrid)">OK</button>&nbsp;&nbsp;
+        <button class="btn btn-default wj-hide-cancel">Cancel</button>
+      </div>
+    </div>
+</wj-popup> -->
+
+
+<dialog-cmp #dialogCmp (btnClick)="getNotification($event)"> </dialog-cmp>

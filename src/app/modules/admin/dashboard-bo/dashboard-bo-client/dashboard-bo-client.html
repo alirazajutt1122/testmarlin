@@ -1,0 +1,42 @@
+<div class="theme">
+    <div class="row header">
+        <span class="font-bold text-xl ml-2 mt-1 text-primary">{{'Translation.CLIENTS' | translate}}</span>
+    </div>
+    <div class="row">
+        <div class="col-sm-5">
+            <div class="row mt-2">
+                <div class="col-sm-6">
+                    <div class="text-left mt-6">
+                        <span class="font-bold text-lg">{{'Translation.Total' | translate}}</span>
+                        <span class="font-bold text-lg block text-primary mt-4">{{'Translation.Active' | translate}}</span>
+                        <span class="font-bold text-lg block text-primary mt-4">{{'Translation.InActive' | translate}}</span>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="text-left mt-6">
+                        <span class="font-bold text-lg">{{total}}</span>
+                        <span class="font-bold text-lg block  mt-4">{{active}}</span>
+                        <span class="font-bold text-lg block  mt-4">{{inActive}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12 mt-14 mb-2">
+                    <div class="text-center mt-10">
+                        <span class="font-medium text-md">{{'Translation.TRADES' | translate}}</span>
+                        <span class="font-semibold block text-3xl -mt-2">{{trades}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-7 ">
+
+            <wj-flex-pie [bindingName]="'type'" [binding]="'trade'" [itemsSource]="Wjdata"  selectionMode="Point" selectedItemPosition="Top" [selectedItemOffset]="0.2" [isAnimated]="true" tooltipContent=""
+                [palette]="['l(0,0,1,0)#82f3fe-#63a6ff', 'l(0,0,0,1)#d3671a-#ffb300']">
+                <wj-flex-pie-data-label [content]="getLabelContent"></wj-flex-pie-data-label>
+                <wj-flex-chart-legend position="Bottom"></wj-flex-chart-legend>
+            </wj-flex-pie>
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,86 @@
+<!-- /////////// Loading animations ///////////// -->
+<div class="loading-animations" *ngIf="showLoader">
+    <div class="request-loader">
+            <progress></progress> 
+    </div>
+</div>
+
+
+        <section class="widget " widget="">
+            <header>
+                <h3>{{ 'Menu.Settlement' | translate }} <span class="fw-semi-bold">{{ 'Translation.Process' | translate }}</span></h3>
+                <div class="other_btns">
+                    <div class="dropdown action_box" style="margin-right:60px;">
+                        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="true">
+                            {{ 'Common.Action' | translate }}
+						<span class="caret"></span>
+					</button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                            <li><a href="javascript:void(0);" *ngIf="status == 'P' && userService.isAuhtorized(userService.EB_EQUITY_SETTLEMENT_REVERSE)"
+                                    (click)="onPostAction('R')">{{ 'Translation.Reverse' | translate }}</a></li>
+                            <li><a href="javascript:void(0);" *ngIf="status == 'U' && userService.isAuhtorized(userService.EB_EQUITY_SETTLEMENT_PROCESS)"
+                                    (click)="onPostAction('P')">{{ 'Translation.Process' | translate }}</a></li>
+                        </ul>
+                    </div>
+                    <button data-toggle="collapse" data-target="#filter_box" class="filter_btn mr-2"><i class="fa fa-filter" aria-hidden="true"></i> </button>
+                </div>
+            </header>
+
+            <div>
+                <div id="filter_box" class="collapse in">
+                    <div class="row">
+                        <div class="col-sm-3 fields_box">
+                            <label for="search-input">{{ 'Translation.Trade Date' | translate }} <span class="validation">*</span></label>
+                            <wj-input-date tabindex="1" #tradeDate class="wijmo_style" [format]="'yyyy-MM-dd'" required [showYearPicker]="false">
+                            </wj-input-date>
+                        </div>
+                        <div class="col-sm-3 fields_box">
+                            <label for="search-input">{{ 'Common.Status' | translate }} <span class="validation">*</span></label>
+                            <wj-combo-box tabindex="2" id="settlemnentStatus" class="wijmo_style" [isEditable]="true" [itemsSource]="searchCriteriaList"
+                                displayMemberPath="name" (ngModelChange)="onStatusChangeEvent($event)" #settlemnentStatus selectedValuePath="code"></wj-combo-box>
+                        </div>
+                        <div class="col-sm-3  fields_box">
+                            <label for="exchangeName">{{ 'Translation.Exchange' | translate }} <span class="validation">*</span></label>
+                            <wj-combo-box id="exchangeName" class="wijmo_style" tabindex="3" [itemsSource]="exchangesList" [(ngModel)]="selectedItem.exchange.exchangeId"
+                                (ngModelChange)="onExchangeChangeEvent($event)" displayMemberPath="exchangeName" selectedValuePath="exchangeId"
+                                [isRequired]="true" [isEditable]="true" #exchangeName>
+                            </wj-combo-box>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="form_search">
+                                <button [class]="buttonClass" (click)="onSearchTransaction(settlemnentStatus.selectedValue,tradeDate.value, selectedItem.exchange.exchangeId)"
+                                    title="Search"  data-toggle="collapse in" data-target="#filter_box"><span class="fa fa-search"></span> </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="table_container">
+                    <wj-flex-grid [itemsSource]="settlementCalendarList" [isReadOnly]="true" [selectionMode]="'Row'" [autoSizeMode]="'Headers'"
+                        [headersVisibility]="'Column'" #settlementGrid class="grid" style="height: 350px;width:100%;">
+                        <wj-flex-grid-filter [filterColumns]="['startDate', 'endDate','settlementType.settlementType','settlementDate','processed']"></wj-flex-grid-filter>
+                        <wj-flex-grid-column [header]="'Translation.From Date' | translate" [binding]="'startDate'" [minWidth]="30" [width]="'0.3*'"></wj-flex-grid-column>
+                        <wj-flex-grid-column [header]="'Translation.To Date' | translate" [binding]="'endDate'" [minWidth]="30" [width]="'0.3*'"></wj-flex-grid-column>
+                        <wj-flex-grid-column [header]="'Translation.Settlement Type' | translate" [binding]="'settlementType.settlementType'" [minWidth]="30" [width]="'0.3*'"></wj-flex-grid-column>
+                        <wj-flex-grid-column [header]="'Translation.Settlement Date' | translate" [binding]="'settlementDate'" [minWidth]="30" [width]="'0.3*'"></wj-flex-grid-column>
+                    </wj-flex-grid>
+                </div>
+                <div class="row"></div>
+                <div class="btn-group col-xs-12 align-right">
+                    <!-- Paginator -->
+                    <wj-collection-view-pager [cv]="settlementGrid?.collectionView"></wj-collection-view-pager>
+                    <!-- page size -->
+                    <wj-menu [(value)]="pageSize" [header]= "'Common.Page Size' | translate">
+                        <wj-menu-item [value]="0">{{ 'Common.No Paging' | translate }}</wj-menu-item>
+				        <wj-menu-item [value]="5">5 {{ 'Common.items' | translate }}</wj-menu-item>
+				        <wj-menu-item [value]="10">10 {{ 'Common.items' | translate }}</wj-menu-item>
+				        <wj-menu-item [value]="20">20 {{ 'Common.items' | translate }}</wj-menu-item>
+				        <wj-menu-item [value]="30">30 {{ 'Common.items' | translate }}</wj-menu-item>
+				        <wj-menu-item [value]="50">50 {{ 'Common.items' | translate }}</wj-menu-item>
+			        	<wj-menu-item [value]="100">100 {{ 'Common.items' | translate }}</wj-menu-item>
+                    </wj-menu>
+                </div>
+            </div>
+        </section>
+
+<dialog-cmp #dialogCmp (btnClick)="getNotification($event)"> </dialog-cmp>

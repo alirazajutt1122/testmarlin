@@ -1,0 +1,124 @@
+<div class="row" style="width: 100%;">
+    <div class="col-sm-12 col-lg-12">
+        <div class="widget" widget>
+            <header>
+                <h6>{{'Menu.Coupon Payment Detail' | translate}}</h6>
+                <div class="other_btns">
+                    <button data-toggle="collapse" data-target="#filter_box" class="filter_btn"><i class="fa fa-filter" aria-hidden="true"></i></button>
+                    <div class="btn-group ml-2">
+                        <button class="dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          <i class="fa fa-download" title="{{ 'Translation.Export' | translate }}" aria-hidden="true"></i>
+                        </button>
+                        <div class="dropdown-menu">
+                            <button class="Iconfilter_btn mx-1" (click)="exportExcel()">
+                                <i class="fa fa-file-excel-o" title="{{ 'Translation.Export' | translate }} Excel" aria-hidden="true"></i>
+                              </button>
+                              <button class="Iconfilter_btn" (click)="exportPDF()">
+                                <i class="fa fa-file-pdf-o" title="{{ 'Translation.Export' | translate }} PDF" aria-hidden="true"></i>
+                              </button>
+                             
+                        </div>
+                      </div>
+                </div>
+                <div id="filter_box" class="collapse in" style="margin-top:10px;">
+                    <form action="" [formGroup]="form" (ngSubmit)="getCouponPaymentDetail(form.value,form.valid)">
+                        <div class="row pt-2">
+                            <div class="col-2 ml-4">
+                                <div class="form-group">
+                                    <label for="security">{{'Translation.Security' | translate}}<span class="validation ml-1">*</span></label>
+                                    <wj-combo-box id="security" [itemsSource]="symbolExchangeMktList" formControlName="security" class="wijmo_style" #cmbSecurity  displayMemberPath="displayName_" selectedValuePath="value" required [isEditable]="true" (ngModelChange)="onSecurityChange($event)">
+                                    </wj-combo-box>
+                                </div>
+                                <div *ngIf="form.controls['security'].hasError('required')"
+                                [hidden]="form.controls.security.valid || form.controls.security.pristine"
+                                class="text-danger" > {{ 'Translation.Security' | translate }} {{ 'Translation.is required' | translate }}.</div>
+                            </div>
+                            <div class="col-2 ml-4">
+                                <div class="form-group">
+                                    <label for="clients">{{'Translation.Client' | translate}}<span class="validation ml-1">*</span></label>
+                                    <wj-combo-box id="clients" [itemsSource]="clientList" formControlName="clientCode" class="wijmo_style" #cmbClient  displayMemberPath="displayValue_" selectedValuePath="clientCode" required [isEditable]="true" >
+                                    </wj-combo-box>
+                                </div>
+                                <div *ngIf="form.controls['clientCode'].hasError('required')"
+                                [hidden]="form.controls.clientCode.valid || form.controls.clientCode.pristine"
+                                class="text-danger" > {{ 'Translation.Client' | translate }} {{ 'Translation.is required' | translate }}.</div>
+                            </div>
+                            <div class="col-2 ml-4">
+                                <div class="form-group">
+                                    <label for="from-date">{{'Translation.From Date'| translate}}<span class="validation ml-1">*</span></label>
+                                    <wj-input-date id="from-date" formControlName="fromDate" class="wijmo_style"  [format]="dateFormat" [mask]="'0000-00-00'"
+                                    [isRequired]="false"  [showYearPicker]="false" [(ngModel)]="fromDate">
+                                    </wj-input-date>
+                                </div>
+                                <div *ngIf="form.controls['fromDate'].hasError('required')"
+                                [hidden]="form.controls.fromDate.valid || form.controls.fromDate.pristine"
+                                class="text-danger" > {{ 'Translation.From Date' | translate }} {{ 'Translation.is required' | translate }}.</div>
+                            </div>
+                            <div class="col-2 ml-4">
+                                <div class="form-group">
+                                    <label for="to-date">{{'Translation.To Date' | translate}}<span class="validation ml-1">*</span></label>
+                                    <wj-input-date id="to-date" formControlName="toDate" class="wijmo_style"  [format]="dateFormat" [mask]="'0000-00-00'"
+                                    [isRequired]="false"  [showYearPicker]="false" [(ngModel)]="toDate">
+                                    </wj-input-date>
+                                </div>
+                                <div *ngIf="form.controls['toDate'].hasError('required')"
+                                [hidden]="form.controls.toDate.valid || form.controls.toDate.pristine"
+                                class="text-danger" > {{ 'Translation.To Date' | translate }} {{ 'Translation.is required' | translate }}.</div>
+                            </div>
+                            <div class="col-2 mt-6">
+                                <button type="submit" class="btn btn-success btn-sm" title="{{ 'Translation.Search' | translate }}" >
+                                    <span class="fa fa-search"></span>
+                                </button>
+                            </div>                                                                                                          
+                        </div>          
+                    </form>
+                </div>
+
+            </header>
+
+            <div class="table_container ">
+  
+                <wj-flex-grid  [isReadOnly]="true" [selectionMode]="'Row'" [autoSizeMode]="'Headers'"
+                  [headersVisibility]="'Column'" style="height: 550px;" #flexGrid [itemsSource]="couponPaymentDetailList">
+          
+                  <wj-flex-grid-column [header]="'Translation.Due Date' | translate" [binding]="'dueDate'" [align]="'left'" [width]="'0.6*'"
+                    [minWidth]="30"></wj-flex-grid-column>
+                  <wj-flex-grid-column [header]="'Translation.Participant Code' | translate" [binding]="'participantCode'" [align]="'left'" [width]="'0.6*'"
+                    [minWidth]="30"></wj-flex-grid-column>
+                    <wj-flex-grid-column [header]="'Translation.Account Code' | translate" [binding]="'accountCode'" [align]="'left'" [width]="'0.7*'" format="n4"
+                    [minWidth]="30"></wj-flex-grid-column>
+                    <wj-flex-grid-column [header]="'Translation.Symbol' | translate" [binding]="'symbol'" [align]="'left'" [width]="'0.5*'" format="n4"
+                    [minWidth]="30"></wj-flex-grid-column>
+                    <wj-flex-grid-column [header]="'Translation.Volume' | translate" [binding]="'volume'" [align]="'left'" [width]="'0.5*'"
+                    [minWidth]="30"></wj-flex-grid-column>
+                    <!-- //----------------------- -->
+                    <wj-flex-grid-column [header]="'Translation.Markup On Parvalue' | translate" [binding]="'markupOnParvalue'" [align]="'left'" [width]="'0.7*'"
+                    [minWidth]="30"></wj-flex-grid-column>
+                    <wj-flex-grid-column [header]="'Translation.Amount' | translate" [binding]="'couponAmount'" [align]="'left'" [width]="'0.5*'"
+                    [minWidth]="30"></wj-flex-grid-column>
+                    <!-- ------------------------- -->
+                    <wj-flex-grid-column [header]="'Translation.Rate' | translate" [binding]="'couponRate'" [align]="'left'" [width]="'0.5*'"
+                    [minWidth]="30"></wj-flex-grid-column>
+                    <wj-flex-grid-column [header]="'Translation.Payment Type' | translate" [binding]="'type'" [align]="'left'" [width]="'0.7*'"
+                    [minWidth]="30"></wj-flex-grid-column>
+                    <wj-flex-grid-column [header]="'Translation.Tax %' | translate" [binding]="'taxPercent'" [align]="'left'" [width]="'0.5*'"
+                    [minWidth]="30"></wj-flex-grid-column>
+                    <wj-flex-grid-column [header]="'Translation.Tax Amount' | translate" [binding]="'tax'" [align]="'left'" [width]="'0.5*'"
+                    [minWidth]="30"></wj-flex-grid-column>
+                    <wj-flex-grid-column [header]="'Translation.Net Amount' | translate" [binding]="'netAmount'" [align]="'left'" [width]="'0.5*'"
+                    [minWidth]="30"></wj-flex-grid-column>
+                    <!-- ---------------------------------- -->
+                    <wj-flex-grid-column [header]="'Translation.Status' | translate" [binding]="'isParticipant'" [align]="'left'" [width]="'0.5*'"
+                    [minWidth]="30"></wj-flex-grid-column>
+                    <!-- --------------------------- -->
+                </wj-flex-grid>
+            
+              </div>
+        </div>
+    </div>
+
+</div>
+
+<dialog-cmp #dialogCmp > </dialog-cmp>
+
+

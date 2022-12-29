@@ -1,0 +1,181 @@
+<!--<div class="row">
+  <div class="col-lg-12 col-xs-12">-->
+<section class="widget" widget="">
+  <header>
+    <h3><span class="fw-semi-bold">{{ 'Menu.Chart Of Accounts' | translate }}</span></h3>
+    <div class="other_btns">
+      <button *ngIf="this.userService.isAuhtorized(userService.EB_FINANCIALS_CHART_OF_ACCOUNT_NEW)" class="add_new_btn"
+        id="btnNew" data-toggle="modal" (click)="onNewAction()" type="button" data-backdrop="static" title="{{ 'Translation.Add' | translate }}"><i
+          class="fa fa-plus" aria-hidden="true"></i> </button>
+    </div>
+    <!--<div class="widget-controls">
+          <a data-widgster="expand" title="Expand" href="#"><i class="glyphicon glyphicon-chevron-up"></i></a>
+          <a data-widgster="collapse" title="Collapse" href="#"><i class="glyphicon glyphicon-chevron-down"></i></a>
+        </div>-->
+  </header>
+
+  <div class="table_container">
+    <wj-flex-grid #flexGrid class="grid" [allowResizing]="'Both'" (initialized)="initialized(flexGrid)"
+      (loadedRows)="loadedRows(flexGrid)" (cellEditEnded)="cellEditEnded(flexGrid, $event)"
+      (resizedColumn)="resizedColumn(flexGrid, $event)" (updatedLayout)="updatedLayout(flexGrid)"
+      [itemsSource]="itemsList" [childItemsPath]="'children'" [headersVisibility]="'Column'" [isReadOnly]="true"
+      [selectionMode]="'Row'">
+      <wj-flex-grid-column [wordWrap]="true" [header]="'Translation.Code' | translate" [align]="'left'" [binding]="'glCodeDisplayName_'"
+        [width]="'0.9*'">
+        <!--     <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-cell="cell" [autoSizeRows]="false">
+          {{cell.item.glCodeDisplayName_}}
+        </ng-template> -->
+      </wj-flex-grid-column>
+      <wj-flex-grid-column *ngIf="this.userService.isAuhtorized(userService.EB_FINANCIALS_CHART_OF_ACCOUNT_UPDATE)"
+        [header]="'Common.Action' | translate" [width]="'0.4*'" [minWidth]="100" [align]="'left'">
+        <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-item=item>
+
+          <!--<button  id="btnEdit" class="on_edit_button" role="button" (click)="onEditAction()"
+                  title="Edit">
+                    <img src="assets/img/edit_orange.png"/>
+                    </button>-->
+          <img *ngIf="item.parentChartOfAccountId > 0" class="gridImg" src="assets/img/edit_orange.png" title="{{ 'Translation.Edit' | translate }}"
+            (click)="onEditAction()" />
+        </ng-template>
+      </wj-flex-grid-column>
+    </wj-flex-grid>
+  </div>
+
+  <div class="row"></div>
+  <div class="btn-group col-xs-12 align-right">
+    <!-- Paginator -->
+    <wj-collection-view-pager [cv]="flexGrid?.collectionView"></wj-collection-view-pager>
+    <!-- page size -->
+    <wj-menu [(value)]="pageSize" [header]= "'Common.Page Size' | translate">
+      <wj-menu-item [value]="0">{{ 'Common.No Paging' | translate }}</wj-menu-item>
+      <wj-menu-item [value]="5">5 {{ 'Common.items' | translate }}</wj-menu-item>
+      <wj-menu-item [value]="10">10 {{ 'Common.items' | translate }}</wj-menu-item>
+      <wj-menu-item [value]="20">20 {{ 'Common.items' | translate }}</wj-menu-item>
+      <wj-menu-item [value]="30">30 {{ 'Common.items' | translate }}</wj-menu-item>
+      <wj-menu-item [value]="50">50 {{ 'Common.items' | translate }}</wj-menu-item>
+      <wj-menu-item [value]="100">100 {{ 'Common.items' | translate }}</wj-menu-item>
+    </wj-menu>
+  </div>
+</section>
+
+
+<!-- Add New Modal -->
+<div id="add_new" class="modal fade" role="dialog" data-keyboard="true">
+  <div class="modal-dialog modal" style="max-width: 755px;">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <!--<div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" (click)="onCancelAction()">&times;</button>
+        <h4 class="modal-title">Chart Of Account</h4>
+      </div>-->
+
+      <form class="form-horizontal form-label-left" method="post" data-parsley-priority-enabled="false" novalidate
+        role="form" id="myForm" name="myForm" [formGroup]="myForm"
+        (ngSubmit)="onSaveAction(myForm.value, myForm.valid)">
+        <div class="modal-body modal-no-border">
+
+
+
+          <div class="row setup_box_container">
+            <div class="col-md-3 col-sm-5 modal_left">
+              <div class="wizard_Logo">
+                <img src="assets/img/Chart-of-Account.png" class="formImg" />
+                <h4>{{ 'Translation.Chart Of Account' | translate }}</h4>
+                <p>{{ 'Translation.para' | translate }}.</p>
+              </div>
+            </div>
+            <div class="col-md-9 col-sm-7 modal_center">
+              <div class="row" style="margin: 40px 40px 0px 40px">
+
+
+
+                <div *ngIf="!isEditing" class="col-sm-4 fields_box">
+                  <label for="code"> {{ 'Translation.Parent Head' | translate }} <span class="validation">*</span></label>
+                  <wj-input-mask id="parentCode" tabindex="1" autofocus="autofocus" formControlName="parentCode"
+                    class="wijmo_style" [isDisabled]="true" #inputParentCode [(ngModel)]="parentItem.glDesc">
+                  </wj-input-mask>
+                </div>
+                <div class="col-sm-4 fields_box">
+                  <label for="code"> {{ 'Translation.Code' | translate }} <span class="validation">*</span></label>
+                  <wj-input-mask id="code" name="code" tabindex="1" autofocus="autofocus" formControlName="code"
+                    class="wijmo_style" [isDisabled]="isEditing" #inputCode [(ngModel)]="selectedItem.partialCode"
+                    required [isRequired]="true"> </wj-input-mask>
+
+                  <div *ngIf="myForm.controls['code'].hasError('required')"
+                    [hidden]="myForm.controls['code'].valid || (myForm.controls['code'].pristine && !isSubmitted)"
+                    class="text-danger">{{ 'Translation.Code is required' | translate }}.</div>
+
+                  <div *ngIf="myForm.controls['code'].hasError('pattern')" class="text-danger">{{ 'Translation.Invalid Code' | translate }}.</div>
+                  <div *ngIf="isSubmitted && (!codeMinLengthCheck || !codeMaxLengthCheck)" class="text-danger">{{ 'Translation.Code must be of' | translate }} {{headLevelLength}} {{ 'Translation.characters' | translate }}</div>
+                </div>
+                <div class="col-sm-4 fields_box">
+                  <label for="desc">{{ 'Translation.Description' | translate }}<span class="validation">*</span></label>
+                  <wj-input-mask id="desc" tabindex="1" autofocus="autofocus" formControlName="desc" class="wijmo_style"
+                    maxlength="200" [(ngModel)]="selectedItem.glDesc" required #inputDesc [isRequired]="true">
+                  </wj-input-mask>
+
+                  <div *ngIf="myForm.controls['desc'].hasError('required')"
+                    [hidden]="myForm.controls['desc'].valid || (myForm.controls['desc'].pristine && !isSubmitted)"
+                    class="text-danger"> {{ 'Translation.Description is required' | translate }}.</div>
+                  <div *ngIf="myForm.controls['desc'].hasError('pattern')" class="text-danger">{{ 'Translation.Invalid Description' | translate }}</div>
+                </div>
+                <div class="col-sm-4 fields_box">
+                  <label for="desc">NCB</label>
+                  <wj-input-mask id="ncb" tabindex="1" formControlName="ncb" class="wijmo_style" maxlength="10"
+                    [(ngModel)]="selectedItem.ncb" [isRequired]="false"> </wj-input-mask>
+                </div>
+                <div class="col-sm-4 fields_box">
+                  <label for="desc">LCB</label>
+                  <wj-input-mask id="lcb" tabindex="1" formControlName="lcb" class="wijmo_style" maxlength="10"
+                    [(ngModel)]="selectedItem.lcb" [isRequired]="false"> </wj-input-mask>
+                </div>
+                <!-- <div class="col-sm-4 fields_box">
+                  <label for="secphead">Debit SECP Head</label>
+                 
+                  
+                  <wj-combo-box tabindex="1" id="dbSecphead" formControlName="dbSecphead" class="wijmo_style" [isEditable]="true"
+									 [itemsSource]="secpAccountList" displayMemberPath="description" selectedValuePath="Id"
+									 (ngModelChange)="onDbSecpHeadChangeEvent($event)" [(ngModel)]="dbSecpAccountId"></wj-combo-box>
+                </div>
+                <div class="col-sm-4 fields_box">
+                  <label for="drSecondarycode">{{ 'Translation.Debit Secondary Code' | translate }}</label>
+                  <wj-input-mask id="dbSecondarycode" tabindex="1" formControlName="dbSecondarycode" class="wijmo_style"
+                    maxlength="100" [(ngModel)]="dbSecondaryCode" [isRequired]="false"> </wj-input-mask>
+                </div>
+                <div *ngIf="myForm.controls['dbSecondarycode'].hasError('required')"
+                    [hidden]="myForm.controls['dbSecondarycode'].valid || (myForm.controls['dbSecondarycode'].pristine && !isSubmitted)"
+                    class="text-danger">{{ 'Translation.Secp Debit Head' | translate }} {{ 'Translation.is required' | translate }}.</div>
+
+                <div class="col-sm-4 fields_box">
+                  <label for="secphead">{{ 'Translation.Credit SECP Head' | translate }}</label>
+                  <wj-combo-box tabindex="1" id="crSecphead" formControlName="crSecphead" class="wijmo_style" [isEditable]="true"
+									 [itemsSource]="secpAccountList" displayMemberPath="description" selectedValuePath="Id"
+									 (ngModelChange)="onCrSecpHeadChangeEvent($event)" [(ngModel)]="crSecpAccountId"></wj-combo-box>
+                </div>
+                <div class="col-sm-4 fields_box">
+                  <label for="crSecondarycode">{{ 'Translation.Credit Secondary Code' | translate }}</label>
+                  <wj-input-mask id="crSecondarycode" tabindex="1" formControlName="crSecondarycode" class="wijmo_style"
+                    maxlength="100" [(ngModel)]="crSecondaryCode" [isRequired]="false"> </wj-input-mask>
+                </div>
+                <div *ngIf="myForm.controls['crSecondarycode'].hasError('required')"
+                [hidden]="myForm.controls['crSecondarycode'].valid || (myForm.controls['crSecondarycode'].pristine && !isSubmitted)"
+                class="text-danger">{{ 'Translation.Secp Credit Head' | translate }}  {{ 'Translation.is required' | translate }}.</div> -->
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="orange_footer_small">
+          <button id="btnSave" type="submit" class="save_btn"
+            *ngIf="!isEditing && this.userService.isAuhtorized(userService.EB_FINANCIALS_CHART_OF_ACCOUNT_NEW)">{{ 'Translation.Save' | translate }}</button>
+          <button id="btnEdit" type="submit" class="save_btn"
+            *ngIf="isEditing && this.userService.isAuhtorized(userService.EB_FINANCIALS_CHART_OF_ACCOUNT_UPDATE)">{{ 'Common.Update' | translate }}</button>
+          <button type="button" data-dismiss="modal" class="cancel_btn" (click)="onCancelAction()">{{ 'Common.Cancel' | translate }}</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<dialog-cmp #dialogCmp (btnClick)="getNotification($event)"> </dialog-cmp>

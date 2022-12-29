@@ -1,0 +1,199 @@
+
+<div class="row" style="width: 100%;">
+    <div class="col-lg-12 col-md-offset-0 col-xs-12 widget-container">
+      <section class="widget" widget>
+        <header>
+          <h3> <span class="fw-semi-bold">{{ 'Translation.Executed Orders' | translate }}</span></h3>
+          <div class="other_btns">
+            <!--<button class="Iconfilter_btn" (click)="print()" tooltip="Print" ><i class="fa fa-print" aria-hidden="true"></i></button>
+            <button class="Iconfilter_btn" (click)="exportExcel()" tooltip="Export" ><i class="fa fa-file-excel-o" aria-hidden="true"></i></button>-->
+            <button data-toggle="collapse" data-target="#filter_box" class="filter_btn mx-1"><i class="fa fa-filter" aria-hidden="true"></i></button>
+            <a class="mx-1"  (click)="getExecutedOrders(myForm.value, myForm.valid)"><i class="fa fa-refresh" aria-hidden="true"></i></a>
+            <div class="btn-group ml-2">
+                <button class="dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <i class="fa fa-download" title="{{ 'Translation.Export' | translate }}" aria-hidden="true"></i>
+                </button>
+                <div class="dropdown-menu">
+                    <button class="Iconfilter_btn mx-1" (click)="exportExcel()">
+                        <i class="fa fa-file-excel-o" title="{{ 'Translation.Export' | translate }} Excel" aria-hidden="true"></i>
+                      </button>
+                      <button class="Iconfilter_btn" (click)="exportPDF()">
+                        <i class="fa fa-file-pdf-o" title="{{ 'Translation.Export' | translate }} PDF" aria-hidden="true"></i>
+                      </button>
+                </div>
+              </div>
+
+          </div>
+          <!-- <div class="widget-controls">
+            <a data-widgster="expand" title="{{ 'Translation.Expand' | translate }}" href="#"><i class="glyphicon glyphicon-chevron-up"></i></a>
+            <a data-widgster="collapse" title="{{ 'Translation.Collapse' | translate }}" href="#"><i class="glyphicon glyphicon-chevron-down"></i></a>
+          </div> -->
+        </header>
+        <div>
+          <div id="filter_box" class="collapse in">
+            <form role="form" (ngSubmit)="getExecutedOrders(myForm.value, myForm.valid)" novalidate #order method="post" data-parsley-priority-enabled="false" name="myForm" [formGroup]="myForm">
+              <div class="row mt-2">
+                <div class="col-sm-2">
+                  <div class="form-group">
+                    <label for="search-input">{{ 'Translation.Exchange' | translate }}                       <span class="validation">*</span></label>
+                    <div class="input-group">
+                      <wj-combo-box id="exchange" formControlName="exchange" #cmbExchange [itemsSource]="exchanges" [(ngModel)]="exchangeId" (ngModelChange)="onExchangeChange($event)"
+                        displayMemberPath="exchangeCode" selectedValuePath="exchangeId" [isEditable]="true">
+                      </wj-combo-box>
+                    </div>
+                    <div *ngIf="myForm.controls['exchange'].hasError('required') || myForm.controls['exchange'].hasError('pattern')" [hidden]="myForm.controls.exchange.valid  || (myForm.controls['exchange'].pristine && !isSubmitted)"
+                    class="text-danger">{{ 'Translation.Exchange' | translate }} {{ 'Translation.is required' | translate }}.</div>
+                  </div>
+                </div>
+                <div class="col-sm-2">
+                  <div class="form-group">
+                    <label for="search-input">{{ 'Translation.Market' | translate }}                       <span class="validation">*</span></label>
+                    <div class="input-group">
+                      <wj-combo-box id="market" formControlName="market" #cmbMarket [isDisabled]="noMarketFound" [itemsSource]="markets" [(ngModel)]="marketId"
+                        (selectedIndexChanged)="onMarketChange()" displayMemberPath="marketCode" selectedValuePath="marketId"
+                        [isEditable]="true">
+                      </wj-combo-box>
+                    </div>
+                    <div *ngIf="myForm.controls['market'].hasError('required') || myForm.controls['market'].hasError('pattern')" [hidden]="myForm.controls.market.valid  || (myForm.controls['market'].pristine && !isSubmitted)"
+                    class="text-danger">{{ 'Translation.Market' | translate }} {{ 'Translation.is required' | translate }}.</div>
+                  </div>
+                </div>
+                <div class="col-sm-2">
+                  <div class="form-group">
+                    <label for="search-input">{{ 'Translation.Security' | translate }}                       <span class="validation">*</span></label>
+                    <div class="input-group">
+                        <wj-combo-box id="symbol" formControlName="symbol" #cmbSymbol [isDisabled]="noMarketFound" [itemsSource]="symbols" [(ngModel)]="symbol"
+                        displayMemberPath="symbol" selectedValuePath="symbol"
+                       [isEditable]="true">
+                     </wj-combo-box>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-2">
+                  <div class="form-group">
+                    <label for="search-input">{{ 'Translation.Trader' | translate }}(s) <span class="validation">*</span></label>&nbsp;
+                    <input id="allTraders" type="checkbox" *ngIf="disabledCheckbox" (change)="onAllSelected($event)">
+                    <label for="chequeCleared"> {{ 'Translation.All' | translate }} </label>
+                    <div class="input-group">
+                      <wj-multi-select #cmbTraders id="username" formControlName="username" [itemsSource]="traders" [(ngModel)]="username" [isDisabled]="userType !== 'PARTICIPANT' && userType !== 'PARTICIPANT ADMIN'"
+                        displayMemberPath="userName" selectedValuePath="email">
+                      </wj-multi-select>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-2">
+                  <div class="form-group">
+                    <label for="search-input">{{ 'Translation.Custodian' | translate }}</label>
+                    <div class="input-group">
+                      <wj-combo-box id="custodian" formControlName="custodian" [(ngModel)]="custodian" [itemsSource]="custodians" [isEditable]="true" displayMemberPath="label"
+                        selectedValuePath="value" [isEditable]="true">
+                      </wj-combo-box>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-1">
+                  <div class="form-group">
+                    <label for="search-input">{{ 'Translation.Client' | translate }}</label>
+                    <div class="input-group">
+                      <!-- <wj-input-mask id="account" name="account" [(ngModel)]="account" requird=false> </wj-input-mask> -->
+                      <wj-auto-complete #client id="account" formControlName="account" class="wijmo_style" [headerPath]="'clientCode'" [isEditable]="false"
+                        [isRequired]="false" [itemsSource]="fromClientList" displayMemberPath="displayValue_" selectedValuePath="clientCode"
+                        [(ngModel)]="account"></wj-auto-complete>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-1">
+                  <div class="bottom_btn_box">
+                    <button type="submit" class="btn btn-success btn-sm" title="{{ 'Translation.Search' | translate }}" data-toggle="collapse in" data-target="#filter_box" (click)="getExecutedOrders(myForm.value, myForm.valid)"><span class="fa fa-search"></span> </button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+          <wj-flex-grid class="grid" [isReadOnly]="true" [itemsSource]="data" [isReadOnly]="false" [selectionMode]="'Row'" [autoSizeMode]="'Headers'"
+            [headersVisibility]="'Column'" #flexGrid style="grid-auto-flow : column;">
+            <wj-flex-grid-filter [filterColumns]="filterColumns"></wj-flex-grid-filter>
+            <wj-flex-grid-column [header]="'Translation.Exchange' | translate" [binding]="'exchange'" [width]="'*'" [minWidth]="50" [align]="'left'">
+              <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-item="item">
+                <span [class.blue_text_grid]="item.side === 'Buy'" [class.pink_text_grid]="item.side === 'Sell'">{{item.exchange}}</span>
+              </ng-template>
+            </wj-flex-grid-column>
+            <wj-flex-grid-column [header]="'Translation.Market' | translate" [binding]="'market'" [width]="'*'" [minWidth]="50" [align]="'left'">
+              <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-item="item">
+                <span [class.blue_text_grid]="item.side === 'Buy'" [class.pink_text_grid]="item.side === 'Sell'">{{item.market}}</span>
+              </ng-template>
+            </wj-flex-grid-column>
+            <wj-flex-grid-column [header]="'Translation.Security' | translate" [binding]="'symbol'" [width]="'*'" [minWidth]="70" [align]="'left'">
+              <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-item="item">
+                <span [class.blue_text_grid]="item.side === 'Buy'" [class.pink_text_grid]="item.side === 'Sell'">{{item.symbol}}</span>
+              </ng-template>
+            </wj-flex-grid-column>
+
+            <wj-flex-grid-column [header]="'Translation.Ticket No' | translate" [binding]="'ticket_no'" [width]="'*'" [minWidth]="70" [align]="'left'">
+              <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-item="item">
+                <span [class.blue_text_grid]="item.side === 'Buy'" [class.pink_text_grid]="item.side === 'Sell'">{{item.ticket_no}}</span>
+              </ng-template>
+            </wj-flex-grid-column>
+            <wj-flex-grid-column [header]="'Translation.Order No' | translate" [binding]="'order_no'" [width]="'*'" [minWidth]="150" [align]="'left'" [isReadOnly]="false">
+              <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-item="item">
+                <span [class.blue_text_grid]="item.side === 'Buy'" [class.pink_text_grid]="item.side === 'Sell'">{{item.order_no}}</span>
+              </ng-template>
+            </wj-flex-grid-column>
+            <wj-flex-grid-column [header]="'Translation.Client' | translate" [binding]="'account'" [width]="'*'" [minWidth]="120" [align]="'left'">
+              <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-item="item">
+                <span [class.blue_text_grid]="item.side === 'Buy'" [class.pink_text_grid]="item.side === 'Sell'">{{item.account}}</span>
+              </ng-template>
+            </wj-flex-grid-column>
+            <wj-flex-grid-column [header]="'Translation.Trader' | translate" [binding]="'username'" [width]="'*'" [minWidth]="120" [align]="'left'">
+              <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-item="item">
+                <span [class.blue_text_grid]="item.side === 'Buy'" [class.pink_text_grid]="item.side === 'Sell'"> {{item.username}} </span>
+              </ng-template>
+            </wj-flex-grid-column>
+            <wj-flex-grid-column [header]="'Translation.Custodian' | translate" [binding]="'custodian'" [width]="'*'" [minWidth]="120" [align]="'left'">
+              <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-item="item">
+                <span [class.blue_text_grid]="item.side === 'Buy'" [class.pink_text_grid]="item.side === 'Sell'">{{item.custodian}}</span>
+              </ng-template>
+            </wj-flex-grid-column>
+            <wj-flex-grid-column [header]="'Translation.Price' | translate" [binding]="'price'" [width]="'*'" [minWidth]="50" [format]="'n4'" [align]="'right'">
+              <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-item="item">
+                <span [class.blue_text_grid]="item.side === 'Buy'" [class.pink_text_grid]="item.side === 'Sell'"> {{item.price}} </span>
+              </ng-template>
+            </wj-flex-grid-column>
+            <wj-flex-grid-column *ngIf="'trigger_price' != null" [header]="'Translation.Trigger Price' | translate" [binding]="'trigger_price'" [width]="'*'" [minWidth]="50"
+              [align]="'right'" [format]="'n4'">
+              <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-item="item">
+                <span [class.blue_text_grid]="item.side === 'Buy'" [class.pink_text_grid]="item.side === 'Sell'">{{item.trigger_price}}</span>
+              </ng-template>
+            </wj-flex-grid-column>
+            <wj-flex-grid-column [header]="'Translation.Quantity' | translate" [binding]="'volume'" [width]="'*'" [minWidth]="70" [align]="'right'" [format]="'n0'">
+              <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-item="item">
+                <span [class.blue_text_grid]="item.side === 'Buy'" [class.pink_text_grid]="item.side === 'Sell'">{{item.volume}}</span>
+              </ng-template>
+            </wj-flex-grid-column>
+            <wj-flex-grid-column [header]="'Translation.Date Time' | translate" [binding]="'execution_time'" [width]="'*'" [align]="'left'" [minWidth]="150">
+              <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-item="item">
+                <span [class.blue_text_grid]="item.side === 'Buy'" [class.pink_text_grid]="item.side === 'Sell'">{{item.execution_time}}</span>
+              </ng-template>
+            </wj-flex-grid-column>
+          </wj-flex-grid>
+        </div>
+        <div class="row">
+          <div class="btn-group col-xs-12 align-right">
+            <!-- Paginator -->
+            <wj-collection-view-pager [cv]="flexGrid?.collectionView"></wj-collection-view-pager>
+            <!-- page size -->
+            <wj-menu [(value)]="pageSize" [header]="'Common.Page Size' | translate">
+              <wj-menu-item [value]="0">{{ 'Common.No Paging' | translate }}</wj-menu-item>
+              <wj-menu-item [value]="5">5 {{ 'Common.items' | translate }}</wj-menu-item>
+              <wj-menu-item [value]="10">10 {{ 'Common.items' | translate }}</wj-menu-item>
+              <wj-menu-item [value]="20">20 {{ 'Common.items' | translate }}</wj-menu-item>
+              <wj-menu-item [value]="30">30 {{ 'Common.items' | translate }}</wj-menu-item>
+              <wj-menu-item [value]="50">50 {{ 'Common.items' | translate }}</wj-menu-item>
+              <wj-menu-item [value]="100">100 {{ 'Common.items' | translate }}</wj-menu-item>
+              </wj-menu>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+  <dialog-cmp-reports #dialogCmp (btnClick)="getNotification($event)"> </dialog-cmp-reports>

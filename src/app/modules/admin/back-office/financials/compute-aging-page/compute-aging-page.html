@@ -1,0 +1,24 @@
+<section class="widget" widget="">
+  <header>
+    <h3>{{ 'Translation.Compute Client Aging' | translate }}</h3>
+  </header>
+
+  <div class="widget-body">
+    <form class="form-horizontal form-label-left" method="post" data-parsley-priority-enabled="false" novalidate
+      role="form" name="myForm" [formGroup]="myForm" (ngSubmit)="onSaveAction(myForm.value, myForm.valid)">
+      <div class="row">
+        <div class="col-sm-3 fields_box">
+          <label for="status">{{ 'Translation.As On' | translate }} <span class="validation">*</span></label>
+          <wj-input-date id="AsOnDate" formControlName="AsOnDate" class="wijmo_style" [(ngModel)]="params.DATE"
+            [format]="dateFormat" [showYearPicker]="false" [mask]="dateMask" [isRequired]="true"> </wj-input-date>
+        </div>
+
+        <div class="col-sm-3 fields_box">
+          <label for="status"> </label>
+          <button type="submit" class="btn btn-success">{{ 'Translation.Compute' | translate }}</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</section>
+<dialog-cmp #dialogCmp (btnClick)="getNotification($event)"> </dialog-cmp>

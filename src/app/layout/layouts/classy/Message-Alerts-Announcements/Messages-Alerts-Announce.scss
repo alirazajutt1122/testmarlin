@@ -1,0 +1,39 @@
+.badge {
+    position: relative;
+    top: -9px;
+    left: -10px;
+    border: 1px solid black;
+    border-radius: 50%;
+   }
+
+
+.icon-btn {
+    margin:0px;
+    margin-top: 8px;
+   }
+
+
+   .badge{
+    display: inline-block;
+    min-width: 10px;
+    padding: 0px 3px;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1;
+    white-space: nowrap;
+    text-align: center;
+    background-color: #555555;
+    border-radius: 100px;
+   }
+
+
+   .icon{
+    margin-top: 7px;
+   }
+
+
+  .dropdown-menu
+  {
+    margin: 18px 0 0;
+  }

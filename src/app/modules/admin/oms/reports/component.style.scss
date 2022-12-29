@@ -1,0 +1,183 @@
+
+@import '/src/app/scss/variables';
+@import '/node_modules/bootstrap/scss/variables';
+
+.tag.tag-pill {
+  padding: .4em .6em;
+  font-weight: $font-weight-bold;
+}
+
+
+.modal-backdrop {
+    z-index: -1;
+  }
+
+
+
+  .dropdown-menu {
+    color: #fff;
+    background-color: #1B3E5E;
+    text-align: center;
+  }
+
+
+
+.row{
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
+
+
+
+.modal-body{
+    padding: 10px 15px 0px 15px;
+}
+
+
+.modal-content {
+    margin: 2px auto;
+    z-index: 1100 !important;
+}
+
+
+@media (min-width: 544px){
+    .modal-dialog {
+      max-width: 600px;
+      margin: 80px auto;
+  }
+  }
+
+
+// .modal-footer{
+//     margin-left: -10px;
+//     margin-right: -10px;
+// }
+
+
+
+.text-blue
+{
+    color: #007BFF;
+}
+
+
+.arrow-up-clr
+{
+    color: #1d601d;
+}
+
+.arrow-down-clr
+{
+    color: #9c1200;
+}
+
+
+
+.quantitylabels
+{
+    font-size: 10px;
+    padding: 2px 3px;
+ //   background: #403f3f;
+    color: #a7a2a2;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.quantitylabels:hover{
+    font-size: 10px;
+    padding: 2px 3px;
+    background: #222222;
+    color: #d1d1d1;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.quantitylabelsBG
+{
+    font-size: 11px;
+    padding: 2px 3px;
+    background: #403f3f;
+    color: #a7a2a2;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+
+.tabsBtns
+{
+    font-size: 11px;
+    border-right: 1px solid rgb(46, 46, 46);
+    border-left: 1px solid rgb(46, 46, 46);
+    color: #0F172A;
+    background: linear-gradient(to right, #888484, #b5afaf);
+    width: 80px;
+    text-align: center;
+    padding: 5px 0px;
+    cursor: pointer;
+}
+
+
+
+.tabsBtnsText
+{
+    color: #193C5D;
+    font-weight: 700;
+}
+
+.tabsBtnsTextActive
+{
+    color: #F59E0B;
+    font-weight: 700;
+}
+
+.tabsBtnsActive
+{
+    font-size: 11px;
+    border-right: 1px solid rgb(46, 46, 46);
+    border-left: 1px solid rgb(46, 46, 46);
+    background: #193C5D;
+    width: 80px;
+    color: #F59E0B;
+    text-align: center;
+    padding: 5px 0px;
+    border-bottom: 2px solid #F59E0B;
+}
+
+
+
+.order-book-table-header
+{
+   background: #18273B;
+   color: #ffff;
+}
+
+.table > thead > tr > th {
+    font-size: 14px;
+    font-weight: 600px;
+    text-align: center;
+    padding: 10px !important;
+}
+
+  .table td {
+    padding: 2px;
+    vertical-align: top;
+    border-top: 2px solid #2A3243;
+}
+
+
+
+.buy-color
+{
+    color: #35A947;
+}
+
+.sell-color
+{
+    color: #E34828;
+}
+
+tr.mat-header-row
+{
+    height: 52px !important;
+}

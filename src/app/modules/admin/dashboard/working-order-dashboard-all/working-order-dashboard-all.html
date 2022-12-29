@@ -1,0 +1,46 @@
+<div class="row" style="width: 100%;">
+    <div class="col-lg-12 widget-container">
+
+        <ul class="mb-0  " style="display: flex;">
+
+            <li class="tabsBtnsDashboard mr-1" (click)="type='workingOrder'"
+                [class.tabsBtnsActiveDashboard]="type === 'workingOrder'">
+                <a><span [class.tabsBtnsTextActiveDashbaord]="type === 'workingOrder'" class="tabsBtnsTextDashbaord">
+                        WORKING ORDERS
+                    </span>
+                </a>
+            </li>
+            <li class="tabsBtnsDashboard mr-1" (click)="type='trade'"
+                [class.tabsBtnsActiveDashboard]="type === 'trade'">
+                <a><span [class.tabsBtnsTextActiveDashbaord]="type === 'trade'" class="tabsBtnsTextDashbaord">
+                        TRADES
+                    </span>
+                </a>
+            </li>
+            <li class="tabsBtnsDashboard" (click)="type='auditTrail'"
+                [class.tabsBtnsActiveDashboard]="type === 'auditTrail'">
+                <a><span [class.tabsBtnsTextActiveDashbaord]="type === 'auditTrail'" class="tabsBtnsTextDashbaord">
+                        EVENT LOGS
+                    </span>
+                </a>
+            </li>
+
+        </ul>
+
+        <div  *ngIf="type === 'workingOrder'" class="dashboardGrid" >
+            <working-order-dashboard></working-order-dashboard>
+        </div>
+
+        <div  *ngIf="type === 'trade'" class="dashboardGrid">
+            <trades-dashboard></trades-dashboard>
+        </div>
+
+        <div  *ngIf="type === 'auditTrail'" class="dashboardGrid">
+            <audit-trails-dashboard></audit-trails-dashboard>
+        </div>
+
+
+
+    </div>
+
+</div>

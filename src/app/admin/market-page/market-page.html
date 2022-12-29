@@ -1,0 +1,127 @@
+
+<section class="widget" widget="">
+	<header>
+		<h3><span class="fw-semi-bold">{{'Translation.Market' | translate}}s </span></h3>
+		<div class="other_btns">
+			<button class="add_new_btn" id="btnNew" data-toggle="modal" (click)="onNewAction()" data-target="#add_new" type="button"
+			 *ngIf="userService.isAuhtorized(userService.EB_MARKET_NEW)" data-backdrop="static" title="{{'Translation.Add' | translate}}"><i class="fa fa-plus" aria-hidden="true"></i>  </button>
+		</div>
+	</header>
+
+	<div class="table_container">
+		<wj-flex-grid [itemsSource]="itemsList" [isReadOnly]="true" [selectionMode]="'Row'" [autoSizeMode]="'Headers'" [headersVisibility]="'Column'"
+		 style="height: 300px;" #flex>
+			<wj-flex-grid-filter [filterColumns]="['marketCode', 'marketType.description','marketDesc','base','active']"></wj-flex-grid-filter>
+			<wj-flex-grid-column [header]="'Translation.Code' | translate" [align]="'left'" [binding]="'marketCode'" [width]="'0.3*'" [minWidth]="30"></wj-flex-grid-column>
+			<wj-flex-grid-column [header]="'Translation.Market Type' | translate" [align]="'left'" [binding]="'marketType.description'" [width]="'0.3*'" [minWidth]="30"></wj-flex-grid-column>
+			<wj-flex-grid-column [header]="'Translation.Description' | translate" [align]="'left'" [binding]="'marketDesc'" [width]="'0.5*'" [minWidth]="30"></wj-flex-grid-column>
+			<wj-flex-grid-column [header]="'Translation.Is Base' | translate" [binding]="'base'" [width]="'0.2*'" [minWidth]="30"></wj-flex-grid-column>
+			<wj-flex-grid-column [header]="'Common.Active' | translate" [binding]="'active'" [width]="'0.2*'" [minWidth]="30"></wj-flex-grid-column>
+			<wj-flex-grid-column *ngIf="userService.isAuhtorized(userService.EB_MARKET_UPDATE)" [header]="'Common.Action' | translate" [width]="'0.2*'"
+			 [align]="'center'" [minWidth]="30">
+				<ng-template wjFlexGridCellTemplate [cellType]="'Cell'">
+					<!--<button *ngIf="userService.isAuhtorized(userService.EB_MARKET_UPDATE)" id="btnEdit" class="on_edit_button" role="button"
+					 (click)="onEditAction()" title="Edit"  data-target="#add_new" data-toggle="modal" data-backdrop="static"> <img src="assets/img/edit_orange.png"/> </button>-->
+					 <img src="assets/img/edit_orange.png" class="gridImg"  title="{{'Translation.Edit' | translate}}" (click)="onEditAction()" data-target="#add_new" data-toggle="modal" data-backdrop="static"/>
+				</ng-template>
+			</wj-flex-grid-column>
+
+		</wj-flex-grid>
+	</div>
+	<div class="row"></div>
+	<div class="btn-group col-xs-12 align-right">
+		<!-- Paginator -->
+		<wj-collection-view-pager [cv]="flex?.collectionView"></wj-collection-view-pager>
+		<!-- page size -->
+		<wj-menu [(value)]="pageSize" [header]= "'Common.Page Size' | translate">
+			<wj-menu-item [value]="0">{{ 'Common.No Paging' | translate }}</wj-menu-item>
+			<wj-menu-item [value]="5">5 {{ 'Common.items' | translate }}</wj-menu-item>
+			<wj-menu-item [value]="10">10 {{ 'Common.items' | translate }}</wj-menu-item>
+			<wj-menu-item [value]="20">20 {{ 'Common.items' | translate }}</wj-menu-item>
+			<wj-menu-item [value]="30">30 {{ 'Common.items' | translate }}</wj-menu-item>
+			<wj-menu-item [value]="50">50 {{ 'Common.items' | translate }}</wj-menu-item>
+			<wj-menu-item [value]="100">100 {{ 'Common.items' | translate }}</wj-menu-item>
+		</wj-menu>
+	</div>
+</section>
+
+<!-- Add New Bank Modal -->
+<div id="add_new" class="modal fade" role="dialog" data-keyboard="true">
+	<div class="modal-dialog modal-lg">
+
+		<!-- Modal content-->
+		<div class="modal-content">
+
+			<form class="form-horizontal form-label-left" method="post" data-parsley-priority-enabled="false" novalidate="novalidate"
+			 role="form" [formGroup]="myForm" (ngSubmit)="onSaveAction(myForm.value, myForm.valid)">
+				<div class="modal-body modal-no-border">
+					<div class="row setup_box_container">
+						<div class="col-md-4 col-sm-5 modal_left">
+							<div class="wizard_Logo">
+								<img src="assets/img/Market.png" class="formImg" />
+								<h4>{{'Translation.Market' | translate}}</h4>
+								<p>{{'Translation.Management of Market(s) configurations' | translate}}</p>
+							</div>
+						</div>
+						<div class="col-md-8 col-sm-7 modal_center">
+							<div class="row" style="margin: 40px 40px 0px 40px">
+
+								<div class="col-sm-6 fields_box">
+									<label for="mktTypeId">{{'Translation.Market Type' | translate}} <span class="validation">*</span></label>
+									<wj-combo-box #mktTypeId autofocus="autofocus" tabindex="1" id="mktTypeId" formControlName="mktTypeId" class="form-control"
+									 [isEditable]="true" [itemsSource]="marketTypeList" displayMemberPath="description" selectedValuePath="mktTypeId"
+									 [(ngModel)]="selectedItem.marketType.mktTypeId" required></wj-combo-box>
+									<div *ngIf="myForm.controls['mktTypeId'].hasError('required')" [hidden]="myForm.controls.mktTypeId.valid || (myForm.controls.mktTypeId.pristine && !isSubmitted)"
+									 class="text-danger">{{'Translation.Market Type' | translate}} {{'Translation.is required' | translate}}.</div>
+								</div>
+
+								<div class="col-sm-3 fields_box">
+									<div class="abc-checkbox abc-checkbox-primary">
+										<input id="activeId" tabindex="2" type="checkbox" [(ngModel)]='selectedItem.active' formControlName="active">
+										<label for="activeId"> {{'Common.Active' | translate}} </label>
+									</div>
+								</div>
+								<div class="col-sm-3 fields_box">
+									<div class="abc-checkbox abc-checkbox-primary">
+										<input id="baseId" tabindex="3" type="checkbox" [(ngModel)]='selectedItem.base' formControlName="base" (ngModelChange)="onIsBaseChangeEvent()">
+										<label for="baseId">{{'Translation.Base' | translate}}  </label>
+									</div>
+								</div>
+								<div class="col-sm-6 fields_box">
+									<label for="baseMarketId">{{'Translation.Base Market' | translate}} <span class="validation">*</span></label>
+									<wj-combo-box tabindex="4" #cmbbaseMarketId id="baseMarketId" formControlName="baseMarketId" class="form-control" [isEditable]="true"
+									 [itemsSource]="baseMarketsList" displayMemberPath="marketCode" selectedValuePath="marketId" [(ngModel)]="selectedItem.baseMarketId"
+									 [isDisabled]="selectedItem.base"></wj-combo-box>
+									<div *ngIf="myForm.controls['baseMarketId'].hasError('required')" [hidden]="selectedItem.base || myForm.controls.baseMarketId.valid || (myForm.controls.baseMarketId.pristine && !isSubmitted)"
+									 class="text-danger">{{'Translation.Base Market' | translate}} {{'Translation.is required' | translate}}.</div>
+								</div>
+								<div class="col-sm-6 fields_box">
+									<label for="marketCode">{{'Translation.Market Code' | translate}} <span class="validation">*</span></label>
+									<wj-input-mask tabindex="5" id="marketCode" class="wijmo_style" formControlName="marketCode" maxlength="30" [(ngModel)]="selectedItem.marketCode"
+									 myForm required [isRequired]="true"> </wj-input-mask>
+									<div *ngIf="myForm.controls['marketCode'].hasError('required')" [hidden]="myForm.controls.marketCode.valid || (myForm.controls.marketCode.pristine && !isSubmitted)"
+									 class="text-danger">{{'Translation.Market Code' | translate}} {{'Translation.is required' | translate}}.</div>
+									<div *ngIf="myForm.controls['marketCode'].hasError('pattern')" class="text-danger">{{'Translation.Invalid' | translate}} {{'Translation.Market Code' | translate}}.</div>
+								</div>
+
+								<div class="col-sm-12 fields_box">
+									<label for="descriptionId">{{'Translation.Description' | translate}}</label>
+									<textarea tabindex="6" [(ngModel)]='selectedItem.marketDesc' rows="5" cols="50" formControlName="marketDesc" maxlength="499"
+									 class="wijmo_style"> </textarea>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="orange_footer_small">
+					<button id="btnSave" type="submit" class="save_btn" *ngIf="!isEditing">{{'Common.Save' | translate}}</button>
+					<button id="btnSave1" type="submit" class="save_btn" *ngIf="isEditing" >{{'Common.Update' | translate}}</button>
+					<button id="btnCancel" type="button" class="cancel_btn" data-dismiss="modal" (click)="onCancelAction()" >{{'Common.Cancel' | translate}}</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<dialog-cmp #dialogCmp (btnClick)="getNotification($event)"> </dialog-cmp>

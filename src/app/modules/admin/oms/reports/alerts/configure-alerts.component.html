@@ -1,0 +1,208 @@
+
+
+        <section class="widget" widget="">
+          <header>
+            <h3> <span class="fw-semi-bold">{{ 'Translation.Alert Management' | translate }}</span></h3>
+            <div class="other_btns">
+              <button class="add_new_btn" id="btnNew" data-toggle="modal" *ngIf="userService.isAuhtorized(userService.OM_ALERT_MANAGEMENT_ALERT_NEW)"
+                (click)="onNewAction()" data-target="#add_new" type="button" data-backdrop="static" title="{{ 'Translation.Add' | translate }}" ><i class="fa fa-plus" aria-hidden="true"></i> </button>
+            </div>
+            <div class="widget-controls">
+              <a data-widgster="expand" title="{{ 'Translation.Expand' | translate }}" href="#"><i class="glyphicon glyphicon-chevron-up"></i></a>
+              <a data-widgster="collapse" title="{{ 'Translation.Collapse' | translate }}" href="#"><i class="glyphicon glyphicon-chevron-down"></i></a>
+            </div>
+          </header>
+    
+          <div>
+            <div class="table_container">
+    
+              <wj-flex-grid [itemsSource]="itemsList" [isReadOnly]="true" [selectionMode]="'Row'" [autoSizeMode]="'Headers'" [headersVisibility]="'Column'"
+                style="height: 450px;" #flex>
+                <wj-flex-grid-filter [filterColumns]="['name','symbolMarketExchange','expression','message']"></wj-flex-grid-filter>
+                <wj-flex-grid-column [header]="'Translation.Name' | translate" [binding]="'name'" [align]="'left'" [width]="'0.25*'" [minWidth]="30"></wj-flex-grid-column>
+                <wj-flex-grid-column [header]="'Translation.Security' | translate" [binding]="'symbolMarketExchange'" [align]="'left'" [width]="'0.25*'" [minWidth]="30"></wj-flex-grid-column>
+                <wj-flex-grid-column [header]="'Translation.Rule' | translate" [binding]="'expression'" [align]="'left'" [width]="'0.6*'" [minWidth]="30"></wj-flex-grid-column>
+                <wj-flex-grid-column [header]="'Translation.Alert Message' | translate" [binding]="'message'" [align]="'left'" [width]="'0.6*'" [minWidth]="30"></wj-flex-grid-column>
+                <wj-flex-grid-column *ngIf="userService.isAuhtorized(userService.OM_ALERT_MANAGEMENT_ALERT_UPDATE) || userService.isAuhtorized(userService.OM_ALERT_MANAGEMENT_ALERT_DELETE)"
+                  [header]="'Common.Action' | translate" [width]="'0.1*'" [minWidth]="30" [align]="'center'">
+                  <ng-template wjFlexGridCellTemplate [cellType]="'Cell'">
+                      <button *ngIf="userService.isAuhtorized(userService.OM_ALERT_MANAGEMENT_ALERT_UPDATE)" id="btnDetailEdit" class="on_edit_button"
+                        role="button" (click)="onEditDetailAction()" title="{{ 'Translation.Edit' | translate }}"  data-target="#add_new"
+                        data-toggle="modal" data-backdrop="static"> <img src="assets/img/edit_orange.png"/> </button>
+    
+                      <button *ngIf="userService.isAuhtorized(userService.OM_ALERT_MANAGEMENT_ALERT_DELETE)" id="btnDetailRemove" class="on_edit_button ml-2"
+                        role="button" (click)="onEditDetailDelete()" title="{{ 'Translation.Delete' | translate }}" > <img src="assets/img/cross_orange.png"/> </button>
+                  </ng-template>
+                </wj-flex-grid-column>
+              </wj-flex-grid>
+    
+            </div>
+    
+            <div class="row"></div>
+            <div class="btn-group col-xs-12 align-right">
+              <!-- Paginator -->
+              <wj-collection-view-pager [cv]="flex?.collectionView"></wj-collection-view-pager>
+              <!-- page size -->
+              <wj-menu [(value)]="pageSize" [header]="'Common.Page Size' | translate">
+                <wj-menu-item [value]="0">{{ 'Common.No Paging' | translate }}</wj-menu-item>
+                <wj-menu-item [value]="5">5 {{ 'Common.items' | translate }}</wj-menu-item>
+                <wj-menu-item [value]="10">10 {{ 'Common.items' | translate }}</wj-menu-item>
+                <wj-menu-item [value]="20">20 {{ 'Common.items' | translate }}</wj-menu-item>
+                <wj-menu-item [value]="30">30 {{ 'Common.items' | translate }}</wj-menu-item>
+                <wj-menu-item [value]="50">50 {{ 'Common.items' | translate }}</wj-menu-item>
+                <wj-menu-item [value]="100">100 {{ 'Common.items' | translate }}</wj-menu-item>
+                </wj-menu>
+            </div>
+    
+    
+          </div>
+        </section>
+
+  
+  
+  <!-- Add New Bank Modal -->
+  <div id="add_new" class="modal fade" role="dialog" data-keyboard="true">
+    <div class="modal-dialog modal-md">
+  
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" (click)="onCancelAction()">&times;</button>
+          <h4 class="modal-title" *ngIf="!isParentDisabled">{{ 'Translation.Alert Management' | translate }}</h4>
+          <h4 class="modal-title" *ngIf="isParentDisabled">{{ 'Translation.Alert Management' | translate }}</h4>
+        </div>
+  
+        <form class="form-horizontal form-label-left" method="post" data-parsley-priority-enabled="false" novalidate="novalidate"
+          role="form" [formGroup]="myForm" (ngSubmit)="onSaveAction(myForm.value, myForm.valid)">
+          <div class="modal-body">
+  
+  
+            <div class="row">
+              <div class="col-sm-6 fields_box">
+                <label for="name">{{ 'Translation.Alert Name' | translate }} <span class="validation">*</span></label>
+                <wj-input-mask id="name" class="wijmo_style" formControlName="name" [isDisabled]="isParentDisabled" maxlength="32" [(ngModel)]="selectedItem.name"
+                  myForm [isRequired]="true"> </wj-input-mask>
+                <div *ngIf="myForm.controls['name'].hasError('required')" [hidden]="myForm.controls.name.valid || (myForm.controls.name.pristine && !isSubmitted)"
+                  class="text-danger">{{ 'Translation.Alert Name' | translate }} {{ 'Translation.is required' | translate }}.</div>
+                <div *ngIf="myForm.controls['name'].hasError('pattern')" class="text-danger">{{ 'Translation.Invalid Alert Name' | translate }}.</div>
+              </div>
+  
+              <div class="col-sm-6 fields_box">
+                <label for="symbol">{{ 'Translation.Security' | translate }} <span class="validation">*</span></label>
+                <wj-auto-complete id="symbol" formControlName="symbol" [isEditable]="true" [isDisabled]="isParentDisabled" #symbol [itemsSource]="symbolExangeMarketList"
+                  (selectedIndexChanged)="onSymbolChange()" displayMemberPath="displayName_" [(ngModel)]="selectedItem.symbolMarkerExchange"
+                  selectedValuePath="value" [isRequired]="true">
+                </wj-auto-complete>
+                <div *ngIf="myForm.controls['symbol'].hasError('required')" [hidden]="myForm.controls.symbol.valid || (myForm.controls.symbol.pristine && !isSubmitted)"
+                  class="text-danger">{{ 'Translation.Symbol' | translate }} {{ 'Translation.is required' | translate }}.</div>
+              </div>
+              <div class="col-sm-6 fields_box">
+                <label for="marketName">{{ 'Translation.Market' | translate }}</label>
+                <div class="sub_heading"><b> {{selectedItem.market}}</b></div>
+              </div>
+              <div class="col-sm-6 fields_box">
+                <label for="exchangeName">{{ 'Translation.Exchange' | translate }}</label>
+                <div class="sub_heading"><b> {{selectedItem.exchange}}</b></div>
+              </div>
+  
+            </div>
+  
+            <div>
+              <h3 class="global-heading">{{ 'Translation.Alert Details' | translate }}</h3>
+              <div class="row">
+                <div class="col-sm-4 fields_box">
+                  <label for="parameter1">{{ 'Translation.Parameter' | translate }} <span class="validation">*</span></label>
+                  <wj-combo-box id="parameter1" class="wijmo_style" formControlName="parameter1" [(ngModel)]="e1.parameter" (ngModelChange)="onParameter1Change($event)"
+                    [itemsSource]="parametresList" displayMemberPath="name" selectedValuePath="id" [isRequired]="true" [isEditable]="true">
+                  </wj-combo-box>
+                  <div *ngIf="myForm.controls['parameter1'].hasError('required')" [hidden]="myForm.controls.parameter1.valid || (myForm.controls.parameter1.pristine && !isSubmitted)"
+                    class="text-danger">{{ 'Translation.Parameter' | translate }} {{ 'Translation.is required' | translate }}.</div>
+                </div>
+                <div class="col-sm-4 fields_box">
+                  <label for="operator1">{{ 'Translation.Operator' | translate }} <span class="validation">*</span></label>
+                  <wj-combo-box id="operator1" class="wijmo_style" formControlName="operator1" [(ngModel)]="e1.operator" [itemsSource]="operatorList"
+                    displayMemberPath="abbreviation" selectedValuePath="id" [isRequired]="true" [isEditable]="true">
+                  </wj-combo-box>
+                  <div *ngIf="myForm.controls['operator1'].hasError('required')" [hidden]="myForm.controls.operator1.valid || (myForm.controls.operator1.pristine && !isSubmitted)"
+                    class="text-danger">{{ 'Translation.Operator' | translate }} {{ 'Translation.is required' | translate }}.</div>
+                </div>
+                <div class="col-sm-4 fields_box">
+                  <label for="value1">{{ 'Translation.Value' | translate }} <span class="validation">*</span></label>
+                  <wj-input-number id="value1" class="wijmo_style" [(ngModel)]="e1.value" formControlName="value1" [max]="9999999999.9999" [min]="0.0001"
+                     (ngModelChange)="onValueChange1($event)" myForm required [isRequired]="true" #value1> </wj-input-number>
+                  <div *ngIf="value1RateError" class="text-danger">{{ 'Translation.Value is out of Range' | translate }}.</div>
+                </div>
+  
+                <div class="col-sm-4 fields_box">
+                  <label for="condition">{{ 'Translation.Condition' | translate }}</label>
+                  <wj-combo-box id="condition" class="wijmo_style" (ngModelChange)="onConditionChange($event)" formControlName="condition"
+                    [(ngModel)]="e1.condition" [itemsSource]="conditionList" displayMemberPath="name" selectedValuePath="id"
+                    [isRequired]="true" [isEditable]="true">
+                  </wj-combo-box>
+                  <div *ngIf="myForm.controls['condition'].hasError('required')" [hidden]="myForm.controls.condition.valid || (myForm.controls.condition.pristine && !isSubmitted)"
+                    class="text-danger">{{ 'Translation.Condition' | translate }} {{ 'Translation.is required' | translate }}.</div>
+                </div>
+  
+                <div class="col-sm-8 fields_box">
+                </div>
+                <!-- <div *ngIf="showSecondCondition" class="col-sm-4 fields_box"> -->
+                  <!-- Defect id: 772 @ 24/Aug/2017 - AiK
+                  due to 'ngIf', the following fields don't populate on startup, that's why formatting fails on value2 field. -->
+                  <div [style.display]="showSecondCondition === true ? 'block': 'none'" class="col-sm-4 fields_box">
+                  <label for="parameter2">{{ 'Translation.Parameter' | translate }} <span class="validation">*</span></label>
+                  <wj-combo-box id="parameter2" class="wijmo_style" formControlName="parameter2" [(ngModel)]="e2.parameter" (ngModelChange)="onParameter2Change($event)"
+                    [itemsSource]="parametresList" displayMemberPath="name" selectedValuePath="id" [isRequired]="true" [isEditable]="true">
+                  </wj-combo-box>
+                  <div *ngIf="myForm.controls['parameter2'].hasError('required')" [hidden]="myForm.controls.parameter2.valid || (myForm.controls.parameter2.pristine && !isSubmitted)"
+                    class="text-danger">{{ 'Translation.Parameter' | translate }} {{ 'Translation.is required' | translate }}.</div>
+                </div>
+                <!-- <div *ngIf="showSecondCondition" class="col-sm-4 fields_box"> -->
+                <div [style.display]="showSecondCondition === true ? 'block': 'none'" class="col-sm-4 fields_box">
+                  <label for="operator2">{{ 'Translation.Operator' | translate }} <span class="validation">*</span></label>
+                  <wj-combo-box id="operator2" class="wijmo_style" formControlName="operator2" [(ngModel)]="e2.operator" [itemsSource]="operatorList"
+                    displayMemberPath="abbreviation" selectedValuePath="id" [isRequired]="true" [isEditable]="true">
+                  </wj-combo-box>
+                  <div *ngIf="myForm.controls['operator2'].hasError('required')" [hidden]="myForm.controls.operator2.valid || (myForm.controls.operator2.pristine && !isSubmitted)"
+                    class="text-danger">{{ 'Translation.Operator' | translate }} {{ 'Translation.is required' | translate }}.</div>
+                </div>
+                <!-- <div *ngIf="showSecondCondition" class="col-sm-4 fields_box"> -->
+                <div [style.display]="showSecondCondition === true ? 'block': 'none'" class="col-sm-4 fields_box">
+                  <label for="value2">{{ 'Translation.Value' | translate }} <span class="validation">*</span></label>
+                  <wj-input-number id="value2" class="wijmo_style" [(ngModel)]="e2.value" formControlName="value2" [max]="9999999999.9999" [min]="0.0001"
+                     (ngModelChange)="onValueChange2($event)" myForm required [isRequired]="true" #value2> </wj-input-number>
+                  <div *ngIf="value2RateError" class="text-danger">{{ 'Translation.Value is out of Range' | translate }}.</div>
+                </div>
+                <div class="col-sm-12 fields_box">
+                  <label for="message">{{ 'Translation.Alert Message' | translate }} <span class="validation">*</span></label>
+                  <textarea [(ngModel)]='selectedItem.message' rows="5" cols="50" formControlName="message" myForm required maxlength="255">
+                     </textarea>
+                  <div *ngIf="myForm.controls['message'].hasError('required')" [hidden]="myForm.controls.message.valid || (myForm.controls.message.pristine && !isSubmitted)"
+                    class="text-danger">{{ 'Translation.Message' | translate }} {{ 'Translation.is required' | translate }}.</div>
+                </div>
+                <div class="col-sm-6 fields_box">
+                  <div class="abc-radio" style="margin-top:5px;">
+                    <input id="persistanceT" type="radio" (click)="onPersistanceChangeEvent(true)" name="persistance" value="true" [checked]="selectedItem.persistance">
+                    <label for="persistanceT">{{ 'Translation.All Days' | translate }}</label>
+                  </div>
+                  <div class="abc-radio" style="margin-top:5px;">
+                    <input id="persistanceF" type="radio" (click)="onPersistanceChangeEvent(false)" name="persistance" value="false" [checked]="!selectedItem.persistance">
+                    <label for="persistanceF">{{ 'Translation.Current Day' | translate }}</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+  
+          </div>
+          <div class="modal-footer">
+            <button id="btnSave" type="submit" class="btn btn-success" (click)="MakeExpression()" *ngIf="!isParentDisabled && userService.isAuhtorized(userService.OM_ALERT_MANAGEMENT_ALERT_NEW)">{{ 'Common.Save' | translate }}</button>
+            <button id="btnEdit" type="submit" class="btn btn-success" (click)="MakeExpression()" *ngIf="isParentDisabled && userService.isAuhtorized(userService.OM_ALERT_MANAGEMENT_ALERT_UPDATE)">{{ 'Common.Update' | translate }}</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal" (click)="onCancelAction()">{{ 'Common.Cancel' | translate }}</button>
+          </div>
+        </form>
+  
+      </div>
+    </div>
+  </div>
+  
+  <dialog-cmp-reports #dialogCmp (btnClick)="getNotification($event)"> </dialog-cmp-reports>
+  

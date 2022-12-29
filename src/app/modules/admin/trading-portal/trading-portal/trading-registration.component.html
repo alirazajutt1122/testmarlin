@@ -1,0 +1,103 @@
+<div class="absolute inset-0 flex flex-col min-w-0 overflow-hidden">
+
+    <div
+        class="flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between p-6 pb-22 sm:px-10 bg-default dark:bg-transparent">
+        <div class="flex-1 min-w-0">
+            <div class="mt-2">
+                <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight leading-7 sm:leading-10 truncate">
+                    Trading Portal
+                </h2>
+            </div>
+        </div>
+        <div class="flex flex-shrink-0 items-center mt-6 sm:mt-0 sm:ml-4">
+            <button mat-icon-button (click)="matDrawer.toggle()">
+                <mat-icon [svgIcon]="'heroicons_outline:menu'"></mat-icon>
+            </button>
+        </div>
+    </div>
+
+    <mat-drawer-container class="flex flex-col flex-auto -mt-16 rounded-t-2xl shadow bg-card">
+
+        <mat-drawer class="75 min-w-100 dark:bg-gray-900" [autoFocus]="false" [mode]="drawerMode"
+                    [opened]="drawerOpened" [position]="'end'" #matDrawer>
+            <trading-portal-sidebar></trading-portal-sidebar>
+        </mat-drawer>
+        <mat-drawer-content class="flex flex-col overflow-hidden">
+
+            <div class="flex-auto p-6 sm:p-10 overflow-y-auto" cdkScrollable>
+                <div class="sm:col-span-2 md:col-span-4 flex flex-col p-6 flex-auto overflow-hidden">
+                    <div class="flex flex-col sm:flex-row items-start justify-between">
+                        <div class="text-lg font-medium tracking-tight leading-6 truncate">Registration For Trading
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 grid-flow-row gap-6 w-full mt-8 sm:mt-4" style="height: 100%;">
+                        <div class="flex flex-col flex-auto">
+                            <div class="font-medium text-secondary">Registration</div>
+                            <div class="flex flex-col flex-auto">
+
+                                <!-- New OTP Registration -->
+                                <div
+                                    class="relative mt-4 flex flex-col rounded-2xl shadow hover:shadow-lg overflow-hidden bg-card transform transition-shadow ease-in-out duration-150">
+                                    <div class="flex flex-col flex-auto items-center p-4 text-center">
+                                        <div class="text-2xl font-semibold">New Registration</div>
+                                        <div class="md:max-w-40 mt-1 text-lg font-medium">If you are new here please
+                                            click below to register
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="flex items-center justify-center py-4 px-8 text-primary-500 dark:text-primary-400 bg-gray-50 dark:bg-transparent dark:border-t hover:bg-primary hover:text-white">
+                                        <a (click)="onNewRegistration()" class="flex items-center cursor-pointer">
+                                            <span class="absolute inset-0"></span>
+                                            <span class="font-medium">New Registration</span>
+                                            <mat-icon class="ml-2 icon-size-5 text-current cursor-pointer"
+                                                      [svgIcon]="'heroicons_solid:arrow-narrow-right'"></mat-icon>
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <div
+                                    class=" mt-4 relative flex flex-col rounded-2xl shadow hover:shadow-lg overflow-hidden bg-card transform transition-shadow ease-in-out duration-150">
+                                    <div class="flex flex-col flex-auto items-center p-4 text-center">
+                                        <div class="text-2xl font-semibold">Already Have OTP!</div>
+                                        <div class="md:max-w-40 mt-1 font-medium text-lg">If you have OTP already click
+                                            below to proceed
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="flex items-center justify-center py-4 px-8 text-primary-500 dark:text-primary-400 bg-gray-50 dark:bg-transparent dark:border-t hover:bg-primary hover:text-white">
+                                        <a class="flex items-center cursor-pointer" (click)="onAlreadyOTP()">
+                                            <span class="absolute inset-0"></span>
+                                            <span class="font-medium">Already Have OTP</span>
+                                            <mat-icon class="ml-2 icon-size-5 text-current"
+                                                      [svgIcon]="'heroicons_solid:arrow-narrow-right'"></mat-icon>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex flex-col">
+                            <div class="font-medium text-secondary">Registration Process Flow</div>
+                            <div class="flex justify-center">
+
+                                <mat-accordion class="max-w-4xl mt-4">
+                                    <ng-container *ngFor="let step of registrationProcess; first as isFirst">
+                                        <mat-expansion-panel class="mb-4" [expanded]="isFirst">
+                                            <mat-expansion-panel-header [collapsedHeight]="'56px'">
+                                                <mat-panel-title
+                                                    class="text-lg leading-tight p-4">{{step.step}}</mat-panel-title>
+                                            </mat-expansion-panel-header>
+                                            <p class="text-lg">{{step.answer}}</p>
+                                        </mat-expansion-panel>
+                                    </ng-container>
+                                </mat-accordion>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </mat-drawer-content>
+    </mat-drawer-container>
+
+</div>

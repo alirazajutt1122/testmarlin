@@ -1,0 +1,83 @@
+
+<div class="row" style="width: 100%;">
+    <div class="col-lg-12 col-xs-12">
+      <section class="widget" widget>
+        <header>
+          <h6>{{ 'Translation.Market Summary' | translate }}</h6>
+          <div class="other_btns">
+            <!--<button class="Iconfilter_btn" tooltip="Print" ><i class="fa fa-print" aria-hidden="true"></i></button>
+            <button class="Iconfilter_btn" tooltip="Export" ><i class="fa fa-file-excel-o" aria-hidden="true"></i></button>-->
+            <button data-toggle="collapse" data-target="#filter_box" class="filter_btn"><i class="fa fa-filter" aria-hidden="true"></i></button>
+          </div>
+
+          <div id="filter_box" class="collapse in" style="margin-top:10px;">
+            <form role="form" [formGroup]="myForm" novalidate>
+              <div class="row pt-2">
+                <div class="col-sm-2">
+                  <div class="form-group">
+                    <label for="search-input">{{ 'Translation.Exchange' | translate }} <span class="validation">*</span></label>
+                    <wj-combo-box id="exchange" formControlName="exchange" class="wijmo_style" #cmbExchange [itemsSource]="exchanges" [(ngModel)]="exchangeId"
+                      (ngModelChange)="onExchangeChange($event)" displayMemberPath="exchangeCode" selectedValuePath="exchangeId"
+                      required [isEditable]="true">
+                      </wj-combo-box>
+                      <div *ngIf="myForm.controls['exchange'].hasError('required')" [hidden]="myForm.controls.exchange.valid || !isSubmitted" class="text-danger">{{ 'Translation.Exchange' | translate }} {{ 'Translation.is required' | translate }}.</div>
+                  </div>
+                </div>
+                <div class="col-sm-2">
+                  <div class="form-group">
+                    <label for="search-input">{{ 'Translation.Market' | translate }} <span class="validation">*</span></label>
+                    <wj-combo-box id="market" formControlName="market" class="wijmo_style" #cmbMarket [itemsSource]="markets" [(ngModel)]="marketId"
+                      displayMemberPath="marketCode" selectedValuePath="marketCode" required [isEditable]="true">
+                      </wj-combo-box>
+                      <div *ngIf="myForm.controls['market'].hasError('required')" [hidden]="myForm.controls.market.valid || !isSubmitted" class="text-danger">{{ 'Translation.Market' | translate }} {{ 'Translation.is required' | translate }}.</div>
+                  </div>
+                </div>
+                <div class="col-sm-1">
+                  <div class="form_search">
+                    <button class="btn btn-success btn-sm" title="{{ 'Translation.Search' | translate }}" data-toggle="collapse in" data-target="#filter_box"
+                      (click)="onSubmit(myForm.value, myForm.valid)"><i class="fa fa-search"></i> </button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <!-- <div class="widget-controls">
+            <a data-widgster="expand" title="{{ 'Translation.Expand' | translate }}"><i class="fa fa-chevron-up"></i></a>
+            <a data-widgster="collapse" title="{{ 'Translation.Collapse' | translate }}"><i class="fa fa-chevron-down"></i></a>
+          </div> -->
+
+        </header>
+        <div>
+
+          <wj-flex-grid class="grid" [isReadOnly]="true" [itemsSource]="msdata" [selectionMode]="'Row'" [autoSizeMode]="'Headers'"
+            (initialized)="initGrid(flexGrid)" style="height: 450px;" #flexGrid>
+            <!--<wj-flex-grid class="grid" [isReadOnly]="true" [itemsSource]="itemsList" [selectionMode]="'Row'" [autoSizeMode]="'Headers'"
+              [headersVisibility]="'Column'" [groupFooters]="true" (initialized)="initGrid(flexGrid)" style="height: 675px;" #flexGrid>-->
+            <wj-flex-grid-filter [filterColumns]="['security', 'quantity','value','previousclose','high','low','open','close','average','trades']"></wj-flex-grid-filter>
+            <wj-flex-grid-column [header]="'Translation.Security' | translate" align="left" [binding]="'security'" [width]="'0.5*'" [minWidth]="30"></wj-flex-grid-column>
+            <wj-flex-grid-column [header]="'Translation.Quantity' | translate" align="left" [binding]="'quantity'" [width]="'0.5*'" [minWidth]="30" [format]="'n0'"
+              [aggregate]='"Sum"'>
+              <!--<ng-template wjFlexGridCellTemplate [cellType]="'Group'" let-cell="cell">
+                  Sum : {{cell.value | number:'1.0-0'}}</ng-template>-->
+              </wj-flex-grid-column>
+              <wj-flex-grid-column [header]="'Translation.Value' | translate" align="left" [binding]="'value'" [width]="'0.5*'" [minWidth]="30" [format]="'n4'"
+                [aggregate]="'Sum'"></wj-flex-grid-column>
+                <wj-flex-grid-column [header]="'Translation.Previous Close' | translate" align="left" [binding]="'previousclose'" [width]="'0.5*'" [minWidth]="30"
+                  [format]="'n4'"></wj-flex-grid-column>
+                  <wj-flex-grid-column [header]="'Translation.High' | translate" align="left" [binding]="'high'" [width]="'0.5*'" [minWidth]="30" [format]="'n4'"></wj-flex-grid-column>
+                  <wj-flex-grid-column [header]="'Translation.Low' | translate" align="left" [binding]="'low'" [width]="'0.5*'" [minWidth]="30" [format]="'n4'"></wj-flex-grid-column>
+                  <wj-flex-grid-column [header]="'Translation.Open' | translate" align="left" [binding]="'open'" [width]="'0.5*'" [minWidth]="30" [format]="'n4'"></wj-flex-grid-column>
+                  <wj-flex-grid-column [header]="'Translation.Close' | translate" align="left" [binding]="'close'" [width]="'0.5*'" [minWidth]="30" [format]="'n4'"></wj-flex-grid-column>
+                  <wj-flex-grid-column [header]="'Translation.Average' | translate" align="left" [binding]="'average'" [width]="'0.5*'" [minWidth]="30" [format]="'n4'"></wj-flex-grid-column>
+                  <wj-flex-grid-column [header]="'Translation.Current Yield' | translate" align="left" [binding]="'current_yield'" [width]="'0.5*'" [minWidth]="30" [format]="'n4'"></wj-flex-grid-column>
+                  <wj-flex-grid-column [header]="'Translation.Open Yield' | translate" align="left" [binding]="'open_yield'" [width]="'0.5*'" [minWidth]="30" [format]="'n4'"></wj-flex-grid-column>
+                  <wj-flex-grid-column [header]="'Translation.Trades' | translate" align="left" [binding]="'trades'" [width]="'0.5*'" [minWidth]="30" [format]="'n0'" [aggregate]="'Sum'"></wj-flex-grid-column>
+                    </wj-flex-grid>
+
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <dialog-cmp-reports #dialogCmp (btnClick)="getNotification($event)"> </dialog-cmp-reports>

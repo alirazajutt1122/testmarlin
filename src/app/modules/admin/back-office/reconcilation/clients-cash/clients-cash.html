@@ -1,0 +1,93 @@
+<div class="widget">
+	<section class=" m-0 p-b-0" widget="">
+		<header>
+			<h3>{{'Translation.Client Cash' | translate}}</h3>
+		</header>
+		<div class="widget-body mt-2">
+			<form class="form-horizontal form-label-left" method="post" data-parsley-priority-enabled="false"
+				novalidate="novalidate" role="form" [formGroup]="myForm">
+				<div class="row wizard_data">
+					<div class="col-sm-3 fields_box"> </div>
+					<div class="col-sm-3 fields_box">
+						<label for="status">{{'Translation.Trading Date' | translate}} <span class="validation">*</span></label>
+						<wj-input-date id="transDate" formControlName="transDate" class="wijmo_style"
+							[(ngModel)]="transDate" [showYearPicker]="false" [isRequired]="true"> </wj-input-date>
+
+						<div *ngIf="myForm.controls['transDate'].hasError('required')"
+							[hidden]="myForm.controls['transDate'].valid || (myForm.controls['transDate'].pristine && !isSubmitted)"
+							class="text-danger"> {{'Translation.Date' | translate}} {{'Translation.is required' | translate}}.</div>
+					</div>
+
+					<div class="col-sm-2 fields_box">
+						<label for="fileUpload">{{'Translation.Document' | translate}} <span class="validation">*</span> ( *.txt )</label>
+						<!--<div class="fileinput fileinput-new" data-provides="fileinput">-->
+						<input type="file" style="color:#f3b170" (change)="fileChangeEvent(input)" #input
+							id="fileUpload" name="fileUpload" formControlName="fileUpload" accept="application/csv"
+							[(ngModel)]="selectedFileName" required />
+						<div *ngIf="fileSizeExceed" class="text-danger">{{'Translation.File size exceed. Maximum allowed size is 50MB' | translate}}.
+						</div>
+						<div *ngIf="IsFileAttached" class="text-danger">{{'Translation.Please attach a file before uploading' | translate}}.</div>
+						<!--</div>-->
+					</div>
+					<div class="col-sm-3 fields_box">
+						<button class="mt-15 btn btn-success btn-rounded pull-left"
+							(click)="btnUpload(myForm.value, myForm.valid)" type="submit"> {{'Translation.Reconcilation' | translate}} </button>
+					</div>
+				</div>
+
+				<div class="row wizard_data">
+					<div class="col-sm-3 fields_box"> </div>
+					<div class="col-sm-6 fields_box">
+						<b><label>{{'Translation.Note' | translate}}:</label> </b> <label>
+							{{'Translation.The uploaded file should not contain any comma' | translate}}(,).
+						</label>
+					</div>
+					<div class="col-sm-3 fields_box"> </div>
+				</div>
+			</form>
+		</div>
+	</section>
+
+	<!-- <div class="row" *ngIf="settlementDate">
+	<div class="col-sm-4 fields_box"> </div>
+	<div class="col-sm-4 fields_box">
+		<label> Settlement Date {{settlementDate | date: 'dd/MM/yyyy'}}</label>  
+	</div>
+	<div class="col-sm-4 fields_box"> </div>
+</div> -->
+	<div class=" p-t-0 m-0">
+		<div class="table_container">
+
+			<wj-flex-grid style="height: 200px;" id="abc" [itemsSource]="CdcReconcilationArray" [isReadOnly]="true"
+				[selectionMode]="'Row'" [autoSizeMode]="'Headers'" #flexDetail>
+
+				<wj-flex-grid-filter
+					[filterColumns]="['clientCode','full_name', 'loader_cash','bbo_cash','difference','Reason']">
+				</wj-flex-grid-filter>
+
+				<wj-flex-grid-column [header]="'Translation.Client Code' | translate" [align]="'left'" [allowSorting]="true"
+					[isRequired]="false" [binding]="'clientCode'" [width]="'0.5*'" [minWidth]="30">
+				</wj-flex-grid-column>
+
+				<wj-flex-grid-column [header]="'Translation.Name' | translate" [align]="'left'" [allowSorting]="true" [isRequired]="false"
+					[binding]="'full_name'" [width]="'0.5*'" [minWidth]="30"></wj-flex-grid-column>
+
+				<wj-flex-grid-column [header]="'Translation.Loader Cash' | translate" [align]="'left'" [allowSorting]="true"
+					[isRequired]="false" [binding]="'loader_cash'" [width]="'0.5*'" [minWidth]="30">
+				</wj-flex-grid-column>
+
+				<wj-flex-grid-column [header]="'Translation.BBO Cash' | translate" [align]="'left'" [allowSorting]="true" [isRequired]="false"
+					[binding]="'bbo_cash'" [width]="'0.5*'" [minWidth]="30"></wj-flex-grid-column>
+
+				<wj-flex-grid-column [header]="'Translation.Difference' | translate" [align]="'left'" [allowSorting]="true" [isRequired]="false"
+					[binding]="'difference'" [width]="'0.5*'" [minWidth]="30"></wj-flex-grid-column>
+
+				<wj-flex-grid-column [header]="'Translation.Reason' | translate" [align]="'left'" [allowSorting]="true" [isRequired]="false"
+					[binding]="'Reason'" [width]="'0.5*'" [minWidth]="30"></wj-flex-grid-column>
+
+			</wj-flex-grid>
+		</div>
+	</div>
+</div>
+
+<dialog-cmp #dialogCmp (btnClick)="getNotification($event)"> </dialog-cmp>

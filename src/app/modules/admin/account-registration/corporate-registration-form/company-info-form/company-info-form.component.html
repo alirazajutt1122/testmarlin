@@ -1,0 +1,58 @@
+<div class="w-full max-w-4xl">
+    <div [formGroup]="companyInfoFormGroup">
+        <div class="w-full">
+            <div class="text-xl">Basic Details</div>
+            <div class="text-secondary">Basic Details of Corporate</div>
+        </div>
+
+        <div class="grid sm:grid-cols-6 gap-6 w-full mt-8">
+
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Name of Company/Firm</mat-label>
+                    <input matInput name="companyName" formControlName="companyName" required>
+                </mat-form-field>
+            </div>
+
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Type of Company</mat-label>
+                    <mat-select name="companyType" formControlName="companyType">
+                        <mat-option *ngFor="let companyType of companyTypes" [value]="companyType.id">
+                            {{companyType.type}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Registered Address</mat-label>
+                    <input matInput name="registeredAddress" formControlName="registeredAddress" required>
+                </mat-form-field>
+            </div>
+
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Tax I.D. Number</mat-label>
+                    <input matInput name="taxIdNumber" formControlName="taxIdNumber" required>
+                </mat-form-field>
+            </div>
+
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Company Registration No.</mat-label>
+                    <input matInput name="companyRegNum" formControlName="companyRegNum" required>
+                </mat-form-field>
+            </div>
+
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Proof of Company Registration No.</mat-label>
+                    <input matInput name="companyRegProof" formControlName="companyRegProof">
+                </mat-form-field>
+            </div>
+
+        </div>
+    </div>
+</div>

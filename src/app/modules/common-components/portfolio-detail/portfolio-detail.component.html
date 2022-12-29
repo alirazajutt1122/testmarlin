@@ -1,0 +1,128 @@
+
+<!-- new design -->
+<div class="w-240 overflow-y-hidden">
+    <div class="flex   w-full justify-end">
+        <button  mat-icon-button (click)="onCloseDialog()">
+            <mat-icon class="text-current mt-2 " [svgIcon]="'heroicons_outline:x'"></mat-icon>
+        </button>
+    </div>
+    <div class="row text-center percentageBar text-black font-bold h-10">
+        <div *ngIf="(equityBarPercent | async) !='0%'"       [ngStyle]="{'width': (equityBarPercent | async),'background-color': equityColor}"><h5 class="barStyle">{{equityBarPercent | async}}</h5> </div>
+        <div *ngIf="(bondsBarPercent | async) !='0%'"       [ngStyle]="{'width': (bondsBarPercent | async),'background-color': bondColor}"><h5 class="barStyle">{{bondsBarPercent | async}}</h5></div>
+        <div *ngIf="(etfBarPercent | async) !='0%'"  [ngStyle]="{'width': (etfBarPercent | async),'background-color': etfColor}"><h5 class="barStyle">{{etfBarPercent | async}}</h5></div>
+        <div *ngIf="loading"  class="w-full bg-gray-500"><h5 class="barStyle">Loading...</h5></div>
+        <div *ngIf="NoDataFound"  class="w-full bg-gray-500"><h5 class="barStyle">No Data Found</h5></div>
+    </div>
+
+    <div class="row mt-10 " style="padding-left:26px;">
+        <div class="col-sm-7">
+            <div >
+                <div class="row h-10 ">
+                    <span class="text-lg font-bold" [ngStyle]="{'color': equityColor}">EQUITIES </span>
+                </div>
+                <div class="row h-9 -mt-5">
+                    <div class="col-sm-4  ">
+                        <h5 class="textStyle mt-4">Total Value:</h5>
+                    </div>
+                    <div class="col-sm-3 ">
+                        <h5 class="textStyle mt-4">{{ equityTotalValue | async}}</h5>
+                    </div>
+                    <div class="col-sm-4 ">
+                        <h5 class="textStyle mt-4">  Volume: {{ equityVolume | async}} </h5>
+                    </div>
+                </div>
+                <div class="row h-9 ">
+                    <div class="col-sm-4  ">
+                        <h5 class="textStyle mt-4">Current Value:</h5>
+                    </div>
+                    <div class="col-sm-3 ">
+                        <h5 class="textStyle mt-4">{{ equityCurrentValue | async}}</h5>
+                    </div>
+                    <div class="col-sm-4 mt-4">
+                        <span  *ngIf="!equityProfit" [ngStyle]="{'color':sellColor}" > Net P/L: {{ equityNetProfitLoss | async }}
+                            <mat-icon  [ngStyle]="{'color':sellColor}" style="font-size: 15px;margin-top: -4px;">arrow_downward</mat-icon>
+                        </span>
+                        <span *ngIf="equityProfit" [ngStyle]="{'color':buyColor}" > Net P/L: {{ equityNetProfitLoss | async }}
+                            <mat-icon  [ngStyle]="{'color':buyColor}" style="font-size: 15px;margin-top: -4px;">arrow_upward</mat-icon>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-5">
+                <div class="row h-10 ">
+                    <span class="text-lg font-bold" [ngStyle]="{'color': bondColor}">BONDS </span>
+                </div>
+                <div class="row h-9 -mt-5 ">
+                    <div class="col-sm-4  ">
+                        <h5 class="textStyle mt-4">Total Value:</h5>
+                    </div>
+                    <div class="col-sm-3  ">
+                        <h5 class="textStyle mt-4">{{ bondsTotalValue | async}}</h5>
+                    </div>
+                    <div class="col-sm-4  ">
+                        <h5 class="textStyle mt-4">  Volume: {{ bondsVolume | async}} </h5>
+                    </div>
+                </div>
+                <div class="row h-9 ">
+                    <div class="col-sm-4 ">
+                        <h5 class="textStyle mt-4">Current Value:</h5>
+                    </div>
+                    <div class="col-sm-3  ">
+                        <h5 class="textStyle mt-4">{{ bondsCurrentValue | async}}</h5>
+                    </div>
+                    <div class="col-sm-4 mt-4">
+                        <span  *ngIf="!bondsProfit" [ngStyle]="{'color':sellColor}" > Net P/L: {{ bondsNetProfitLoss | async }}
+                            <mat-icon  [ngStyle]="{'color':sellColor}" style="font-size: 15px;margin-top: -4px;">arrow_downward</mat-icon>
+                        </span>
+                        <span *ngIf="bondsProfit" [ngStyle]="{'color':buyColor}" > Net P/L: {{ bondsNetProfitLoss | async }}
+                            <mat-icon  [ngStyle]="{'color':buyColor}" style="font-size: 15px;margin-top: -4px;">arrow_upward</mat-icon>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div class="row h-10 mt-5">
+                    <span class="text-lg font-bold" [ngStyle]="{'color': etfColor}">ETFs </span>
+                </div>
+                <div class="row h-9 -mt-5">
+                    <div class="col-sm-4  ">
+                        <h5 class="textStyle mt-4">Total Value:</h5>
+                    </div>
+                    <div class="col-sm-3  ">
+                        <h5 class="textStyle mt-4">{{ etfTotalValue | async}}</h5>
+                    </div>
+                    <div class="col-sm-4  ">
+                        <h5 class="textStyle mt-4">  Volume: {{ etfVolume | async}} </h5>
+                    </div>
+                </div>
+                <div class="row h-9 ">
+                    <div class="col-sm-4  ">
+                        <h5 class="textStyle  mt-4">Current Value:</h5>
+                    </div>
+                    <div class="col-sm-3  ">
+                        <h5 class="textStyle mt-4">{{ etfCurrentValue | async}}</h5>
+                    </div>
+                    <div class="col-sm-4 mt-4">
+                        <span  *ngIf="!etfProfit" [ngStyle]="{'color':sellColor}" > Net P/L: {{ etfNetProfitLoss | async }}
+                            <mat-icon  [ngStyle]="{'color':sellColor}" style="font-size: 15px;margin-top: -4px;">arrow_downward</mat-icon>
+                        </span>
+                        <span *ngIf="etfProfit" [ngStyle]="{'color':buyColor}" > Net P/L: {{ etfNetProfitLoss | async }}
+                            <mat-icon  [ngStyle]="{'color':buyColor}" style="font-size: 15px;margin-top: -4px;">arrow_upward</mat-icon>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-5">
+            <div class="w-full min-h-100 sm:p-2  -mt-4 mb-4">
+                <div id="chart_">
+                    <apx-chart [series]="chartOptions.series" [chart]="chartOptions.chart"
+                        [plotOptions]="chartOptions.plotOptions" [labels]="chartOptions.labels" [colors]="chartOptions.colors"></apx-chart>
+                    <img class="globe_" src="assets/images/logo/globe1.png" alt="" sizes="" srcset="">
+                </div>
+    
+            </div>
+        </div>
+    </div>
+
+</div>

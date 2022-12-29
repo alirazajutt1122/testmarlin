@@ -1,0 +1,153 @@
+<!-- <fuse-vertical-navigation class="dark bg-skyblue-900 print:hidden" [mode]="isScreenSmall ? 'over' : 'side'"
+    [name]="'mainNavigation'" [navigation]="navigation.default" [opened]="!isScreenSmall">
+
+
+    <ng-container fuseVerticalNavigationHeader>
+        <div class="h-16 flex justify-center" style="background-image: linear-gradient(to right, #3d3d43 0%, #ABB0B8 100%, #193c5d 100%);">
+            <img src="../../../../assets/images/logo/marlinNewLogo.png" class="w-40 h-8 mt-4 ng-tns-c177-0 my-1">
+        </div>
+    </ng-container>
+
+
+
+    <ng-container fuseVerticalNavigationContentFooter>
+        <div class="flex flex-0 items-center justify-center h-16 pr-6 pl-2 mb-4 opacity-12">
+            <img class="max-w-36" style="position: fixed; bottom : 15px" src="../../../../assets/images/marlin-dashboard/infotech-white.png">
+        </div>
+    </ng-container>
+
+</fuse-vertical-navigation> -->
+
+
+
+
+
+
+<div class="flex flex-col flex-auto w-full min-w-0">
+    <!----------------------------------------- Top Bar  ------------------------------------------>
+    <div class="">
+        <div id="marlin-top-bar"
+            style="background-image: linear-gradient(to right, #3d3d43 0%, #ABB0B8 0%, #193c5d  100%);"
+            class="relative flex items-center w-full h-16 sm:h-14 px-4 md:px-6 z-49 shadow dark:shadow-none dark:border-b bg-card dark:bg-transparent">
+
+            <!-- <button class="ml-2" mat-icon-button (click)="toggleNavigation('mainNavigation')">
+                <mat-icon class="text-accent-700" [svgIcon]="'heroicons_outline:menu'"></mat-icon>
+            </button> -->
+
+            <div *ngIf="publicMenu" class="hvr" style="height: 37px; width: 125px;">
+                <a [routerLink]=" ['/dashboard'] "> <img src="assets/images/logo/marlinNewLogo.png" class="mr-4 "
+                        style="height: 27px; width: 122px; margin-top: 4px;margin-left: 5px;cursor: pointer;" /> </a>
+            </div>
+            <div *ngIf="!publicMenu" class="hvr" style="height: 37px; width: 125px;">
+                <a [routerLink]=" ['/admin/dashboard-admin'] "> <img src="assets/images/logo/marlinNewLogo.png" class="mr-4 "
+                        style="height: 27px; width: 122px; margin-top: 4px;margin-left: 5px;cursor: pointer;" /> </a>
+            </div>
+            <!-- <img src="assets/images/logo/marlinNewLogo.png"  class="mr-4" style="height: 27px; width : 124px" /> -->
+            <div class="cardContainer">
+                <fuse-card class="card_  flex   w-36 p-2 cursor-pointer hover:bg-primary"
+                    *ngFor="let security of allSecurities; let index = i;" (click)="onClickCard(security)"
+                    [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}"
+                    [ngStyle]="{'border-top-width':'3px' ,'border-top-color': security.borderColor}"
+                    style="height: 44px;">
+                 
+                    <div class="row p-0">
+                        <div class="col-sm-2 mr-2 -ml-3">
+                            <img class="icon-size-6" [src]="security.src || 'assets/images/marlin-dashboard/silver.png'"
+                            [alt]="security.symbol">
+                        </div>
+                        <div class="col-sm-7 mr-2">
+                            <div class="flex flex-col">
+                                <div class="text-sm font-semibold leading-tight"> {{security?.securityCode}} </div>
+                                <div class="text-sm text-gray-280  truncate">
+                                    LTP: {{security?.lastTradePrice || 'N/A'}}</div>
+                            </div>
+                        </div>
+                        <div class="col-sm-2  -mt-2">
+                            <mat-icon (click)="onRemoveSymbol(security)" [matTooltip]="'Remove'"
+                             [svgIcon]="'heroicons_outline:x'" style="min-width: 20px; width: 20px !important;">
+                        </mat-icon>
+                        </div>
+
+                    </div>
+
+                </fuse-card>
+            </div>
+            <div class="flex items-center pl-2 ml-auto space-x-0.5 sm:space-x-2">
+
+                <!-----------------------Trade Switch------------------------>
+                <ui-switch (change)="onChangeTrade($event)" [(ngModel)]="tradeType" [disabled]="tradeTypeDisabled">
+                </ui-switch>
+                <!-----------------------Trade Switch------------------------>
+
+
+                <button title="Add Symbols" (click)="onClickAddSymbols()" mat-icon-button>
+                    <mat-icon class="icon-size-10" [svgIcon]="'add'"></mat-icon>
+                </button>
+                <search class="" [appearance]="'bar'"></search>
+                <!-- .......................................Language.............................................................................................. -->
+                <button mat-button class="text-accent-100 px-3 " [matMenuTriggerFor]="menu" *ngIf="activelang=== 'en'">
+
+                    <!-- <span class="material-icons" style="font-size: 22px; margin-right: 2px;line-height: 1;">language</span> -->
+                    <span class="relative shadow rounded-sm overflow-hidden  w-8 h-6 mt-2 "
+                        style=" margin-bottom: 5px;">
+                        <img [src]="'assets/images/flags/US.svg'">
+                    </span>
+                </button>
+                <button mat-button class="text-accent-100 px-3" [matMenuTriggerFor]="menu" *ngIf="activelang=== 'pt'">
+                    <!-- <span class="material-icons" style="font-size: 22px; margin-right: 2px;line-height: 1;">language</span>  -->
+
+                    <span class="relative shadow rounded-sm overflow-hidden  w-8 h-6 " style="margin-bottom: -3px;">
+                        <img [src]="'assets/images/flags/Angola.png'">
+                    </span>
+                </button>
+
+                <mat-menu #menu="matMenu">
+
+                    <button mat-menu-item (click)="setActiveLang('en')"><span
+                            class="relative shadow rounded-sm overflow-hidden  w-7 h-5 mt-2"
+                            style="margin-left: 2px; margin-right : 3px; margin-bottom: 5px;">
+
+                            <img [src]="'assets/images/flags/US.svg'">
+
+                        </span>English</button>
+
+                    <button mat-menu-item (click)="setActiveLang('pt')"><span
+                            class="relative shadow rounded-sm overflow-hidden w-7 h-5 "
+                            style="margin-left: 2px; margin-right : 3px; margin-bottom: -3px;">
+
+                            <img [src]="'assets/images/flags/Angola.png'">
+
+                        </span> Portuguese</button>
+
+                </mat-menu>
+
+
+
+                <!-- .......................................Language................................................................................................ -->
+
+
+
+                <span class="border-2 h-12"></span>
+
+                <messages-alerts-announcements></messages-alerts-announcements>
+
+                <span class="border-2 h-12"></span>
+
+                <user class="w-76"></user>
+
+                <!-- <button class="ml-2 block" mat-icon-button (click)="drawerCloseOpen()" *ngIf="_router.url === '/dashboard'">
+                    <mat-icon class="text-primary-700" [svgIcon]="'heroicons_outline:menu'"></mat-icon>
+                </button> -->
+            </div>
+        </div>
+    </div>
+    <!----------------------------------------- Top Bar  ------------------------------------------>
+
+    <!-- <fuse-horizontal-navigation [name]="'mainNavigation'" [navigation]="navigation.default"></fuse-horizontal-navigation> -->
+    <menubar></menubar>
+
+    <div class="flex flex-col flex-auto">
+        <router-outlet *ngIf="true"></router-outlet>
+    </div>
+
+</div>
